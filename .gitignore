@@ -34,3 +34,7 @@
 # Compiled library folders
 intel/
 runtime/exports/
+
+# Jetbrains IDE
+.idea/
+cmake-build-debug/

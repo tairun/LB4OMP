@@ -2200,6 +2200,7 @@ if (goldenChunk) // if it is set
   } // case
   break;
   case kmp_sch_faca: {
+    printf("Kury: Selecting facA schedule for preparation in init");
     /* Factoring variant a (FACa) using redundant chunk calculation */
     if (tid == 0 && means_sigmas.find(loc->psource)==means_sigmas.end()){
 		read_profiling_data(loc->psource);
@@ -4371,6 +4372,7 @@ if((int)tid == 0){
   break;
 
   case kmp_sch_faca: {
+    printf("Kury: Selecting facA schedule for preparation in next");
     UT counter; // factoring counter
     UT batch; // batch index
     T min_chunk = pr->u.p.parm4; // minimum chunk size

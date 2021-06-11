@@ -124,7 +124,10 @@ typedef struct {
   double bestTime; // loop time of the best DLS
   double cLB; // load imbalance of the current DLS
   double bestLB; // load imbalance of the best DLS
-
+  double cVar;
+  double bestVar;
+  double cCOV;
+  double bestCOV;
 } LoopData;
 
 std::unordered_map<std::string, LoopData> autoLoopData; // holds loop data
@@ -742,7 +745,6 @@ double LBISLow(double LB) {
 
 // ΔDLS
 //
-//
 //  __________        _^_        __________
 // |          \      / | \      /          |
 // |           \    /  |  \    /           |
@@ -973,6 +975,10 @@ void autoFuzzySearch(int N, int P) {
   autoLoopData.at(autoLoopName).cDLS = selectedDLS;
 }
 
+void rlAgentSearch(int N, int P) {
+  printf("This is not ready yet.\n");
+  return;
+}
 /*---------------------------------------------- auto_DLS_Search
  * ------------------------------------------*/
 // Search for the best DLS technique within portfolio for a specific loop
@@ -985,6 +991,7 @@ void autoFuzzySearch(int N, int P) {
 // b. Binary search
 // c. Random
 // d. Expert (fuzzy logic)
+// e. Reinforcement Learning Agent
 //
 // Search/optimization method is changed using chunk parameter with auto,
 // i.e., auto,1 is exhaustive search and auto,4 is expert.
@@ -1026,7 +1033,14 @@ void auto_DLS_Search(int N, int P, int option) {
     autoFuzzySearch(N, P);
     // set chunk size
     autoSetChunkSize(N, P);
-  } else // normal LLVM auto - it will not reach to this part if chunk is higher
+  /* ----- Reinforcement Learning Agent Implementation ----- */
+  } else if (option == 6) {
+    // set DLS
+    rlAgentSearch(N, P);
+    // set chunk size
+    autoSetChunkSize(N, P);
+  }
+  else // normal LLVM auto - it will not reach to this part if chunk is higher
          // than 4
   {
     // Error ...it should not reach that part of the code
@@ -1044,7 +1058,6 @@ void init_auto_loop_timer(int nproc, int tid) {
   int flag = std::atomic_fetch_add(&autoTimerFirstEntry, 1);
 
   // tsc_tick_count tickThreadCount[nproc];
-
   // autoThreadTimerInit[tid] =  tickThreadCount[tid].getValue() *
   // tickThreadCount[tid].tick_time()*1000; //time in seconds
 
@@ -1093,7 +1106,6 @@ void end_auto_loop_timer(int nproc, int tid) {
 
   if (localNProc == nproc - 1) // last thread to leave the loop
   {
-
     int localmean =
         std::atomic_fetch_add(&autoMeanThreadTime, 0); // fetch the latest value
     localNProc =
@@ -1196,6 +1208,7 @@ void print_loop_timer(
     exit(-1);
   }
 
+  //TODO: Print loop statistics
   // fileMutex.lock();
   ofs.open(fileData, std::ofstream::out | std::ofstream::app);
   ofs << "LoopOccurrence: " << currentLoopMap.at(globalLoopline)

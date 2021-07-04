@@ -975,12 +975,17 @@ void autoFuzzySearch(int N, int P) {
   autoLoopData.at(autoLoopName).cDLS = selectedDLS;
 }
 
+// -------------------------- LB4OMP AUTO Extension --------------------------//
+// -------------------------- Reinforcement Learning -------------------------//
 void rlAgentSearch(int N, int P) {
-  printf("This is not ready yet.\n");
+  printf("LB4OMP AUTO Extension.\n");
+  printf("Reinforcement Learning.\n");
+  autoLoopData.at(autoLoopName).cDLS = 0; // Should select static schedule
+
   return;
 }
-/*---------------------------------------------- auto_DLS_Search
- * ------------------------------------------*/
+
+/*--------------------------- auto_DLS_Search---------------------------------*/
 // Search for the best DLS technique within portfolio for a specific loop
 // Sets the best identified DLS technique in autoLoopData[loopName].cDLS
 // Identifies the best DLS technique based on loop execution time
@@ -1033,13 +1038,13 @@ void auto_DLS_Search(int N, int P, int option) {
     autoFuzzySearch(N, P);
     // set chunk size
     autoSetChunkSize(N, P);
-  /* ----- Reinforcement Learning Agent Implementation ----- */
+// -------------------------- LB4OMP AUTO Extension --------------------------//
+// -------------------------- Reinforcement Learning -------------------------//
   } else if (option == 6) {
-    // set DLS
-    rlAgentSearch(N, P);
-    // set chunk size
-    autoSetChunkSize(N, P);
+    rlAgentSearch(N, P); // set DLS
+    autoSetChunkSize(N, P); // set chunk size
   }
+// ---------------------------------------------------------------------------//
   else // normal LLVM auto - it will not reach to this part if chunk is higher
          // than 4
   {
@@ -1208,7 +1213,7 @@ void print_loop_timer(
     exit(-1);
   }
 
-  //TODO: Print loop statistics
+  // TODO: Print loop statistics
   // fileMutex.lock();
   ofs.open(fileData, std::ofstream::out | std::ofstream::app);
   ofs << "LoopOccurrence: " << currentLoopMap.at(globalLoopline)
@@ -6289,7 +6294,6 @@ int __kmp_dispatch_next_algorithm(
     LOOP_TIME_MEASURE_END
     // AUTO by Ali
     AUTO_eLoopTimer
-
   } else {
     STORE_CHUNK_INFO
   }

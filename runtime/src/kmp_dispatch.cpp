@@ -1417,7 +1417,7 @@ void __kmp_dispatch_init_algorithm(ident_t *loc, int gtid,
 
     if (schedule == kmp_sch_auto) {
 
-      if ((chunk >= 2) && (chunk <= 5)) // AUTO by Ali
+      if ((chunk >= 2) && (chunk <= 6)) // AUTO by Ali
       {
         AUTO_FLAG = 1; // Set auto flag
       } else {

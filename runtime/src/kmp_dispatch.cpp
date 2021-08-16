@@ -1162,7 +1162,7 @@ void rlAgentSearch(int N, int P) {
   GAMMA = 0.90; // Discount Rate
   RLMETHOD = 0; // 0 = Q-LEARN, other = SARSA
 
-  printf("-----\n")
+  printf("-----\n");
   printf("Reinforcement Learning.\n");
 
   printf("LoopName: %s, Timestep: %i, DLS: %d, time: %lf , LB: %lf, chunk: %d, ALPHA: %i, GAMMA: %i \n",

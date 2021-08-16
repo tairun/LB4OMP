@@ -1171,7 +1171,7 @@ void rlAgentSearch(int N, int P) {
   RLMETHOD = 0; // 0 = Q-LEARN, other = SARSA
 
   if (agent_data.find(autoLoopName) == agent_data.end()) {
-    startLearn()
+    startLearn();
   }
 
   // The state represents the current DLS algorithm.

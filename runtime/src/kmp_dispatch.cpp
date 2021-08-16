@@ -977,34 +977,49 @@ void autoFuzzySearch(int N, int P) {
 
 // -------------------------- LB4OMP AUTO Extension --------------------------//
 // -------------------------- Reinforcement Learning -------------------------//
-// -------------------------- START ------------------------------------------//
+// -------------------------- START (2007 Code)-------------------------------//
 
-#define STATES 7      // TODO: Number of DLS techniques in LB4OMP portfolio
-#define ACTIONS 7     // TODO: Same, because we can switch to every DLS technique???
-#define TOTAL_CELLS 49// Product of the two above?
+/*
+ * COMMON TODOs:
+ * Actually save the time as lowtime or hightime OR use LB4OMP loopdata
+ * Understand differences and similarities between QTM app where code is from and chunked loops as in OpenMP in respect to RL agent
+ * Also implement Expected SARSA and Double-Q-Learning
+ * */
+
+#define STATES autoDLSPortfolio.size() - 1      // TODO: Number of DLS techniques in LB4OMP portfolio
+#define ACTIONS autoDLSPortfolio.size() - 1     // TODO: Same, because we can switch to every DLS technique???
+#define TOTAL_CELLS STATES * ACTIONS    // Product of the two above?
+
 
 typedef struct {
   int state, action, trialstate;
   double lowTime, highTime;
   int count[ACTIONS];
   double qvalue[STATES][ACTIONS];
+  int timestep_counter;
 } RLinfo;
 
-std::unordered_map<string, RLinfo> agent_data;       //TODO: This should become a map
+std::unordered_map<string, RLinfo> agent_data;  //TODO: This should become a map ✅
 
 double ALPHA, GAMMA;  // Learning rates. TODO: How to iterate over different learning rates?
 int TRIAL_EPISODES,   // TRIAL_EPISODES denotes how many times the RL agent should just learn and not select something due to policy
                       // TODO: We should use the trial counter on autoLoopData struct
-    RLMETHOD;         // RLMETHOD denotes what learnong strategy should be employed: Q-LEARN, SARSA
+    RLMETHOD;         // RLMETHOD denotes what learning strategy should be employed by the getMax_Q function:
+                      // 0=Q-LEARN, 1=SARSA, more?? (Double-Q-Learn, Expected SARSA)
 
-void startlearn() {
-  int s, a;
 
+void startLearn() {
   /* TODO: Initialize RLinfo struct for each loop. We can't do that with LB4OMP
    since we are using a map to keep track of the loop and will call the startlearn_
    method for every loop. */
-  agent_data[autoLoopName].lowTime = -99.00;
+  agent_data[autoLoopName].lowTime = -99.00; // TODO: Why are the values initialized negative?
   agent_data[autoLoopName].highTime = -999.00;
+  agent_data[autoLoopName].timestep_counter = 0;
+
+  TRIAL_EPISODES = 2 * ACTIONS;
+  RLMETHOD = 0;
+
+  int s, a;
 
   for (s = 0; s < STATES; s++)
     for (a = 0; a < ACTIONS; a++)
@@ -1013,11 +1028,17 @@ void startlearn() {
   return;
 }
 
-int getState(int try) {
+/*
+    Get the state (which method of scheduling for a specific loop.
+    Do special stuff when still in TRIAL phase (exploration?)
+    try:int: timestep?
+    choice:int: loop identifier? // We don't need this parameter here, because loop ID is "global"
+*/
+int getState(int timestep) {
   if (try < TRIAL_EPISODES) { // Have we finished exploring and are ready to
                               // start exploiting?
-    if ((try % ACTIONS) == 0) { // TODO: Have we tried all actions?
-      if ((try % TOTAL_CELLS) == 0) // TODO: Don't know about this one!
+    if ((timestep % ACTIONS) == 0) { // TODO: Have we tried all actions?
+      if ((timestep % TOTAL_CELLS) == 0) // TODO: Don't know about this one!
         agent_data[autoLoopName].trialstate =
             0; // TODO: Choice is the loop index?!
       else
@@ -1028,12 +1049,17 @@ int getState(int try) {
   return agent_data[autoLoopName].state;
 }
 
-// What is the input parameter time? Is it the n-th timestep?
-int selectAction(int time, int s) {
+/*
+    Implements e-greedy policy?`
+    time:int: timestep?
+    s:int: current state
+    choice:int: current loop id // We don't need this parameter here, because loop ID is "global"
+*/
+int selectAction(int timestep, int state) {
   int i, action, action_max;
 
-  if (time < TRIAL_EPISODES) {    // TODO: What does this comparison do?
-    action = time % ACTIONS;
+  if (timestep < TRIAL_EPISODES) {
+    action = timestep % ACTIONS;
   } else {
     action_max = 0;
     for (i = 0; i < ACTIONS; i++)
@@ -1046,30 +1072,37 @@ int selectAction(int time, int s) {
   return action;
 }
 
-// TODO: Is this the driver code?
-void _computeMethod(int *timestep, int *method) {
-  int trial = 0;
-  int state = 0;
+/*
+ * Gets the new DLS method via the selectAction function
+ * */
+int computeMethod(int timestep) {
+  int method = 0, state = 0;
 
-  trial = *timestep;
-  state = getState(trial);
-  *method = selectAction(trial, state);    // TODO: What does this do?
-  return;
+  state = getState(timestep);
+  method = selectAction(timestep, state);
+  return method;
 }
 
-double _getMax_Q(int s) {
+/*
+    Actual RL algorithm implementation
+    block:int: current loop id
+    s:int: current state
+*/
+double getMax_Q(int state) {
   double maxQ;
   int i, j;
 
   /* Q Learning */
-  if (RLMETHOD == 0) {
-    maxQ = agent_data[autoLoopName].qvalue[s][0];
+  /* Select best action based on qvalue of current state */
+  if (RLMETHOD == 0) { //TODO: Do not use constant for this comparison, use ENV VARIABLE
+    maxQ = agent_data[autoLoopName].qvalue[state][0];
     for (j = 1; j < ACTIONS; j++)
-      if (agent_data[autoLoopName].qvalue[s][j] > maxQ) {
-        maxQ = agent_data[autoLoopName].qvalue[s][j];
+      if (agent_data[autoLoopName].qvalue[state][j] > maxQ) {
+        maxQ = agent_data[autoLoopName].qvalue[state][j];
         agent_data[autoLoopName].state = j;
       }
     /* SARSA Learning */
+    /* Select best overall action (disregarding current state) */
   } else {
     maxQ = agent_data[autoLoopName].qvalue[0][0];  // TODO: Why is index here [0][0] and on the other one its [s][0]?
     for (i = 1; i < STATES; i++)
@@ -1079,17 +1112,19 @@ double _getMax_Q(int s) {
           agent_data[autoLoopName].state = j;
         }
   }
-
   return maxQ;
 }
 
-void getReward(double *exectime, int *action) {
+/*
+    Updates the qvalue according to the Bellman equation depending on the loop id, selected action and execution time
+    *exectime:double: Execution time for the loop in this timestep
+    *action:int: seleceted action in previous step
+    *choice:int: current loop id
+*/
+void getReward(double exectime, int action) {
 
   double qval, qbest;
-  int reward;
-  int s, a;
-
-  a = *action;
+  int reward, state;
 
   if ((*exectime) < agent_data[autoLoopName].lowTime) {  // Good case
     agent_data[autoLoopName].lowTime = *exectime;
@@ -1099,16 +1134,15 @@ void getReward(double *exectime, int *action) {
     agent_data[autoLoopName].lowTime = *exectime;
     reward = 0;
   }
-  if (*exectime > agent_data[autoLoopName].highTime) { // Base case
+  if (*exectime > agent_data[autoLoopName].highTime) { // Bad case
     agent_data[autoLoopName].highTime = *exectime;
     reward = -2;
   }
 
-  /* updateQ() */
-  s = agent_data[autoLoopName].state;
-  qval = agent_data[autoLoopName].qvalue[s][a];
-  qbest = _getMax_Q(s);
-  agent_data[autoLoopName].qvalue[s][a] = qval + ALPHA * (reward + (GAMMA * qbest) - qval);  // Do the actual learning
+  state = agent_data[autoLoopName].state;
+  qval = agent_data[autoLoopName].qvalue[state][action];
+  qbest = getMax_Q(state);
+  agent_data[autoLoopName].qvalue[state][action] = qval + ALPHA * (reward + (GAMMA * qbest) - qval);  // Do the actual learning
 
   return;
 }
@@ -1133,8 +1167,8 @@ void rlAgentSearch(int N, int P) {
          autoLoopData.at(autoLoopName).cTime, autoLoopData.at(autoLoopName).cLB,
          autoLoopData.at(autoLoopName).cChunk);
 
-  ALPHA = 0.6;
-  GAMMA = 0.3;
+  ALPHA = 0.15; // Learning Rate
+  GAMMA = 0.90; // Discount Rate
   RLMETHOD = 0; // 0 = Q-LEARN, other = SARSA
 
   // TODO: Make sure we got at least some trial episodes?
@@ -1144,21 +1178,32 @@ void rlAgentSearch(int N, int P) {
     TRIAL_EPISODES = (*maxEPISODES) / 10;
 
   if (agent_data.find(autoLoopName) == agent_data.end()) {
-    startlearn()
+    startLearn()
   }
 
   // The state represents the current DLS algorithm.
   // The action represents the DLS algorithm which we should switch to.
-  int state = getState(); // TODO: What is the input argument try here?
-  int action = selectAction(autoLoopData.at(autoLoopName).cTime, state);
-  getReward();
+  //int state = getState(?? someParameter ??); // TODO: What is the input argument try here?
+  //int action = selectAction(autoLoopData.at(autoLoopName).cTime, state);
+  int method = computeMethod(agent_data[autoLoopName].timestep_counter);
+  getReward(autoLoopData.at(autoLoopName).cTime);
 
-  autoLoopData.at(autoLoopName).cDLS = action; // Should select static schedule
+  // make sure that selected DLS is within limits
+  int limit = autoDLSPortfolio.size() - 1;
+  if (method > limit) {
+    method = limit;
+  } else if (selectedDLS < 0) {
+    method = 0;
+  }
+
+  autoLoopData.at(autoLoopName).cDLS = method; // Should select static schedule
+  agent_data[autoLoopName].timestep_counter += 1;
 
   return;
 }
+// -------------------------- END (2007 Code)---------------------------------//
 // -------------------------- Reinforcement Learning -------------------------//
-// -------------------------- END --------------------------------------------//
+
 
 /*--------------------------- auto_DLS_Search---------------------------------*/
 // Search for the best DLS technique within portfolio for a specific loop
@@ -1215,12 +1260,11 @@ void auto_DLS_Search(int N, int P, int option) {
     autoSetChunkSize(N, P);
 
 // -------------------------- Reinforcement Learning -------------------------//
-// -------------------------- START ------------------------------------------//
   } else if (option == 6) {
     rlAgentSearch(N, P); // set DLS
     autoSetChunkSize(N, P); // set chunk size
   }
-// -------------------------- END --------------------------------------------//
+// -------------------------- Reinforcement Learning -------------------------//
 
   else // normal LLVM auto - it will not reach to this part if chunk is higher
          // than 4

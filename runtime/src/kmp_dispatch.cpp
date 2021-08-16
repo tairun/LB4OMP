@@ -1149,14 +1149,13 @@ void getReward(double exectime, int action) {
 
 /* Don't know exactly of what use this method is. */
 void _displayCount() {
-  int lidx, aidx;
-  for (lidx = 0; lidx < 3; lidx++) {
-    printf("\nLoop %d:", lidx);
-    for (aidx = 0; aidx < ACTIONS; aidx++)
-      printf(" %d", agent_data[lidx].count[aidx]);
-  }
+  int aidx;
+  printf("\nLoop %s:", autoLoopName);
+  for (aidx = 0; aidx < ACTIONS; aidx++)
+    printf(" %d", agent_data[autoLoopName].count[aidx]);
   return;
 }
+*/
 
 void rlAgentSearch(int N, int P) {
   printf("LB4OMP AUTO Extension.\n");
@@ -1180,7 +1179,7 @@ void rlAgentSearch(int N, int P) {
   //int state = getState(?? someParameter ??); // TODO: What is the input argument try here?
   //int action = selectAction(autoLoopData.at(autoLoopName).cTime, state);
   int method = computeMethod(agent_data[autoLoopName].timestep_counter);
-  getReward(autoLoopData.at(autoLoopName).cTime);
+  getReward(autoLoopData.at(autoLoopName).cTime, method);
 
   // make sure that selected DLS is within limits
   int limit = autoDLSPortfolio.size() - 1;

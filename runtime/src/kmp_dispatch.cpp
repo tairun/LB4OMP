@@ -975,7 +975,7 @@ void autoFuzzySearch(int N, int P) {
   autoLoopData.at(autoLoopName).cDLS = selectedDLS;
 }
 
-// -------------------------- Reinforcement Learning -------------------------//
+/* -------------------------- Reinforcement Learning -------------------------*/
 /*
  * COMMON TODOs:
  * Actually save the time as lowtime or hightime OR use LB4OMP loopdata
@@ -1145,7 +1145,11 @@ void getReward(double exectime, int action) {
 }
 
 void printQValues() {
-  return;
+  int s, a;
+
+  for (s = 0; s < STATES; s ++)
+    for (a = 0; a < ACTIONS; a++)
+      printf("%f", agent_data[autoLoopName].qvalue[s][a]);
 }
 
 void displayCount() {
@@ -1165,10 +1169,10 @@ void rlAgentSearch(int N, int P) {
   printf("-----\n");
   printf("Reinforcement Learning.\n");
 
-  printf("LoopName: %s, Timestep: %i, DLS: %d, time: %lf , LB: %lf, chunk: %d, ALPHA: %d, GAMMA: %d \n",
+  printf("LoopName: %s, Timestep: %i, DLS: %d, time: %lf , LB: %lf, chunk: %d, ALPHA: %lf, GAMMA: %lf, RLMETHOD: %i, TRIAL_EPISODES: %i\n",
          autoLoopName, agent_data[autoLoopName].timestep_counter, autoLoopData.at(autoLoopName).cDLS,
          autoLoopData.at(autoLoopName).cTime, autoLoopData.at(autoLoopName).cLB,
-         autoLoopData.at(autoLoopName).cChunk, ALPHA, GAMMA);
+         autoLoopData.at(autoLoopName).cChunk, ALPHA, GAMMA, RLMETHOD, TRIAL_EPISODES);
 
   if (agent_data.find(autoLoopName) == agent_data.end()) {
     startLearn();
@@ -1177,7 +1181,7 @@ void rlAgentSearch(int N, int P) {
   int method = computeMethod(agent_data[autoLoopName].timestep_counter);
   getReward(autoLoopData.at(autoLoopName).cTime, method);
 
-  printf("New DLS method: %i\n", method);
+  printf("New DLS method (before clamp): %i\n", method);
 
   // make sure that selected DLS is within limits
   int limit = autoDLSPortfolio.size() - 1;
@@ -1187,15 +1191,14 @@ void rlAgentSearch(int N, int P) {
     method = 0;
   }
 
-  printf("New DLS method: %i\n", method);
+  printf("New DLS method (after clamp): %i\n", method);
 
   autoLoopData.at(autoLoopName).cDLS = method;
   agent_data[autoLoopName].timestep_counter += 1;
 
   return;
 }
-// -------------------------- Reinforcement Learning -------------------------//
-
+/* -------------------------- Reinforcement Learning -------------------------*/
 
 /*--------------------------- auto_DLS_Search---------------------------------*/
 // Search for the best DLS technique within portfolio for a specific loop
@@ -1251,12 +1254,12 @@ void auto_DLS_Search(int N, int P, int option) {
     // set chunk size
     autoSetChunkSize(N, P);
 
-// -------------------------- Reinforcement Learning -------------------------//
+/* -------------------------- Reinforcement Learning -------------------------*/
   } else if (option == 6) {
     rlAgentSearch(N, P); // set DLS
     autoSetChunkSize(N, P); // set chunk size
   }
-// -------------------------- Reinforcement Learning -------------------------//
+/* -------------------------- Reinforcement Learning -------------------------*/
 
   else // normal LLVM auto - it will not reach to this part if chunk is higher
          // than 4

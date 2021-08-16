@@ -1165,7 +1165,7 @@ void rlAgentSearch(int N, int P) {
   printf("-----\n");
   printf("Reinforcement Learning.\n");
 
-  printf("LoopName: %s, Timestep: %i, DLS: %d, time: %lf , LB: %lf, chunk: %d, ALPHA: %i, GAMMA: %i \n",
+  printf("LoopName: %s, Timestep: %i, DLS: %d, time: %lf , LB: %lf, chunk: %d, ALPHA: %d, GAMMA: %d \n",
          autoLoopName, agent_data[autoLoopName].timestep_counter, autoLoopData.at(autoLoopName).cDLS,
          autoLoopData.at(autoLoopName).cTime, autoLoopData.at(autoLoopName).cLB,
          autoLoopData.at(autoLoopName).cChunk, ALPHA, GAMMA);
@@ -1177,7 +1177,7 @@ void rlAgentSearch(int N, int P) {
   int method = computeMethod(agent_data[autoLoopName].timestep_counter);
   getReward(autoLoopData.at(autoLoopName).cTime, method);
 
-  printf("New DLS method: %i", method);
+  printf("New DLS method: %i\n", method);
 
   // make sure that selected DLS is within limits
   int limit = autoDLSPortfolio.size() - 1;
@@ -1187,7 +1187,7 @@ void rlAgentSearch(int N, int P) {
     method = 0;
   }
 
-  printf("New DLS method: %i", method);
+  printf("New DLS method: %i\n", method);
 
   autoLoopData.at(autoLoopName).cDLS = method;
   agent_data[autoLoopName].timestep_counter += 1;

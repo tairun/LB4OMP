@@ -1035,7 +1035,7 @@ void startLearn() {
     choice:int: loop identifier? // We don't need this parameter here, because loop ID is "global"
 */
 int getState(int timestep) {
-  if (try < TRIAL_EPISODES) { // Have we finished exploring and are ready to
+  if (timestep < TRIAL_EPISODES) { // Have we finished exploring and are ready to
                               // start exploiting?
     if ((timestep % ACTIONS) == 0) { // TODO: Have we tried all actions?
       if ((timestep % TOTAL_CELLS) == 0) // TODO: Don't know about this one!
@@ -1126,16 +1126,16 @@ void getReward(double exectime, int action) {
   double qval, qbest;
   int reward, state;
 
-  if ((*exectime) < agent_data[autoLoopName].lowTime) {  // Good case
-    agent_data[autoLoopName].lowTime = *exectime;
+  if ((exectime) < agent_data[autoLoopName].lowTime) {  // Good case
+    agent_data[autoLoopName].lowTime = exectime;
     reward = 2;
   }
-  if ((*exectime > agent_data[autoLoopName].lowTime) && (*exectime < agent_data[autoLoopName].highTime)) {  // Neutral case
-    agent_data[autoLoopName].lowTime = *exectime;
+  if ((exectime > agent_data[autoLoopName].lowTime) && (exectime < agent_data[autoLoopName].highTime)) {  // Neutral case
+    agent_data[autoLoopName].lowTime = exectime;
     reward = 0;
   }
-  if (*exectime > agent_data[autoLoopName].highTime) { // Bad case
-    agent_data[autoLoopName].highTime = *exectime;
+  if (exectime > agent_data[autoLoopName].highTime) { // Bad case
+    agent_data[autoLoopName].highTime = exectime;
     reward = -2;
   }
 
@@ -1153,7 +1153,7 @@ void _displayCount() {
   for (lidx = 0; lidx < 3; lidx++) {
     printf("\nLoop %d:", lidx);
     for (aidx = 0; aidx < ACTIONS; aidx++)
-      printf(" %d", loop[lidx].count[aidx]);
+      printf(" %d", agent_data[lidx].count[aidx]);
   }
   return;
 }
@@ -1163,19 +1163,13 @@ void rlAgentSearch(int N, int P) {
   printf("Reinforcement Learning.\n");
 
   printf(" LoopName: %s, DLS: %d, time: %lf , LB: %lf, chunk: %d \n",
-         autoLoopName, currentPortfolioIndex,
+         autoLoopName, autoLoopData.at(autoLoopName).cDLS,
          autoLoopData.at(autoLoopName).cTime, autoLoopData.at(autoLoopName).cLB,
          autoLoopData.at(autoLoopName).cChunk);
 
   ALPHA = 0.15; // Learning Rate
   GAMMA = 0.90; // Discount Rate
   RLMETHOD = 0; // 0 = Q-LEARN, other = SARSA
-
-  // TODO: Make sure we got at least some trial episodes?
-  if (2 * ACTIONS > (*maxEPISODES) / 10)  // TODO: Do we really need this?
-    TRIAL_EPISODES = 2 * ACTIONS;
-  else
-    TRIAL_EPISODES = (*maxEPISODES) / 10;
 
   if (agent_data.find(autoLoopName) == agent_data.end()) {
     startLearn()
@@ -1192,7 +1186,7 @@ void rlAgentSearch(int N, int P) {
   int limit = autoDLSPortfolio.size() - 1;
   if (method > limit) {
     method = limit;
-  } else if (selectedDLS < 0) {
+  } else if (method < 0) {
     method = 0;
   }
 

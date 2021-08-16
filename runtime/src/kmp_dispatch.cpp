@@ -1253,7 +1253,7 @@ void auto_DLS_Search(int N, int P, int option) {
 
 // -------------------------- Reinforcement Learning -------------------------//
   } else if (option == 6) {
-    rlAgentrlAgentSearch(N, P); // set DLS
+    rlAgentSearch(N, P); // set DLS
     autoSetChunkSize(N, P); // set chunk size
   }
 // -------------------------- Reinforcement Learning -------------------------//

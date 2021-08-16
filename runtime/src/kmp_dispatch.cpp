@@ -1147,7 +1147,7 @@ void getReward(double exectime, int action) {
   return;
 }
 
-/* Don't know exactly of what use this method is. */
+
 void _displayCount() {
   int aidx;
   printf("\nLoop %s:", autoLoopName);
@@ -1155,7 +1155,7 @@ void _displayCount() {
     printf(" %d", agent_data[autoLoopName].count[aidx]);
   return;
 }
-*/
+
 
 void rlAgentSearch(int N, int P) {
   printf("LB4OMP AUTO Extension.\n");

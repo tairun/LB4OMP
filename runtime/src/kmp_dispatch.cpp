@@ -986,9 +986,9 @@ void autoFuzzySearch(int N, int P) {
  * Also implement Expected SARSA and Double-Q-Learning
  * */
 
-#define STATES autoDLSPortfolio.size() - 1      // TODO: Number of DLS techniques in LB4OMP portfolio
-#define ACTIONS autoDLSPortfolio.size() - 1     // TODO: Same, because we can switch to every DLS technique???
-#define TOTAL_CELLS STATES * ACTIONS    // Product of the two above?
+#define STATES 12 // autoDLSPortfolio.size() - 1      // TODO: Number of DLS techniques in LB4OMP portfolio
+#define ACTIONS 12 // autoDLSPortfolio.size() - 1     // TODO: Same, because we can switch to every DLS technique???
+#define TOTAL_CELLS 144 // STATES * ACTIONS    // Product of the two above?
 
 
 typedef struct {
@@ -999,7 +999,7 @@ typedef struct {
   int timestep_counter;
 } RLinfo;
 
-std::unordered_map<string, RLinfo> agent_data;  //TODO: This should become a map ✅
+std::unordered_map<std::string, RLinfo> agent_data;  //TODO: This should become a map ✅
 
 double ALPHA, GAMMA;  // Learning rates. TODO: How to iterate over different learning rates?
 int TRIAL_EPISODES,   // TRIAL_EPISODES denotes how many times the RL agent should just learn and not select something due to policy

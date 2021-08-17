@@ -176,6 +176,21 @@ enum DLSPortfolio {
   mAF
 };
 
+const char* DLSPortfolioNames[] {
+  "STATIC",
+  "SS",
+  "TSS",
+  "GSS_LLVM",
+  "GSS",
+  "mFAC2",
+  "static_steal",
+  "AWFB",
+  "AWFC",
+  "AWFD",
+  "AWFE",
+  "mAF"
+};
+
 // ------------------------------------------ end Auto extension variables
 // --------------------
 
@@ -983,9 +998,9 @@ void autoFuzzySearch(int N, int P) {
  * Also implement Expected SARSA and Double-Q-Learning
  * */
 
-#define STATES 12 // autoDLSPortfolio.size() - 1      // TODO: Number of DLS techniques in LB4OMP portfolio
-#define ACTIONS 12 // autoDLSPortfolio.size() - 1     // TODO: Same, because we can switch to every DLS technique???
-#define TOTAL_CELLS 144 // STATES * ACTIONS    // Product of the two above?
+#define STATES 12 // autoDLSPortfolio.size() - 1      // ✅ TODO: Number of DLS techniques in LB4OMP portfolio
+#define ACTIONS 12 // autoDLSPortfolio.size() - 1     // ✅ TODO: Same, because we can switch to every DLS technique???
+#define TOTAL_CELLS 144 // STATES * ACTIONS           // Product of the two above?
 
 
 typedef struct {
@@ -996,50 +1011,54 @@ typedef struct {
   int timestep_counter;
 } RLinfo;
 
-std::unordered_map<std::string, RLinfo> agent_data;  //TODO: This should become a map ✅
+std::unordered_map<std::string, RLinfo> agent_data;  // ✅ TODO: This should become a map
 
 double ALPHA, GAMMA;  // Learning rates. TODO: How to iterate over different learning rates?
 int TRIAL_EPISODES,   // TRIAL_EPISODES denotes how many times the RL agent should just learn and not select something due to policy
-                      // TODO: We should use the trial counter on autoLoopData struct
+                      // TODO: We should use the trial counter on autoLoopData struct --> Is this even a thing?
     RLMETHOD;         // RLMETHOD denotes what learning strategy should be employed by the getMax_Q function:
                       // 0=Q-LEARN, 1=SARSA, more?? (Double-Q-Learn, Expected SARSA)
 
-
+/*
+ * Initializes the RLinfo struct for each loop
+ * */
 void startLearn() {
-  /* TODO: Initialize RLinfo struct for each loop. We can't do that with LB4OMP
-   since we are using a map to keep track of the loop and will call the startlearn_
-   method for every loop. */
-  agent_data[autoLoopName].lowTime = -99.00; // TODO: Why are the values initialized negative?
-  agent_data[autoLoopName].highTime = -999.00;
+  agent_data[autoLoopName].state = 0;
+  agent_data[autoLoopName].action = 0;
+  agent_data[autoLoopName].trialstate = 0;
+  agent_data[autoLoopName].lowTime = -99.00;    // TODO: Why are the values initialized negative?
+  agent_data[autoLoopName].highTime = -999.00;  // TODO: Why are the values initialized negative?
   agent_data[autoLoopName].timestep_counter = 0;
 
-  TRIAL_EPISODES = 2 * ACTIONS;
-  RLMETHOD = 0;
+  TRIAL_EPISODES = 144 //2 * ACTIONS; //for now use 10% of total timesteps?
+  RLMETHOD = 0;         // For now it is fixed to Q-Learning. We need to read this from the environment
 
   int s, a;
 
   for (s = 0; s < STATES; s++)
-    for (a = 0; a < ACTIONS; a++)
+    for (a = 0; a < ACTIONS; a++) {
+      agent_data[autoLoopName].count[a] = 0;
       agent_data[autoLoopName].qvalue[s][a] = -299.0; // Don't know about this one.
+    }
 
   return;
 }
 
 /*
-    Get the state (which method of scheduling for a specific loop.
+    Get the state (which method of scheduling) for a specific loop.
     Do special stuff when still in TRIAL phase (exploration?)
     try:int: timestep?
     choice:int: loop identifier? // We don't need this parameter here, because loop ID is "global"
 */
 int getState(int timestep) {
-  if (timestep < TRIAL_EPISODES) { // Have we finished exploring and are ready to
-                              // start exploiting?
+  if (timestep < TRIAL_EPISODES) { // Have we finished exploring and are ready to start exploiting?
+    // TODO: Insert more debugging to check modulo operation
     if ((timestep % ACTIONS) == 0) { // TODO: Have we tried all actions?
       if ((timestep % TOTAL_CELLS) == 0) // TODO: Don't know about this one!
         agent_data[autoLoopName].trialstate =
             0; // TODO: Choice is the loop index?!
       else
-        agent_data[autoLoopName].trialstate++;
+        agent_data[autoLoopName].trialstate++; // Guard this against parallel access, maybe do compare_and_swap
     }
     agent_data[autoLoopName].state = agent_data[autoLoopName].trialstate;
   }
@@ -1076,6 +1095,7 @@ int computeMethod(int timestep) {
   int method = 0, state = 0;
 
   state = getState(timestep);
+  printf("getState returned %d\n", state);
   method = selectAction(timestep, state);
   return method;
 }
@@ -1091,7 +1111,7 @@ double getMax_Q(int state) {
 
   /* Q Learning */
   /* Select best action based on qvalue of current state */
-  if (RLMETHOD == 0) { //TODO: Do not use constant for this comparison, use ENV VARIABLE
+  if (RLMETHOD == 0) {
     maxQ = agent_data[autoLoopName].qvalue[state][0];
     for (j = 1; j < ACTIONS; j++)
       if (agent_data[autoLoopName].qvalue[state][j] > maxQ) {
@@ -1101,7 +1121,7 @@ double getMax_Q(int state) {
     /* SARSA Learning */
     /* Select best overall action (disregarding current state) */
   } else {
-    maxQ = agent_data[autoLoopName].qvalue[0][0];  // TODO: Why is index here [0][0] and on the other one its [s][0]?
+    maxQ = agent_data[autoLoopName].qvalue[0][0];
     for (i = 1; i < STATES; i++)
       for (j = 0; j < ACTIONS; j++)
         if (agent_data[autoLoopName].qvalue[i][j] > maxQ) {
@@ -1123,11 +1143,13 @@ void getReward(double exectime, int action) {
   double qval, qbest;
   int reward, state;
 
-  if ((exectime) < agent_data[autoLoopName].lowTime) {  // Good case
+  // Good case
+  if ((exectime) < agent_data[autoLoopName].lowTime) {
     agent_data[autoLoopName].lowTime = exectime;
     reward = 2;
   }
-  if ((exectime > agent_data[autoLoopName].lowTime) && (exectime < agent_data[autoLoopName].highTime)) {  // Neutral case
+  // Neutral case
+  if ((exectime > agent_data[autoLoopName].lowTime) && (exectime < agent_data[autoLoopName].highTime)) {
     agent_data[autoLoopName].lowTime = exectime;
     reward = 0;
   }
@@ -1147,9 +1169,12 @@ void getReward(double exectime, int action) {
 void printQValues() {
   int s, a;
 
-  for (s = 0; s < STATES; s ++)
+  printf("QValue Table for loop: %s", autoLoopName);
+  for (s = 0; s < STATES; s ++) {
     for (a = 0; a < ACTIONS; a++)
-      printf("%f", agent_data[autoLoopName].qvalue[s][a]);
+      printf("%6.2lf ", agent_data[autoLoopName].qvalue[s][a]);
+  }
+  printf("\n");
 }
 
 void displayCount() {
@@ -1169,10 +1194,12 @@ void rlAgentSearch(int N, int P) {
   printf("-----\n");
   printf("Reinforcement Learning.\n");
 
-  printf("LoopName: %s, Timestep: %i, DLS: %d, time: %lf , LB: %lf, chunk: %d, ALPHA: %lf, GAMMA: %lf, RLMETHOD: %i, TRIAL_EPISODES: %i\n",
-         autoLoopName, agent_data[autoLoopName].timestep_counter, autoLoopData.at(autoLoopName).cDLS,
+  printf("LoopName: %s, Timestep: %i, DLS: %d;%s, time: %lf , LB: %lf, chunk: %d, ALPHA: %lf, GAMMA: %lf, RLMETHOD: %d, TRIAL_EPISODES: %d\n",
+         autoLoopName, agent_data[autoLoopName].timestep_counter, autoLoopData.at(autoLoopName).cDLS, DLSPortfolioNames[autoLoopData.at(autoLoopName).cDLS],
          autoLoopData.at(autoLoopName).cTime, autoLoopData.at(autoLoopName).cLB,
          autoLoopData.at(autoLoopName).cChunk, ALPHA, GAMMA, RLMETHOD, TRIAL_EPISODES);
+  printf("-----\n");
+  printQValues();
 
   if (agent_data.find(autoLoopName) == agent_data.end()) {
     startLearn();

@@ -1169,7 +1169,7 @@ void getReward(double exectime, int action) {
 void printQValues() {
   int s, a;
 
-  printf("QValue Table for loop: %s", autoLoopName);
+  printf("QValue Table for loop: %s\n", autoLoopName);
   for (s = 0; s < STATES; s ++) {
     for (a = 0; a < ACTIONS; a++)
       printf("%6.2lf ", agent_data[autoLoopName].qvalue[s][a]);

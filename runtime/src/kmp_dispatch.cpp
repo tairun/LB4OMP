@@ -1171,10 +1171,11 @@ void printQValues() {
 
   printf("QValue Table for loop: %s\n", autoLoopName);
   for (s = 0; s < STATES; s ++) {
-    for (a = 0; a < ACTIONS; a++)
+    for (a = 0; a < ACTIONS; a++) {
       printf("%6.2lf ", agent_data[autoLoopName].qvalue[s][a]);
+    }
+    printf("\n");
   }
-  printf("\n");
 }
 
 void displayCount() {

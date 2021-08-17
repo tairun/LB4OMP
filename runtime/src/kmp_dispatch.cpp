@@ -1030,8 +1030,8 @@ void startLearn() {
   agent_data[autoLoopName].highTime = -999.00;  // TODO: Why are the values initialized negative?
   agent_data[autoLoopName].timestep_counter = 0;
 
-  TRIAL_EPISODES = 144; //2 * ACTIONS; //for now use 10% of total timesteps?
-  RLMETHOD = 0;         // For now it is fixed to Q-Learning. We need to read this from the environment
+  // TRIAL_EPISODES = 144; //2 * ACTIONS; //for now use 10% of total timesteps?
+  // RLMETHOD = 0;         // For now it is fixed to Q-Learning. We need to read this from the environment
 
   int s, a;
 
@@ -1172,7 +1172,7 @@ void printQValues() {
   printf("QValue Table for loop: %s\n", autoLoopName);
   for (s = 0; s < STATES; s ++) {
     for (a = 0; a < ACTIONS; a++) {
-      printf("%6.2lf ", agent_data[autoLoopName].qvalue[s][a]);
+      printf("%6.2lf,", agent_data[autoLoopName].qvalue[s][a]);
     }
     printf("\n");
   }
@@ -1191,6 +1191,7 @@ void rlAgentSearch(int N, int P) {
   ALPHA = 0.15; // Learning Rate
   GAMMA = 0.90; // Discount Rate
   RLMETHOD = 0; // 0 = Q-LEARN, other = SARSA
+  TRIAL_EPISODES = 144;
 
   printf("-----\n");
   printf("Reinforcement Learning.\n");

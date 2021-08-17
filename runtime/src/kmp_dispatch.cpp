@@ -1030,7 +1030,7 @@ void startLearn() {
   agent_data[autoLoopName].highTime = -999.00;  // TODO: Why are the values initialized negative?
   agent_data[autoLoopName].timestep_counter = 0;
 
-  TRIAL_EPISODES = 144 //2 * ACTIONS; //for now use 10% of total timesteps?
+  TRIAL_EPISODES = 144; //2 * ACTIONS; //for now use 10% of total timesteps?
   RLMETHOD = 0;         // For now it is fixed to Q-Learning. We need to read this from the environment
 
   int s, a;

@@ -1053,11 +1053,12 @@ void startLearn() {
 int getState(int timestep) {
   if (timestep < TRIAL_EPISODES) { // Have we finished exploring and are ready to start exploiting?
     // TODO: Insert more debugging to check modulo operation
-    if ((timestep % ACTIONS) == 0) { // TODO: Have we tried all actions?
-      if ((timestep % TOTAL_CELLS) == 0) // TODO: Don't know about this one!
-        agent_data[autoLoopName].trialstate =
-            0; // TODO: Choice is the loop index?!
+    if ((timestep % ACTIONS) == 0) {
+      if ((timestep % TOTAL_CELLS) == 0)
+        printf("Reset trialstate!\n")
+        agent_data[autoLoopName].trialstate = 0;
       else
+      printf("Forcing new trialstate!\n")
         agent_data[autoLoopName].trialstate++; // Guard this against parallel access, maybe do compare_and_swap
     }
     agent_data[autoLoopName].state = agent_data[autoLoopName].trialstate;
@@ -1459,11 +1460,12 @@ void print_loop_timer(
   }
 
   // TODO: Print loop statistics
+  // Modified printout to be more easyliy parsable as csv
   // fileMutex.lock();
   ofs.open(fileData, std::ofstream::out | std::ofstream::app);
-  ofs << "LoopOccurrence: " << currentLoopMap.at(globalLoopline)
-      << " Location: " << globalLoopline << " #iterations " << globalNIterations
-      << " threadID: " << tid_for_timer << " threadTime: " << time_span.count()
+  ofs << "LoopOccurrence:" << currentLoopMap.at(globalLoopline)
+      << ",Location:" << globalLoopline << ",#iterations:" << globalNIterations
+      << ",threadID:" << tid_for_timer << ",threadTime: " << time_span.count()
       << std::endl;
 
   if (count == (nThreads - 1)) {
@@ -1471,16 +1473,16 @@ void print_loop_timer(
     timeEnd = mytime;
     loopEnter = 0; // end loop execution instance
 
-    ofs << "Location: " << globalLoopline << " #iterations "
-        << globalNIterations << " LoopTime: " << time_span.count()
-        << " Schedule: " << DLS[schedule] << " Chunk: " << global_chunk
+    ofs << "Location:" << globalLoopline << ",#iterations:"
+        << globalNIterations << ",LoopTime:" << time_span.count()
+        << ",Schedule:" << DLS[schedule] << ",Chunk: " << global_chunk
         << std::endl; // modified to print the current schedule and chunk size
 
     if (currentChunkIndex != -1 && chunkSizeInfo != NULL) {
       for (int i = 0; i < currentChunkIndex; i += 4) {
-        ofs << "chunkLocation: " << globalLoopline << " lower "
-            << chunkSizeInfo[i] << " upper " << chunkSizeInfo[i + 1]
-            << " chunksize " << chunkSizeInfo[i + 2] << " tid "
+        ofs << "chunkLocation:" << globalLoopline << ",lower,"
+            << chunkSizeInfo[i] << ",upper:" << chunkSizeInfo[i + 1]
+            << ",chunksize:" << chunkSizeInfo[i + 2] << ",tid:"
             << chunkSizeInfo[i + 3] << std::endl;
       }
 

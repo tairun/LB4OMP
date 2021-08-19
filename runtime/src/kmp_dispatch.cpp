@@ -1054,12 +1054,13 @@ int getState(int timestep) {
   if (timestep < TRIAL_EPISODES) { // Have we finished exploring and are ready to start exploiting?
     // TODO: Insert more debugging to check modulo operation
     if ((timestep % ACTIONS) == 0) {
-      if ((timestep % TOTAL_CELLS) == 0)
+      if ((timestep % TOTAL_CELLS) == 0) {
         printf("Reset trialstate!\n");
         agent_data[autoLoopName].trialstate = 0;
-      else
-      printf("Forcing new trialstate!\n");
-        agent_data[autoLoopName].trialstate++; // Guard this against parallel access, maybe do compare_and_swap
+      } else {
+        printf("Forcing new trialstate!\n");
+        agent_data[autoLoopName].trialstate++;
+      }
     }
     agent_data[autoLoopName].state = agent_data[autoLoopName].trialstate;
   }

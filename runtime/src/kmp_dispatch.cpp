@@ -1198,7 +1198,7 @@ void rlAgentSearch(int N, int P) {
   printf("-----\n");
   printf("Reinforcement Learning.\n");
 
-  printf("LoopName: %s, Timestep: %i, DLS: %d;%s, time: %lf , LB: %lf, chunk: %d, ALPHA: %lf, GAMMA: %lf, RLMETHOD: %d, TRIAL_EPISODES: %d\n",
+  printf("LoopName:%s,Timestep:%i,DLS:%d;%s,time:%lf,LB:%lf,chunk:%d,ALPHA:%lf,GAMMA:%lf,RLMETHOD:%d,TRIAL_EPISODES:%d\n",
          autoLoopName, agent_data[autoLoopName].timestep_counter, autoLoopData.at(autoLoopName).cDLS, DLSPortfolioNames[autoLoopData.at(autoLoopName).cDLS],
          autoLoopData.at(autoLoopName).cTime, autoLoopData.at(autoLoopName).cLB,
          autoLoopData.at(autoLoopName).cChunk, ALPHA, GAMMA, RLMETHOD, TRIAL_EPISODES);
@@ -3112,7 +3112,7 @@ void __kmp_dispatch_init_algorithm(ident_t *loc, int gtid,
       }
       std::fstream ofs;
       ofs.open(fileData, std::ofstream::out | std::ofstream::app);
-      ofs << "Location: " << loc->psource << " ";
+      ofs << "Location:" << loc->psource << ",";
       ofs.close();
     }
     // reset shared variables first time

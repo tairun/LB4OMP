@@ -1022,13 +1022,13 @@ int TRIAL_EPISODES,   // TRIAL_EPISODES denotes how many times the RL agent shou
 /*
  * Initializes the RLinfo struct for each loop
  * */
-void startLearn() {
-  agent_data[autoLoopName].state = 0;
-  agent_data[autoLoopName].action = 0;
-  agent_data[autoLoopName].trialstate = 0;
-  agent_data[autoLoopName].lowTime = -99.00;    // TODO: Why are the values initialized negative?
-  agent_data[autoLoopName].highTime = -999.00;  // TODO: Why are the values initialized negative?
-  agent_data[autoLoopName].timestep_counter = 0;
+void startLearn(std::string loop_id) {
+  agent_data[loop_id].state = 0;
+  agent_data[loop_id].action = 0;
+  agent_data[loop_id].trialstate = 0;
+  agent_data[loop_id].lowTime = -99.00;    // TODO: Why are the values initialized negative?
+  agent_data[loop_id].highTime = -999.00;  // TODO: Why are the values initialized negative?
+  agent_data[loop_id].timestep_counter = 0;
 
   // TRIAL_EPISODES = 144; //2 * ACTIONS; //for now use 10% of total timesteps?
   // RLMETHOD = 0;         // For now it is fixed to Q-Learning. We need to read this from the environment
@@ -1037,8 +1037,8 @@ void startLearn() {
 
   for (s = 0; s < STATES; s++)
     for (a = 0; a < ACTIONS; a++) {
-      agent_data[autoLoopName].count[a] = 0;
-      agent_data[autoLoopName].qvalue[s][a] = -299.0; // Don't know about this one.
+      agent_data[loop_id].count[a] = 0;
+      agent_data[loop_id].qvalue[s][a] = -299.0; // Don't know about this one.
     }
 
   return;
@@ -1050,21 +1050,21 @@ void startLearn() {
     try:int: timestep?
     choice:int: loop identifier? // We don't need this parameter here, because loop ID is "global"
 */
-int getState(int timestep) {
+int getState(int timestep, std::string loop_id) {
   if (timestep < TRIAL_EPISODES) { // Have we finished exploring and are ready to start exploiting?
     // TODO: Insert more debugging to check modulo operation
     if ((timestep % ACTIONS) == 0) {
       if ((timestep % TOTAL_CELLS) == 0) {
         printf("Reset trialstate!\n");
-        agent_data[autoLoopName].trialstate = 0;
+        agent_data[loop_id].trialstate = 0;
       } else {
         printf("Forcing new trialstate!\n");
-        agent_data[autoLoopName].trialstate++;
+        agent_data[loop_id].trialstate++;
       }
     }
-    agent_data[autoLoopName].state = agent_data[autoLoopName].trialstate;
+    agent_data[loop_id].state = agent_data[loop_id].trialstate;
   }
-  return agent_data[autoLoopName].state;
+  return agent_data[loop_id].state;
 }
 
 /*
@@ -1073,7 +1073,7 @@ int getState(int timestep) {
     s:int: current state
     choice:int: current loop id // We don't need this parameter here, because loop ID is "global"
 */
-int selectAction(int timestep, int state) {
+int selectAction(int timestep, int state, std::string loop_id) {
   int i, action, action_max;
 
   if (timestep < TRIAL_EPISODES) {
@@ -1081,24 +1081,24 @@ int selectAction(int timestep, int state) {
   } else {
     action_max = 0;
     for (i = 0; i < ACTIONS; i++)
-      if (agent_data[autoLoopName].qvalue[agent_data[autoLoopName].state][i] >
-          agent_data[autoLoopName].qvalue[agent_data[autoLoopName].state][action_max])
+      if (agent_data[loop_id].qvalue[state][i] >
+          agent_data[loop_id].qvalue[state][action_max])
         action_max = i;
     action = action_max;
   }
-  agent_data[autoLoopName].count[action] += 1;
+  agent_data[loop_id].count[action] += 1;
   return action;
 }
 
 /*
  * Gets the new DLS method via the selectAction function
  * */
-int computeMethod(int timestep) {
-  int method = 0, state = 0;
+int computeMethod(int timestep, std::string loop_id) {
+  int state = 0, method = 0;
 
-  state = getState(timestep);
-  printf("getState returned %d\n", state);
-  method = selectAction(timestep, state);
+  state = getState(timestep, loop_id);
+  printf("getState() returned %d\n", state);
+  method = selectAction(timestep, state, loop_id);
   return method;
 }
 
@@ -1107,28 +1107,28 @@ int computeMethod(int timestep) {
     block:int: current loop id
     s:int: current state
 */
-double getMax_Q(int state) {
+double getMax_Q(int state, std::string loop_id) {
   double maxQ;
   int i, j;
 
   /* Q Learning */
   /* Select best action based on qvalue of current state */
   if (RLMETHOD == 0) {
-    maxQ = agent_data[autoLoopName].qvalue[state][0];
+    maxQ = agent_data[loop_id].qvalue[state][0];
     for (j = 1; j < ACTIONS; j++)
-      if (agent_data[autoLoopName].qvalue[state][j] > maxQ) {
-        maxQ = agent_data[autoLoopName].qvalue[state][j];
-        agent_data[autoLoopName].state = j;
+      if (agent_data[loop_id].qvalue[state][j] > maxQ) {
+        maxQ = agent_data[loop_id].qvalue[state][j];
+        agent_data[loop_id].state = j;
       }
     /* SARSA Learning */
     /* Select best overall action (disregarding current state) */
   } else {
-    maxQ = agent_data[autoLoopName].qvalue[0][0];
+    maxQ = agent_data[loop_id].qvalue[0][0];
     for (i = 1; i < STATES; i++)
       for (j = 0; j < ACTIONS; j++)
-        if (agent_data[autoLoopName].qvalue[i][j] > maxQ) {
-          maxQ = agent_data[autoLoopName].qvalue[i][j];
-          agent_data[autoLoopName].state = j;
+        if (agent_data[loop_id].qvalue[i][j] > maxQ) {
+          maxQ = agent_data[loop_id].qvalue[i][j];
+          agent_data[loop_id].state = j;
         }
   }
   return maxQ;
@@ -1140,55 +1140,59 @@ double getMax_Q(int state) {
     *action:int: seleceted action in previous step
     *choice:int: current loop id
 */
-void getReward(double exectime, int action) {
+void getReward(double exectime, int action, std::string loop_id) {
 
   double qval, qbest;
   int reward, state;
+  printf("getReward(): Exectime is: %lf", exectime);
 
   // Good case
-  if ((exectime) < agent_data[autoLoopName].lowTime) {
-    agent_data[autoLoopName].lowTime = exectime;
+  if ((exectime) < agent_data[loop_id].lowTime) {
+    printf("getReward(): Good case");
+    agent_data[loop_id].lowTime = exectime;
     reward = 2;
   }
   // Neutral case
-  if ((exectime > agent_data[autoLoopName].lowTime) && (exectime < agent_data[autoLoopName].highTime)) {
-    agent_data[autoLoopName].lowTime = exectime;
+  if ((exectime > agent_data[loop_id].lowTime) && (exectime < agent_data[loop_id].highTime)) {
+    printf("getReward(): Neutral case");
+    agent_data[loop_id].lowTime = exectime;
     reward = 0;
   }
-  if (exectime > agent_data[autoLoopName].highTime) { // Bad case
-    agent_data[autoLoopName].highTime = exectime;
+  if (exectime > agent_data[loop_id].highTime) { // Bad case
+    printf("getReward(): Bad case");
+    agent_data[loop_id].highTime = exectime;
     reward = -2;
   }
 
-  state = agent_data[autoLoopName].state;
-  qval = agent_data[autoLoopName].qvalue[state][action];
-  qbest = getMax_Q(state);
-  agent_data[autoLoopName].qvalue[state][action] = qval + ALPHA * (reward + (GAMMA * qbest) - qval);  // Do the actual learning
+  state = agent_data[loop_id].state;
+  qval = agent_data[loop_id].qvalue[state][action];
+  qbest = getMax_Q(state, loop_id);
+  agent_data[loop_id].qvalue[state][action] = qval + ALPHA * (reward + (GAMMA * qbest) - qval);  // Do the actual learning
 
   return;
 }
 
-void printQValues() {
+void printQValues(std::string loop_id) {
   int s, a;
 
-  printf("QValue Table for loop: %s\n", autoLoopName);
+  printf("QValue Table for loop: %s\n", loop_id);
   for (s = 0; s < STATES; s ++) {
     for (a = 0; a < ACTIONS; a++) {
-      printf("%6.2lf,", agent_data[autoLoopName].qvalue[s][a]);
+      printf("%6.2lf,", agent_data[loop_id].qvalue[s][a]);
     }
     printf("\n");
   }
 }
 
-void displayCount() {
+void displayCount(std::string loop_id) {
   int aidx;
-  printf("\nLoop %s:", autoLoopName);
+  printf("\nLoop %s:", loop_id);
   for (aidx = 0; aidx < ACTIONS; aidx++)
-    printf(" %d", agent_data[autoLoopName].count[aidx]);
+    printf(" %d", agent_data[loop_id].count[aidx]);
   return;
 }
 
-
+/* -------------------------- Reinforcement Learning -------------------------*/
 void rlAgentSearch(int N, int P) {
   ALPHA = 0.15; // Learning Rate
   GAMMA = 0.90; // Discount Rate
@@ -1209,12 +1213,10 @@ void rlAgentSearch(int N, int P) {
     startLearn();
   }
 
-  int method = computeMethod(agent_data[autoLoopName].timestep_counter);
-  getReward(autoLoopData.at(autoLoopName).cTime, method);
+  int method = computeMethod(agent_data[autoLoopName].timestep_counter, autoLoopName);
+  getReward(autoLoopData.at(autoLoopName).cTime, method, autoLoopName);
 
-  printf("New DLS method (before clamp): %i\n", method);
-
-  // make sure that selected DLS is within limits
+  // make sure, that selected DLS is within limits
   int limit = autoDLSPortfolio.size() - 1;
   if (method > limit) {
     method = limit;
@@ -1222,7 +1224,7 @@ void rlAgentSearch(int N, int P) {
     method = 0;
   }
 
-  printf("New DLS method (after clamp): %i\n", method);
+  printf("New DLS method: %i\n", method);
 
   autoLoopData.at(autoLoopName).cDLS = method;
   agent_data[autoLoopName].timestep_counter += 1;

@@ -1217,7 +1217,7 @@ void rlAgentSearch(int N, int P) {
          autoLoopData.at(autoLoopName).cChunk, ALPHA, GAMMA, RLMETHOD, TRIAL_EPISODES);
   printf("-----\n");
 
-  if (agent_data.find(autoLoopName) == agent_data.end()) {
+  if (agent_data.count(autoLoopName) == 0) {
     printf("Initializing RLinfo struct for loop: %s\n", autoLoopName);
     startLearn(autoLoopName);
   }

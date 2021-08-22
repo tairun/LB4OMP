@@ -1207,10 +1207,10 @@ void rlAgentSearch(int N, int P) {
          autoLoopData.at(autoLoopName).cTime, autoLoopData.at(autoLoopName).cLB,
          autoLoopData.at(autoLoopName).cChunk, ALPHA, GAMMA, RLMETHOD, TRIAL_EPISODES);
   printf("-----\n");
-  printQValues();
+  printQValues(autoLoopName);
 
   if (agent_data.find(autoLoopName) == agent_data.end()) {
-    startLearn();
+    startLearn(autoLoopName);
   }
 
   int method = computeMethod(agent_data[autoLoopName].timestep_counter, autoLoopName);

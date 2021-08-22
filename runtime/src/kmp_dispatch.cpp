@@ -1144,22 +1144,22 @@ void getReward(double exectime, int action, std::string loop_id) {
 
   double qval, qbest;
   int reward, state;
-  printf("getReward(): Exectime is: %lf", exectime);
+  printf("getReward(): Exectime is: %lf\n", exectime);
 
   // Good case
   if ((exectime) < agent_data[loop_id].lowTime) {
-    printf("getReward(): Good case");
+    printf("getReward(): Good case\n");
     agent_data[loop_id].lowTime = exectime;
     reward = 2;
   }
   // Neutral case
   if ((exectime > agent_data[loop_id].lowTime) && (exectime < agent_data[loop_id].highTime)) {
-    printf("getReward(): Neutral case");
+    printf("getReward(): Neutral case\n");
     agent_data[loop_id].lowTime = exectime;
     reward = 0;
   }
   if (exectime > agent_data[loop_id].highTime) { // Bad case
-    printf("getReward(): Bad case");
+    printf("getReward(): Bad case\n");
     agent_data[loop_id].highTime = exectime;
     reward = -2;
   }

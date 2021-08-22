@@ -1026,9 +1026,10 @@ void startLearn(std::string loop_id) {
   agent_data[loop_id].state = 0;
   agent_data[loop_id].action = 0;
   agent_data[loop_id].trialstate = 0;
-  agent_data[loop_id].lowTime = -99.00;    // TODO: Why are the values initialized negative?
-  agent_data[loop_id].highTime = -999.00;  // TODO: Why are the values initialized negative?
+  agent_data[loop_id].lowTime = -99.0;    // TODO: Why are the values initialized negative?
+  agent_data[loop_id].highTime = -999.0;  // TODO: Why are the values initialized negative?
   agent_data[loop_id].timestep_counter = 0;
+  printf("Hightime: %lf\n", agent_data[loop_id].highTime);
 
   // TRIAL_EPISODES = 144; //2 * ACTIONS; //for now use 10% of total timesteps?
   // RLMETHOD = 0;         // For now it is fixed to Q-Learning. We need to read this from the environment
@@ -1176,7 +1177,7 @@ void getReward(double exectime, int action, std::string loop_id) {
 void printQValues(std::string loop_id) {
   int s, a;
 
-  printf("QValue Table for loop: %s\n", loop_id);
+  printf("<-start-qvalues->:%s\n", loop_id.c_str());
   for (s = 0; s < STATES; s ++) {
     for (a = 0; a < ACTIONS; a++) {
       printf("%6.2lf,", agent_data[loop_id].qvalue[s][a]);
@@ -1187,7 +1188,7 @@ void printQValues(std::string loop_id) {
 
 void displayCount(std::string loop_id) {
   int aidx;
-  printf("\nLoop %s:", loop_id);
+  printf("\nLoop %s:", loop_id.c_str());
   for (aidx = 0; aidx < ACTIONS; aidx++)
     printf(" %d", agent_data[loop_id].count[aidx]);
   return;
@@ -1200,7 +1201,7 @@ void rlAgentSearch(int N, int P) {
   RLMETHOD = 0; // 0 = Q-LEARN, other = SARSA
   TRIAL_EPISODES = 144;
 
-  printf("-----\n");
+  printf("<-start-rl-debug->\n");
   printf("Reinforcement Learning.\n");
 
   printf("LoopName:%s,Timestep:%i,DLS:%d;%s,time:%lf,LB:%lf,chunk:%d,ALPHA:%lf,GAMMA:%lf,RLMETHOD:%d,TRIAL_EPISODES:%d\n",
@@ -1210,11 +1211,17 @@ void rlAgentSearch(int N, int P) {
   printf("-----\n");
 
   if (agent_data.find(autoLoopName) == agent_data.end()) {
+    printf("Initializing RLinfo struct for loop: %s\n", autoLoopName.c_str);
     startLearn(autoLoopName);
   }
 
-  int method = computeMethod(agent_data[autoLoopName].timestep_counter, autoLoopName);
-  getReward(autoLoopData.at(autoLoopName).cTime, method, autoLoopName);
+  int method = 0;
+
+  if (agent_data[autoLoopName].timestep_counter != 0) {
+    method = computeMethod(agent_data[autoLoopName].timestep_counter, autoLoopName);
+    getReward(autoLoopData.at(autoLoopName).cTime, method, autoLoopName);
+  }
+
   printQValues(autoLoopName);
 
   // make sure, that selected DLS is within limits

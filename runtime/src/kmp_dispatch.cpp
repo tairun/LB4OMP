@@ -1024,13 +1024,13 @@ int TRIAL_EPISODES,   // TRIAL_EPISODES denotes how many times the RL agent shou
  * */
 void startLearn(char *loop_id) {
   agent_data.insert(std::make_pair(loop_id, RLinfo()));
-  agent_data[loop_id].state = 0;
-  agent_data[loop_id].action = 0;
-  agent_data[loop_id].trialstate = 0;
-  agent_data[loop_id].lowTime = -99.0;    // TODO: Why are the values initialized negative?
-  agent_data[loop_id].highTime = -999.0;  // TODO: Why are the values initialized negative?
-  agent_data[loop_id].timestep_counter = 0;
-  printf("Hightime: %lf\n", agent_data[loop_id].highTime);
+  agent_data.at(loop_id).state = 0;
+  agent_data.at(loop_id).action = 0;
+  agent_data.at(loop_id).trialstate = 0;
+  agent_data.at(loop_id).lowTime = -99.0;    // TODO: Why are the values initialized negative?
+  agent_data.at(loop_id).highTime = -999.0;  // TODO: Why are the values initialized negative?
+  agent_data.at(loop_id).timestep_counter = 0;
+  printf("Hightime: %lf\n", agent_data.at(loop_id).highTime);
 
   // TRIAL_EPISODES = 144; //2 * ACTIONS; //for now use 10% of total timesteps?
   // RLMETHOD = 0;         // For now it is fixed to Q-Learning. We need to read this from the environment
@@ -1206,7 +1206,7 @@ void rlAgentSearch(int N, int P) {
   printf("Reinforcement Learning.\n");
 
   printf("LoopName:%s,Timestep:%i,DLS:%d;%s,time:%lf,LB:%lf,chunk:%d,ALPHA:%lf,GAMMA:%lf,RLMETHOD:%d,TRIAL_EPISODES:%d\n",
-         autoLoopName, agent_data[autoLoopName].timestep_counter, autoLoopData.at(autoLoopName).cDLS, DLSPortfolioNames[autoLoopData.at(autoLoopName).cDLS],
+         autoLoopName, agent_data.at(autoLoopName).timestep_counter, autoLoopData.at(autoLoopName).cDLS, DLSPortfolioNames[autoLoopData.at(autoLoopName).cDLS],
          autoLoopData.at(autoLoopName).cTime, autoLoopData.at(autoLoopName).cLB,
          autoLoopData.at(autoLoopName).cChunk, ALPHA, GAMMA, RLMETHOD, TRIAL_EPISODES);
   printf("-----\n");

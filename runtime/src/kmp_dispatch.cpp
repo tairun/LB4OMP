@@ -1184,7 +1184,7 @@ void getReward(double exectime, int action, std::string loop_id) {
 void printQValues(std::string loop_id) {
   int s, a;
 
-  printf("<-start-qvalues->:%s\n", loop_id);
+  printf("<-start-qvalues->:%s\n", loop_id.c_str());
   for (s = 0; s < STATES; s ++) {
     for (a = 0; a < ACTIONS; a++) {
       printf("%6.2lf,", agent_data.at(loop_id).qvalue[s][a]);
@@ -1195,7 +1195,7 @@ void printQValues(std::string loop_id) {
 
 void displayCount(std::string loop_id) {
   int aidx;
-  printf("\nLoop %s:", loop_id);
+  printf("Loop %s\n:", loop_id.c_str());
   for (aidx = 0; aidx < ACTIONS; aidx++)
     printf(" %d", agent_data.at(loop_id).count[aidx]);
   return;
@@ -1209,18 +1209,17 @@ void rlAgentSearch(int N, int P) {
   TRIAL_EPISODES = 144;
 
   printf("<-start-rl-debug->\n");
-  printf("Reinforcement Learning.\n");
+
+  if (agent_data.count(autoLoopName) == 0) {
+    printf("Initializing RLinfo struct for loop: %s\n", autoLoopName);
+    startLearn(autoLoopName);
+  }
 
   printf("LoopName:%s,Timestep:%i,DLS:%d;%s,time:%lf,LB:%lf,chunk:%d,ALPHA:%lf,GAMMA:%lf,RLMETHOD:%d,TRIAL_EPISODES:%d\n",
          autoLoopName, agent_data.at(autoLoopName).timestep_counter, autoLoopData.at(autoLoopName).cDLS, DLSPortfolioNames[autoLoopData.at(autoLoopName).cDLS],
          autoLoopData.at(autoLoopName).cTime, autoLoopData.at(autoLoopName).cLB,
          autoLoopData.at(autoLoopName).cChunk, ALPHA, GAMMA, RLMETHOD, TRIAL_EPISODES);
   printf("-----\n");
-
-  if (agent_data.count(autoLoopName) == 0) {
-    printf("Initializing RLinfo struct for loop: %s\n", autoLoopName);
-    startLearn(autoLoopName);
-  }
 
   int method = 0;
 

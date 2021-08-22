@@ -1144,7 +1144,8 @@ void getReward(double exectime, int action, std::string loop_id) {
 
   double qval, qbest;
   int reward, state;
-  printf("getReward(): Exectime is: %lf\n", exectime);
+  printf("getReward(): Exectime is: %lf (LowTime: %lf, Hightime: %lf)\n",
+         exectime, agent_data[loop_id].lowTime, agent_data[loop_id].highTime);
 
   // Good case
   if ((exectime) < agent_data[loop_id].lowTime) {
@@ -1207,7 +1208,6 @@ void rlAgentSearch(int N, int P) {
          autoLoopData.at(autoLoopName).cTime, autoLoopData.at(autoLoopName).cLB,
          autoLoopData.at(autoLoopName).cChunk, ALPHA, GAMMA, RLMETHOD, TRIAL_EPISODES);
   printf("-----\n");
-  printQValues(autoLoopName);
 
   if (agent_data.find(autoLoopName) == agent_data.end()) {
     startLearn(autoLoopName);
@@ -1215,6 +1215,7 @@ void rlAgentSearch(int N, int P) {
 
   int method = computeMethod(agent_data[autoLoopName].timestep_counter, autoLoopName);
   getReward(autoLoopData.at(autoLoopName).cTime, method, autoLoopName);
+  printQValues(autoLoopName);
 
   // make sure, that selected DLS is within limits
   int limit = autoDLSPortfolio.size() - 1;

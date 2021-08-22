@@ -1052,7 +1052,7 @@ void startLearn(char *loop_id) {
     try:int: timestep?
     choice:int: loop identifier? // We don't need this parameter here, because loop ID is "global"
 */
-int getState(int timestep, std::string loop_id) {
+int getState(int timestep, char *loop_id) {
   if (timestep < TRIAL_EPISODES) { // Have we finished exploring and are ready to start exploiting?
     // TODO: Insert more debugging to check modulo operation
     if ((timestep % ACTIONS) == 0) {
@@ -1075,7 +1075,7 @@ int getState(int timestep, std::string loop_id) {
     s:int: current state
     choice:int: current loop id // We don't need this parameter here, because loop ID is "global"
 */
-int selectAction(int timestep, int state, std::string loop_id) {
+int selectAction(int timestep, int state, char *loop_id) {
   int i, action, action_max;
 
   if (timestep < TRIAL_EPISODES) {
@@ -1095,7 +1095,7 @@ int selectAction(int timestep, int state, std::string loop_id) {
 /*
  * Gets the new DLS method via the selectAction function
  * */
-int computeMethod(int timestep, std::string loop_id) {
+int computeMethod(int timestep, char *loop_id) {
   int state = 0, method = 0;
 
   state = getState(timestep, loop_id);
@@ -1109,7 +1109,7 @@ int computeMethod(int timestep, std::string loop_id) {
     block:int: current loop id
     s:int: current state
 */
-double getMax_Q(int state, std::string loop_id) {
+double getMax_Q(int state, char *loop_id) {
   double maxQ;
   int i, j;
 
@@ -1142,7 +1142,7 @@ double getMax_Q(int state, std::string loop_id) {
     *action:int: seleceted action in previous step
     *choice:int: current loop id
 */
-void getReward(double exectime, int action, std::string loop_id) {
+void getReward(double exectime, int action, char *loop_id) {
 
   double qval, qbest;
   int reward, state;
@@ -1175,10 +1175,10 @@ void getReward(double exectime, int action, std::string loop_id) {
   return;
 }
 
-void printQValues(std::string loop_id) {
+void printQValues(char *loop_id) {
   int s, a;
 
-  printf("<-start-qvalues->:%s\n", loop_id.c_str());
+  printf("<-start-qvalues->:%s\n", loop_id);
   for (s = 0; s < STATES; s ++) {
     for (a = 0; a < ACTIONS; a++) {
       printf("%6.2lf,", agent_data[loop_id].qvalue[s][a]);
@@ -1187,9 +1187,9 @@ void printQValues(std::string loop_id) {
   }
 }
 
-void displayCount(std::string loop_id) {
+void displayCount(char *loop_id) {
   int aidx;
-  printf("\nLoop %s:", loop_id.c_str());
+  printf("\nLoop %s:", loop_id);
   for (aidx = 0; aidx < ACTIONS; aidx++)
     printf(" %d", agent_data[loop_id].count[aidx]);
   return;

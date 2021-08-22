@@ -1003,15 +1003,15 @@ void autoFuzzySearch(int N, int P) {
 #define TOTAL_CELLS 144 // STATES * ACTIONS           // Product of the two above?
 
 
-typedef struct {
+struct RLinfo {
   int state, action, trialstate;
   double lowTime, highTime;
   int count[ACTIONS];
   double qvalue[STATES][ACTIONS];
   int timestep_counter;
-} RLinfo;
+};
 
-std::unordered_map<std::string, RLinfo> agent_data;  // ✅ TODO: This should become a map
+std::unordered_map<char *, RLinfo> agent_data;  // ✅ TODO: This should become a map
 
 double ALPHA, GAMMA;  // Learning rates. TODO: How to iterate over different learning rates?
 int TRIAL_EPISODES,   // TRIAL_EPISODES denotes how many times the RL agent should just learn and not select something due to policy
@@ -1022,7 +1022,8 @@ int TRIAL_EPISODES,   // TRIAL_EPISODES denotes how many times the RL agent shou
 /*
  * Initializes the RLinfo struct for each loop
  * */
-void startLearn(std::string loop_id) {
+void startLearn(char *loop_id) {
+  agent_data.insert(std::make_pair(loop_id, RLinfo()));
   agent_data[loop_id].state = 0;
   agent_data[loop_id].action = 0;
   agent_data[loop_id].trialstate = 0;

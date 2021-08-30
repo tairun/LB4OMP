@@ -1193,11 +1193,12 @@ void printQValues(std::string loop_id) {
   }
 }
 
-void displayCount(std::string loop_id) {
+void printDlsFreq(std::string loop_id) {
   int aidx;
-  printf("Loop %s\n:", loop_id.c_str());
+  printf("<-start-dls-freq->:%s\n", loop_id.c_str());
   for (aidx = 0; aidx < ACTIONS; aidx++)
-    printf(" %d", agent_data.at(loop_id).count[aidx]);
+    printf("%3.0d,", agent_data.at(loop_id).count[aidx]);
+  printf("\n");
   return;
 }
 
@@ -1229,6 +1230,7 @@ void rlAgentSearch(int N, int P) {
   }
 
   printQValues(autoLoopName);
+  printDlsFreq(autoLoopName);
 
   // make sure, that selected DLS is within limits
   int limit = autoDLSPortfolio.size() - 1;

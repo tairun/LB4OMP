@@ -99,6 +99,7 @@ std::chrono::high_resolution_clock::time_point timeEnd;
 // ---------------------------------------- Auto extension variables
 // --------------------
 
+#define RLDEBUG // Uncomment if DEBUG info on R-AGENT is needed
 volatile int AUTO_FLAG = 0;
 volatile double autoTimerInit;
 volatile double autoTimerEnd;
@@ -335,7 +336,7 @@ int goldenChunkSize(int N, int P, int AUTO_FLAG) {
   int chunkSize = 0;
 
   // default for auto to use goldenChunk unless user do not want to by
-  // explicitly export KMP_Golden_Chunksize
+  // explicitly export KMP_Golden_Chunksize=0
   golden = AUTO_FLAG;
   if (std::getenv("KMP_Golden_Chunksize") != NULL) {
     golden = atoi(std::getenv("KMP_Golden_Chunksize"));
@@ -999,14 +1000,17 @@ void autoFuzzySearch(int N, int P) {
  * */
 
 #define STATES 12 // autoDLSPortfolio.size() - 1      // ✅ TODO: Number of DLS techniques in LB4OMP portfolio
-#define ACTIONS 12 // autoDLSPortfolio.size() - 1     // ✅ TODO: Same, because we can switch to every DLS technique???
-#define TOTAL_CELLS 144 // STATES * ACTIONS           // Product of the two above?
-
+#define ACTIONS                                                                \
+  12 // autoDLSPortfolio.size() - 1     // ✅ TODO: Same, because we can switch
+     // to every DLS technique
+#define TOTAL_CELLS                                                            \
+  144 // STATES * ACTIONS           // Product of the two above
 
 struct RLinfo {
   int state, action, trialstate;
   double lowTime, highTime;
   int count[ACTIONS];
+  int bestqvalue;
   double qvalue[STATES][ACTIONS];
   int timestep_counter;
 };
@@ -1014,11 +1018,15 @@ struct RLinfo {
 std::unordered_map<std::string, RLinfo>
     agent_data; // ✅ TODO: This should become a map
 
-double ALPHA, GAMMA;  // Learning rates. TODO: How to iterate over different learning rates?
-int TRIAL_EPISODES,   // TRIAL_EPISODES denotes how many times the RL agent should just learn and not select something due to policy
-                      // TODO: We should use the trial counter on autoLoopData struct --> Is this even a thing?
-    RLMETHOD;         // RLMETHOD denotes what learning strategy should be employed by the getMax_Q function:
-                      // 0=Q-LEARN, 1=SARSA, more?? (Double-Q-Learn, Expected SARSA)
+double ALPHA = 0.50, // Learning rate
+    GAMMA = 0.15; // Discount factor
+int TRIAL_EPISODES, // TRIAL_EPISODES denotes how many times the RL agent should
+                    // just learn and not select something due to policy
+                    // TODO: We should use the trial counter on autoLoopData
+                    // struct --> Is this even a thing?
+    RLMETHOD = 0; // RLMETHOD denotes what learning strategy should be employed
+                  // by the getMax_Q function: 0=Q-LEARN, 1=SARSA, more??
+                  // (Double-Q-Learn, Expected SARSA)
 
 /*
  * Initializes the RLinfo struct for each loop
@@ -1030,11 +1038,8 @@ void startLearn(std::string loop_id) {
   agent_data.at(loop_id).trialstate = 0;
   agent_data.at(loop_id).lowTime = -99.0;    // TODO: Why are the values initialized negative?
   agent_data.at(loop_id).highTime = -999.0;  // TODO: Why are the values initialized negative?
+  agent_data.at(loop_id).bestqvalue = 0;
   agent_data.at(loop_id).timestep_counter = 0;
-  printf("Hightime: %lf\n", agent_data.at(loop_id).highTime);
-
-  // TRIAL_EPISODES = 144; //2 * ACTIONS; //for now use 10% of total timesteps?
-  // RLMETHOD = 0;         // For now it is fixed to Q-Learning. We need to read this from the environment
 
   int s, a;
 
@@ -1059,10 +1064,14 @@ int getState(int timestep, std::string loop_id) {
                                    // to start exploiting?
     if ((timestep % ACTIONS) == 0) {
       if ((timestep % TOTAL_CELLS) == 0) {
+#ifdef RLDEBUG
         printf("Reset trialstate!\n");
+#endif
         agent_data.at(loop_id).trialstate = 0;
       } else {
+#ifdef RLDEBUG
         printf("Forcing new trialstate!\n");
+#endif
         agent_data.at(loop_id).trialstate++;
       }
     }
@@ -1101,7 +1110,6 @@ int computeMethod(int timestep, std::string loop_id) {
   int state = 0, method = 0;
 
   state = getState(timestep, loop_id);
-  printf("getState() returned %d\n", state);
   method = selectAction(timestep, state, loop_id);
   return method;
 }
@@ -1148,25 +1156,33 @@ void getReward(double exectime, int action, std::string loop_id) {
 
   double qval, qbest;
   int reward, state;
+
+#ifdef RLDEBUG
   printf("getReward(): Exectime is: %lf (LowTime: %lf, Hightime: %lf)\n",
          exectime, agent_data.at(loop_id).lowTime,
          agent_data.at(loop_id).highTime);
-
+#endif
   // Good case
   if ((exectime) < agent_data.at(loop_id).lowTime) {
+#ifdef RLDEBUG
     printf("getReward(): Good case\n");
+#endif
     agent_data.at(loop_id).lowTime = exectime;
     reward = 2;
   }
   // Neutral case
   if ((exectime > agent_data.at(loop_id).lowTime) &&
       (exectime < agent_data.at(loop_id).highTime)) {
+#ifdef RLDEBUG
     printf("getReward(): Neutral case\n");
+#endif
     agent_data.at(loop_id).lowTime = exectime;
     reward = 0;
   }
   if (exectime > agent_data.at(loop_id).highTime) { // Bad case
+#ifdef RLDEBUG
     printf("getReward(): Bad case\n");
+#endif
     agent_data.at(loop_id).highTime = exectime;
     reward = -2;
   }
@@ -1204,33 +1220,53 @@ void printDlsFreq(std::string loop_id) {
 
 /* -------------------------- Reinforcement Learning -------------------------*/
 void rlAgentSearch(int N, int P) {
-  ALPHA = 0.15; // Learning Rate
-  GAMMA = 0.90; // Discount Rate
-  RLMETHOD = 0; // 0 = Q-LEARN, other = SARSA
+  if (std::getenv("RLAGENT_ALPHA") != NULL) {
+    ALPHA = std::stod(std::getenv("RLAGENT_ALPHA"));
+  }
+  if (std::getenv("RLAGENT_GAMMA") != NULL) {
+    GAMMA = std::stod(std::getenv("RLAGENT_GAMMA"));
+  }
+  if (std::getenv("RLAGENT_METHOD") != NULL) {
+    GAMMA = std::stod(std::getenv("RLAGENT_METHOD"));
+  }
+
   TRIAL_EPISODES = 144;
 
+#ifdef RLDEBUG
   printf("<-start-rl-debug->\n");
+#endif
 
   if (agent_data.count(autoLoopName) == 0) {
+#ifdef RLDEBUG
     printf("Initializing RLinfo struct for loop: %s\n", autoLoopName);
+#endif
     startLearn(autoLoopName);
   }
 
-  printf("LoopName:%s,Timestep:%i,DLS:%d;%s,time:%lf,LB:%lf,chunk:%d,ALPHA:%lf,GAMMA:%lf,RLMETHOD:%d,TRIAL_EPISODES:%d\n",
-         autoLoopName, agent_data.at(autoLoopName).timestep_counter, autoLoopData.at(autoLoopName).cDLS, DLSPortfolioNames[autoLoopData.at(autoLoopName).cDLS],
+#ifdef RLDEBUG
+  printf("LoopName:%s,Timestep:%d,DLS:%d;%s,time:%lf,LB:%lf,chunk:%d,ALPHA:%lf,"
+         "GAMMA:%lf,RLMETHOD:%d,TRIAL_EPISODES:%d\n",
+         autoLoopName, agent_data.at(autoLoopName).timestep_counter,
+         autoLoopData.at(autoLoopName).cDLS,
+         DLSPortfolioNames[autoLoopData.at(autoLoopName).cDLS],
          autoLoopData.at(autoLoopName).cTime, autoLoopData.at(autoLoopName).cLB,
-         autoLoopData.at(autoLoopName).cChunk, ALPHA, GAMMA, RLMETHOD, TRIAL_EPISODES);
+         autoLoopData.at(autoLoopName).cChunk, ALPHA, GAMMA, RLMETHOD,
+         TRIAL_EPISODES);
   printf("-----\n");
+#endif
 
   int method = 0;
 
-  if (agent_data[autoLoopName].timestep_counter != 0) {
-    method = computeMethod(agent_data[autoLoopName].timestep_counter, autoLoopName);
+  if (agent_data[autoLoopName].timestep_counter > 0) {
+    method = computeMethod(agent_data[autoLoopName].timestep_counter - 1,
+                           autoLoopName);
     getReward(autoLoopData.at(autoLoopName).cTime, method, autoLoopName);
   }
 
+#ifdef RLDEBUG
   printQValues(autoLoopName);
   printDlsFreq(autoLoopName);
+#endif
 
   // make sure, that selected DLS is within limits
   int limit = autoDLSPortfolio.size() - 1;
@@ -1240,7 +1276,9 @@ void rlAgentSearch(int N, int P) {
     method = 0;
   }
 
+#ifdef RLDEBUG
   printf("New DLS method: %i\n", method);
+#endif
 
   autoLoopData.at(autoLoopName).cDLS = method;
   agent_data[autoLoopName].timestep_counter += 1;
@@ -1306,6 +1344,7 @@ void auto_DLS_Search(int N, int P, int option) {
 /* -------------------------- Reinforcement Learning -------------------------*/
   } else if (option == 6) {
     rlAgentSearch(N, P); // set DLS
+    // set chunk size
     autoSetChunkSize(N, P); // set chunk size
   }
 /* -------------------------- Reinforcement Learning -------------------------*/

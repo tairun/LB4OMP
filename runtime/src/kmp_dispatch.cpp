@@ -1013,20 +1013,25 @@ struct RLinfo {
   int bestqvalue;
   double qvalue[STATES][ACTIONS];
   int timestep_counter;
+  double alpha;
+  double gammma;
+  int method;
 };
 
 std::unordered_map<std::string, RLinfo>
     agent_data; // ✅ TODO: This should become a map
 
-double ALPHA = 0.50; // Learning rate
-double GAMMA = 0.15; // Discount factor
-int TRIAL_EPISODES; // TRIAL_EPISODES denotes how many times the RL agent should
-                    // just learn and not select something due to policy
-                    // TODO: We should use the trial counter on autoLoopData
-                    // struct --> Is this even a thing?
-int RLMETHOD = 0; // RLMETHOD denotes what learning strategy should be employed
-                  // by the getMax_Q function: 0=Q-LEARN, 1=SARSA, more??
-                  // (Double-Q-Learn, Expected SARSA)
+// double ALPHA = 0.50; // Learning rate
+// double GAMMA = 0.15; // Discount factor
+// int TRIAL_EPISODES; // TRIAL_EPISODES denotes how many times the RL agent
+// should
+//                     // just learn and not select something due to policy
+//                     // TODO: We should use the trial counter on autoLoopData
+//                     // struct --> Is this even a thing?
+// int RLMETHOD = 0; // RLMETHOD denotes what learning strategy should be
+// employed
+//                   // by the getMax_Q function: 0=Q-LEARN, 1=SARSA, more??
+//                   // (Double-Q-Learn, Expected SARSA)
 
 /*
  * Initializes the RLinfo struct for each loop
@@ -1040,6 +1045,24 @@ void startLearn(std::string loop_id) {
   agent_data.at(loop_id).highTime = -999.0;  // TODO: Why are the values initialized negative?
   agent_data.at(loop_id).bestqvalue = 0;
   agent_data.at(loop_id).timestep_counter = 0;
+
+  if (std::getenv("KMP_RL_ALPHA") != NULL) {
+    agent_data.at(loop_id).alpha = std::stod(std::getenv("KMP_RL_ALPHA"));
+  } else {
+    agent_data.at(loop_id).alpha = 0.6
+  }
+
+  if (std::getenv("KMP_RL_ALPHA") != NULL) {
+    agent_data.at(loop_id).gamma = std::stod(std::getenv("KMP_RL_ALPHA"));
+  } else {
+    agent_data.at(loop_id).gamma = 0.6
+  }
+
+  if (std::getenv("KMP_RL_LMETHOD") != NULL) {
+    agent_data.at(loop_id).method = std::atoi(std::getenv("KMP_RL_LMETHOD"));
+  } else {
+    agent_data.at(loop_id).method = 1
+  }
 
   int s, a;
 
@@ -1125,7 +1148,7 @@ double getMax_Q(int state, std::string loop_id) {
 
   /* Q Learning */
   /* Select best action based on qvalue of current state */
-  if (RLMETHOD == 0) {
+  if (agent_data.at(autoLoopName).method == 0) {
     maxQ = agent_data.at(loop_id).qvalue[state][0];
     for (j = 1; j < ACTIONS; j++)
       if (agent_data.at(loop_id).qvalue[state][j] > maxQ) {
@@ -1191,8 +1214,9 @@ void getReward(double exectime, int action, std::string loop_id) {
   qval = agent_data.at(loop_id).qvalue[state][action];
   qbest = getMax_Q(state, loop_id);
   agent_data.at(loop_id).qvalue[state][action] =
-      qval +
-      ALPHA * (reward + (GAMMA * qbest) - qval); // Do the actual learning
+      qval + agent_data.at(loop_id).alpha *
+                 (reward + (agent_data.at(loop_id).gamma * qbest) -
+                  qval); // Do the actual learning
 
   return;
 }
@@ -1220,17 +1244,17 @@ void printDlsFreq(std::string loop_id) {
 
 /* -------------------------- Reinforcement Learning -------------------------*/
 void rlAgentSearch(int N, int P) {
-  if (std::getenv("KMP_RL_ALPHA") != NULL) {
-    ALPHA = std::stod(std::getenv("KMP_RL_ALPHA"));
-  }
+  // if (std::getenv("KMP_RL_ALPHA") != NULL) {
+  //   ALPHA = std::stod(std::getenv("KMP_RL_ALPHA"));
+  // }
 
-  if (std::getenv("KMP_RL_ALPHA") != NULL) {
-    GAMMA = std::stod(std::getenv("KMP_RL_ALPHA"));
-  }
+  // if (std::getenv("KMP_RL_ALPHA") != NULL) {
+  //   GAMMA = std::stod(std::getenv("KMP_RL_ALPHA"));
+  // }
 
-  if (std::getenv("KMP_RL_LMETHOD") != NULL) {
-    RLMETHOD = std::atoi(std::getenv("KMP_RL_LMETHOD"));
-  }
+  // if (std::getenv("KMP_RL_LMETHOD") != NULL) {
+  //   RLMETHOD = std::atoi(std::getenv("KMP_RL_LMETHOD"));
+  // }
 
   TRIAL_EPISODES = 144;
 
@@ -1252,8 +1276,9 @@ void rlAgentSearch(int N, int P) {
          autoLoopData.at(autoLoopName).cDLS,
          DLSPortfolioNames[autoLoopData.at(autoLoopName).cDLS],
          autoLoopData.at(autoLoopName).cTime, autoLoopData.at(autoLoopName).cLB,
-         autoLoopData.at(autoLoopName).cChunk, ALPHA, GAMMA, RLMETHOD,
-         TRIAL_EPISODES);
+         autoLoopData.at(autoLoopName).cChunk,
+         agent_data.at(autoLoopName).alpha, agent_data.at(autoLoopName).gamma,
+         agent_data.at(autoLoopName).method, TRIAL_EPISODES);
   printf("-----\n");
 #endif
 

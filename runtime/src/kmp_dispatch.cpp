@@ -1052,8 +1052,8 @@ void startLearn(std::string loop_id) {
     agent_data.at(loop_id).alpha = 0.6;
   }
 
-  if (std::getenv("KMP_RL_ALPHA") != NULL) {
-    agent_data.at(loop_id).gamma = std::stod(std::getenv("KMP_RL_ALPHA"));
+  if (std::getenv("KMP_RL_GAMMA") != NULL) {
+    agent_data.at(loop_id).gamma = std::stod(std::getenv("KMP_RL_GAMMA"));
   } else {
     agent_data.at(loop_id).gamma = 0.6;
   }

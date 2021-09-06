@@ -1018,13 +1018,13 @@ struct RLinfo {
 std::unordered_map<std::string, RLinfo>
     agent_data; // ✅ TODO: This should become a map
 
-double ALPHA = 0.50, // Learning rate
-    GAMMA = 0.15; // Discount factor
-int TRIAL_EPISODES, // TRIAL_EPISODES denotes how many times the RL agent should
+double ALPHA = 0.50; // Learning rate
+double GAMMA = 0.15; // Discount factor
+int TRIAL_EPISODES; // TRIAL_EPISODES denotes how many times the RL agent should
                     // just learn and not select something due to policy
                     // TODO: We should use the trial counter on autoLoopData
                     // struct --> Is this even a thing?
-    RLMETHOD = 0; // RLMETHOD denotes what learning strategy should be employed
+int RLMETHOD = 0; // RLMETHOD denotes what learning strategy should be employed
                   // by the getMax_Q function: 0=Q-LEARN, 1=SARSA, more??
                   // (Double-Q-Learn, Expected SARSA)
 
@@ -1220,14 +1220,16 @@ void printDlsFreq(std::string loop_id) {
 
 /* -------------------------- Reinforcement Learning -------------------------*/
 void rlAgentSearch(int N, int P) {
-  if (std::getenv("RLAGENT_ALPHA") != NULL) {
-    ALPHA = std::stod(std::getenv("RLAGENT_ALPHA"));
+  if (std::getenv("KMP_RL_ALPHA") != NULL) {
+    ALPHA = std::stod(std::getenv("KMP_RL_ALPHA"));
   }
-  if (std::getenv("RLAGENT_GAMMA") != NULL) {
-    GAMMA = std::stod(std::getenv("RLAGENT_GAMMA"));
+
+  if (std::getenv("KMP_RL_ALPHA") != NULL) {
+    GAMMA = std::stod(std::getenv("KMP_RL_ALPHA"));
   }
-  if (std::getenv("RLAGENT_METHOD") != NULL) {
-    GAMMA = std::stod(std::getenv("RLAGENT_METHOD"));
+
+  if (std::getenv("KMP_RL_LMETHOD") != NULL) {
+    RLMETHOD = std::atoi(std::getenv("KMP_RL_LMETHOD"));
   }
 
   TRIAL_EPISODES = 144;

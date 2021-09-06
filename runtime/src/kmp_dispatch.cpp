@@ -1023,7 +1023,7 @@ std::unordered_map<std::string, RLinfo>
 
 // double ALPHA = 0.50; // Learning rate
 // double GAMMA = 0.15; // Discount factor
-// int TRIAL_EPISODES; // TRIAL_EPISODES denotes how many times the RL agent
+int TRIAL_EPISODES; // TRIAL_EPISODES denotes how many times the RL agent
 // should
 //                     // just learn and not select something due to policy
 //                     // TODO: We should use the trial counter on autoLoopData

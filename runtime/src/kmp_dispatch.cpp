@@ -1014,7 +1014,7 @@ struct RLinfo {
   double qvalue[STATES][ACTIONS];
   int timestep_counter;
   double alpha;
-  double gammma;
+  double gamma;
   int method;
 };
 

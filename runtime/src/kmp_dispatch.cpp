@@ -1049,19 +1049,19 @@ void startLearn(std::string loop_id) {
   if (std::getenv("KMP_RL_ALPHA") != NULL) {
     agent_data.at(loop_id).alpha = std::stod(std::getenv("KMP_RL_ALPHA"));
   } else {
-    agent_data.at(loop_id).alpha = 0.6
+    agent_data.at(loop_id).alpha = 0.6;
   }
 
   if (std::getenv("KMP_RL_ALPHA") != NULL) {
     agent_data.at(loop_id).gamma = std::stod(std::getenv("KMP_RL_ALPHA"));
   } else {
-    agent_data.at(loop_id).gamma = 0.6
+    agent_data.at(loop_id).gamma = 0.6;
   }
 
   if (std::getenv("KMP_RL_LMETHOD") != NULL) {
     agent_data.at(loop_id).method = std::atoi(std::getenv("KMP_RL_LMETHOD"));
   } else {
-    agent_data.at(loop_id).method = 1
+    agent_data.at(loop_id).method = 1;
   }
 
   int s, a;

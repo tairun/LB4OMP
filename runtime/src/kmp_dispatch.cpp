@@ -99,7 +99,7 @@ std::chrono::high_resolution_clock::time_point timeEnd;
 // ---------------------------------------- Auto extension variables
 // --------------------
 
-#define RLDEBUG // Uncomment if DEBUG info on R-AGENT is needed
+//#define RLDEBUG // Uncomment if DEBUG info on R-AGENT is needed
 volatile int AUTO_FLAG = 0;
 volatile double autoTimerInit;
 volatile double autoTimerEnd;

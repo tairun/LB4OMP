@@ -1145,19 +1145,9 @@ int computeMethod(int timestep, std::string loop_id) {
 double getMax_Q(int state, std::string loop_id) {
   double maxQ;
   int i, j;
-
-  /* Q Learning */
-  /* Select best action based on qvalue of current state */
+  /* Q-Learning */
+  /* Select best overall action (disregarding current state) */
   if (agent_data.at(autoLoopName).method == 0) {
-    maxQ = agent_data.at(loop_id).qvalue[state][0];
-    for (j = 1; j < ACTIONS; j++)
-      if (agent_data.at(loop_id).qvalue[state][j] > maxQ) {
-        maxQ = agent_data.at(loop_id).qvalue[state][j];
-        agent_data.at(loop_id).state = j;
-      }
-    /* SARSA Learning */
-    /* Select best overall action (disregarding current state) */
-  } else {
     maxQ = agent_data.at(loop_id).qvalue[0][0];
     for (i = 1; i < STATES; i++)
       for (j = 0; j < ACTIONS; j++)
@@ -1165,6 +1155,15 @@ double getMax_Q(int state, std::string loop_id) {
           maxQ = agent_data.at(loop_id).qvalue[i][j];
           agent_data.at(loop_id).state = j;
         }
+    /* SARSA*/
+    /* Select best action based on qvalue of current state */
+  } else {
+    maxQ = agent_data.at(loop_id).qvalue[state][0];
+    for (j = 1; j < ACTIONS; j++)
+      if (agent_data.at(loop_id).qvalue[state][j] > maxQ) {
+        maxQ = agent_data.at(loop_id).qvalue[state][j];
+        agent_data.at(loop_id).state = j;
+      }
   }
   return maxQ;
 }

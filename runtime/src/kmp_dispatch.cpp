@@ -1137,11 +1137,6 @@ int computeMethod(int timestep, std::string loop_id) {
   return method;
 }
 
-/*
-    Actual RL algorithm implementation
-    block:int: current loop id
-    s:int: current state
-*/
 double getMax_Q(int state, std::string loop_id) {
   double maxQ;
   int i, j;

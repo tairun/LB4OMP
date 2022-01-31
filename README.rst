@@ -1,3 +1,5 @@
+> This repository is a fork of the original code at: https://github.com/unibas-dmi-hpc/LB4OMP. It extends the original work with a automatic method for scheduling algorithm selection based on reinforcement learning.
+
 ======
 LB4OMP
 ======

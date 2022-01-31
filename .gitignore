@@ -30,3 +30,16 @@
 *.exe
 *.out
 *.app
+.idea/.gitignore
+.idea/.name
+.idea/LB4OMP.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+
+# Custom
+cmake-build-debug/*
+cmake-build-release/*
+intel/*
+!intel/.gitkeep
+

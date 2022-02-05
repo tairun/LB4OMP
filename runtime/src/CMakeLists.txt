@@ -44,6 +44,10 @@ include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   ${LIBOMP_SRC_DIR}
   ${LIBOMP_SRC_DIR}/i18n
+  # START Reinforcement Learning Extensions
+  #${LIBOMP_SRC_DIR}/reinforcement-learning
+  #${LIBOMP_SRC_DIR}/reinforcement-learning/agents
+  # END Reinforcement Learning Extensions
   ${LIBOMP_INC_DIR}
   ${LIBOMP_SRC_DIR}/thirdparty/ittnotify
 )
@@ -83,6 +87,12 @@ else()
     kmp_dispatch.cpp
     kmp_lock.cpp
     kmp_sched.cpp
+    # START Reinforcement Learning Extensions
+    reinforcement-learning/kmp_rl_agent_factory.cpp
+    reinforcement-learning/agents/kmp_agent_options.cpp
+    reinforcement-learning/agents/kmp_q_learner_old.cpp
+    # reinforcement-learning/agents/kmp_sarsa_learner_old.cpp
+    # END Reinforcement Learning Extensions
   )
   if(WIN32)
     # Windows specific files

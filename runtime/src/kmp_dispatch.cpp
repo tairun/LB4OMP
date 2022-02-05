@@ -23,8 +23,8 @@
  */
 
 /* -------------------------- START Reinforcement Learning Extensions -------------------------*/
-#include "reinforcement-learning/rl_agent_factory.hpp"
-#include "reinforcement-learning/agents/agent_options.hpp"
+#include "reinforcement-learning/kmp_rl_agent_factory.h"
+#include "reinforcement-learning/agents/kmp_agent_options.h"
 /* -------------------------- END Reinforcement Learning Extensions ---------------------------*/
 #include "kmp.h"
 #include <iostream>
@@ -953,28 +953,20 @@ void autoFuzzySearch(int N, int P) {
 
 //set new DLS
     autoLoopData.at(autoLoopName).cDLS = selectedDLS;
-
 }
 
 /* -------------------------- START Reinforcement Learning Extensions -------------------------*/
-std::unordered_map<std::string, int> rl_timesteps;
-std::unordered_map<std::string, RLAgent*> agents;
+std::unordered_map<std::string, int> rl_timesteps; // We need to keep track of the elapsed timesteps. TODO: Is this already done?
+std::unordered_map<std::string, RLAgent*> agents; // Keep a reference to all the agents for every loop.
 
-void rlAgentSearch(int N, int P) {
+
+void rlAgentSearch(int gtid, int N, int P, int agent_type) {
+    // Make print statement here (with thread ID)
     if (!rl_timesteps.count(autoLoopName)) {
         rl_timesteps.insert(std::make_pair(autoLoopName, 0));
 
-        std::string config_path;
-
-        if (std::getenv("KMP_RL_CONFIGPATH") != NULL) {
-            config_path = std::string(std::getenv("KMP_RL_CONFIGPATH"));
-        }
-
-        nlohmann::json agent_config = AgentOptions::parse_options(config_path);
-
-        auto agent = rl_agent_factory::create_agent(&agent_config);
-        agent->startLearning(autoLoopName, &agent_config);
-
+        auto agent = rl_agent_factory::create_agent(agent_type);
+        agent->startLearning(autoLoopName);
         agents.insert(std::make_pair(autoLoopName, agent));
     } else {
         auto agent = agents.find(autoLoopName)->second;
@@ -999,10 +991,11 @@ void rlAgentSearch(int N, int P) {
 //
 //
 // Input
+// gtid: global thread id
 // N: number of loop iterations
 // P: number of threads
 // option: passed as a chunk size with auto ... option can select the auto search method
-void auto_DLS_Search(int N, int P, int option) {
+void auto_DLS_Search(int gtid, int N, int P, int option) {
     int currentPortfolioIndex = autoLoopData.at(autoLoopName).cDLS;
 #if KMP_DEBUG
     printf(" LoopName: %s, DLS: %d, time: %lf , LB: %lf, chunk: %d \n", autoLoopName, currentPortfolioIndex, autoLoopData.at(autoLoopName).cTime, autoLoopData.at(autoLoopName).cLB, autoLoopData.at(autoLoopName).cChunk);
@@ -1031,13 +1024,16 @@ void auto_DLS_Search(int N, int P, int option) {
         // set chunk size
         autoSetChunkSize(N, P);
     }
+
     /* -------------------------- START Reinforcement Learning Extensions -------------------------*/
     else if (option == 6) {
-        rlAgentSearch(N, P); // set DLS
-        // set chunk size
+        int new_method = RLAgentFactory::rlAgentSearch(autoLoopName, option, autoLoopData.at(autoLoopName).cTime, autoDLSPortfolio.size() - 1);
         autoSetChunkSize(N, P); // set chunk size
+        autoLoopData.at(autoLoopName).cDLS = new_method;
     }
+    /* Add more methods here */
     /* -------------------------- END Reinforcement Learning Extensions ---------------------------*/
+
     else // normal LLVM auto - it will not reach to this part if chunk is higher
         // than 4
     {
@@ -1536,7 +1532,7 @@ void __kmp_dispatch_init_algorithm(ident_t *loc, int gtid,
             if (autoLoopData.at(autoLoopName).autoSearch == 1) //if autoSearch == 1
             {
                 //printf("chunk size %d \n", chunk);
-                auto_DLS_Search(tc, nproc, chunk);
+                auto_DLS_Search(gtid, tc, nproc, chunk);
             }
 
             //printf("tc: %d, tid: %d, nproc: %d \n", tc, tid, nproc);

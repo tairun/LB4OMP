@@ -1,14 +1,14 @@
 #include <string>
 #include <unordered_map>
 
-#include "rl_agent.hpp"
-#include "sarsa_learner_old.hpp"
+#include "kmp_rl_agent.h"
+#include "kmp_sarsa_learner_old.h"
 
 #define STATES 12
 #define ACTIONS 12
 #define TOTAL_CELLS 144
 
-class SarsaLearnerOld : public rl_agent {
+class SarsaLearnerOld : public RLAgent {
 public:
     SarsaLearnerOld(const std::string &name, const std::string &type,
                   const std::string &id, const std::string &config);

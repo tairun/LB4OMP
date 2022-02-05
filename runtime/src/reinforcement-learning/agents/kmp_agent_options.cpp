@@ -1,6 +1,6 @@
 #include <string>
 
-#include "agent_options.hpp"
+#include "kmp_agent_options.h"
 #include "../thirdparty/json.hpp"
 
 int AgentOptions::parse_options(std::string config_path) {

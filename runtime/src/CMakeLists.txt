@@ -89,8 +89,7 @@ else()
     kmp_sched.cpp
     # START Reinforcement Learning Extensions
     reinforcement-learning/kmp_rl_agent_factory.cpp
-    reinforcement-learning/agents/kmp_agent_options.cpp
-    reinforcement-learning/agents/kmp_q_learner_old.cpp
+          reinforcement-learning/agents/kmp_q_learner_old.cpp
     # reinforcement-learning/agents/kmp_sarsa_learner_old.cpp
     # END Reinforcement Learning Extensions
   )

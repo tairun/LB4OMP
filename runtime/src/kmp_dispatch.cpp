@@ -24,7 +24,6 @@
 
 /* -------------------------- START Reinforcement Learning Extensions -------------------------*/
 #include "reinforcement-learning/kmp_rl_agent_factory.h"
-#include "reinforcement-learning/agents/kmp_agent_options.h"
 /* -------------------------- END Reinforcement Learning Extensions ---------------------------*/
 #include "kmp.h"
 #include <iostream>

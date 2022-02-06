@@ -964,7 +964,7 @@ void rlAgentSearch(int gtid, int N, int P, int agent_type) {
     if (!rl_timesteps.count(autoLoopName)) {
         rl_timesteps.insert(std::make_pair(autoLoopName, 0));
 
-        auto agent = rl_agent_factory::create_agent(agent_type);
+        auto agent = RLAgentFactory::create_agent(agent_type);
         agent->startLearning(autoLoopName);
         agents.insert(std::make_pair(autoLoopName, agent));
     } else {

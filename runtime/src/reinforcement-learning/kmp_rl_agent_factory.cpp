@@ -1,17 +1,16 @@
 #include <string>
 #include <iostream>
 
-#include "kmp_agent_type.h"
 #include "kmp_rl_agent_factory.h"
 #include "agents/kmp_q_learner_old.h"
-#include "agents/kmp_sarsa_learner_old.h"
+//#include "agents/kmp_sarsa_learner_old.h"
 
 int RLAgentFactory::rlAgentSearch(const std::string& loop_id, int agent_type, double reward_signal, int portfolio_size) {
     //TODO: Make print statement here (with thread ID)
     if (!rl_timesteps.count(loop_id)) {
         rl_timesteps.insert(std::make_pair(loop_id, 0));
 
-        auto agent = create_agent(loop_id, agent_type, portfolio_size, portfolio_size, 0);
+        auto agent = create_agent(loop_id, agent_type, portfolio_size, portfolio_size, 6);
         agents.insert(std::make_pair(loop_id, agent));
         return 0;
     } else {

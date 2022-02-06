@@ -1,3 +1,5 @@
+#pragma once
+
 /* Struct to manage data of the reinforcement learning agent */
 class RLInfo {
 public:

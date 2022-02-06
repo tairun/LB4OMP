@@ -954,26 +954,6 @@ void autoFuzzySearch(int N, int P) {
     autoLoopData.at(autoLoopName).cDLS = selectedDLS;
 }
 
-/* -------------------------- START Reinforcement Learning Extensions -------------------------*/
-std::unordered_map<std::string, int> rl_timesteps; // We need to keep track of the elapsed timesteps. TODO: Is this already done?
-std::unordered_map<std::string, RLAgent*> agents; // Keep a reference to all the agents for every loop.
-
-
-void rlAgentSearch(int gtid, int N, int P, int agent_type) {
-    // Make print statement here (with thread ID)
-    if (!rl_timesteps.count(autoLoopName)) {
-        rl_timesteps.insert(std::make_pair(autoLoopName, 0));
-
-        auto agent = RLAgentFactory::create_agent(agent_type);
-        agent->startLearning(autoLoopName);
-        agents.insert(std::make_pair(autoLoopName, agent));
-    } else {
-        auto agent = agents.find(autoLoopName)->second;
-        agent->doLearning(/*TODO: params*/);
-    }
-}
-/* -------------------------- END Reinforcement Learning Extensions ---------------------------*/
-
 /*---------------------------------------------- auto_DLS_Search ------------------------------------------*/
 // Search for the best DLS technique within portfolio for a specific loop
 // Sets the best identified DLS technique in autoLoopData[loopName].cDLS

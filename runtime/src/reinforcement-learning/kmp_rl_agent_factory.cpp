@@ -5,7 +5,6 @@
 #include "kmp_rl_agent_factory.h"
 #include "agents/kmp_q_learner_old.h"
 #include "agents/kmp_sarsa_learner_old.h"
-#include "agents/kmp_agent_options.h"
 
 int RLAgentFactory::rlAgentSearch(const std::string& loop_id, int agent_type, double reward_signal, int portfolio_size) {
     //TODO: Make print statement here (with thread ID)

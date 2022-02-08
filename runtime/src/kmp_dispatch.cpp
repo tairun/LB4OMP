@@ -1006,6 +1006,7 @@ void auto_DLS_Search(int gtid, int N, int P, int option) {
 
     /* -------------------------- START Reinforcement Learning Extensions -------------------------*/
     else if (option == 6) {
+        std::cout << "Will call setup method from factory next" << std::endl;
         int new_method = RLAgentFactory::rlAgentSearch(autoLoopName, option, autoLoopData.at(autoLoopName).cTime, autoDLSPortfolio.size() - 1);
         autoSetChunkSize(N, P); // set chunk size
         autoLoopData.at(autoLoopName).cDLS = new_method;

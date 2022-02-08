@@ -12,6 +12,7 @@ int RLAgentFactory::rlAgentSearch(const std::string& loop_id, int agent_type, do
 
         auto agent = create_agent(loop_id, agent_type, portfolio_size, portfolio_size, 6);
         RLAgentFactory::GetAgents().insert(std::make_pair(loop_id, agent));
+        std::cout << "Agent created" << std::endl;
         return 0;
     } else {
         auto agent = RLAgentFactory::GetAgents().find(loop_id)->second;

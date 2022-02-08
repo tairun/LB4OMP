@@ -7,21 +7,21 @@
 
 int RLAgentFactory::rlAgentSearch(const std::string& loop_id, int agent_type, double reward_signal, int portfolio_size) {
     //TODO: Make print statement here (with thread ID)
-    if (!rl_timesteps.count(loop_id)) {
-        rl_timesteps.insert(std::make_pair(loop_id, 0));
+    if (!RLAgentFactory::GetTimesteps().count(loop_id)) {
+        RLAgentFactory::GetTimesteps().insert(std::make_pair(loop_id, 0));
 
         auto agent = create_agent(loop_id, agent_type, portfolio_size, portfolio_size, 6);
-        agents.insert(std::make_pair(loop_id, agent));
+        RLAgentFactory::GetAgents().insert(std::make_pair(loop_id, agent));
         return 0;
     } else {
-        auto agent = agents.find(loop_id)->second;
-        int new_method = agent->doLearning(loop_id, rl_timesteps.at(loop_id), reward_signal);
+        auto agent = RLAgentFactory::GetAgents().find(loop_id)->second;
+        int new_method = agent->doLearning(loop_id, RLAgentFactory::GetTimesteps().at(loop_id), reward_signal);
         return new_method;
     }
 }
 
-RLAgent *RLAgentFactory::create_agent(const std::string& loop_id, int agent_type, int states, int actions, int offset = 0) {
-    RLAgent *agent;
+RLAgent* RLAgentFactory::create_agent(const std::string& loop_id, int agent_type, int states, int actions, int offset = 0) {
+    RLAgent *agent = nullptr;
 
     int new_type = agent_type - offset;
 
@@ -37,4 +37,14 @@ RLAgent *RLAgentFactory::create_agent(const std::string& loop_id, int agent_type
     }
 
     return agent;
+}
+
+std::unordered_map<std::string, int>& RLAgentFactory::GetTimesteps() {
+    static auto* timesteps = new std::unordered_map<std::string, int>();
+    return *timesteps;
+}
+
+std::unordered_map<std::string, RLAgent*>& RLAgentFactory::GetAgents() {
+    static auto* agents = new std::unordered_map<std::string, RLAgent*>();
+    return *agents;
 }

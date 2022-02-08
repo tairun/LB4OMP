@@ -5,13 +5,9 @@
 #include "kmp_rl_agent.h"
 #include "kmp_q_learner_old.h"
 
-#define STATES 12
-#define ACTIONS 12
-#define TRIAL_EPISODES 144
-
 // public
 QLearnerOld::QLearnerOld(const std::string& loop_id, int states, int actions) : RLAgent(states, actions) {
-    auto* data = new RLInfo(STATES, ACTIONS);
+    auto* data = new RLInfo(states, actions);
     agent_data.insert(std::make_pair(loop_id, data));
 }
 
@@ -24,9 +20,9 @@ int QLearnerOld::doLearning(std::string loop_id, int timestep, double reward_sig
 
 // private
 int QLearnerOld::getState(int timestep, const std::string& loop_id) {
-    if (timestep < TRIAL_EPISODES) {
-        if ((timestep % ACTIONS) == 0) {
-            if ((timestep % TRIAL_EPISODES) == 0) {
+    if (timestep < (states * actions)) {
+        if ((timestep % actions) == 0) {
+            if ((timestep % (states * actions)) == 0) {
                 agent_data.at(loop_id)->trialstate = 0;
             } else {
                 agent_data.at(loop_id)->trialstate++;
@@ -40,11 +36,11 @@ int QLearnerOld::getState(int timestep, const std::string& loop_id) {
 int QLearnerOld::selectAction(int timestep, int state, const std::string& loop_id) {
     int i, action, action_max;
 
-    if (timestep < TRIAL_EPISODES) {
-        action = timestep % ACTIONS;
+    if (timestep < (states * actions)) {
+        action = timestep % actions;
     } else {
         action_max = 0;
-        for (i = 0; i < ACTIONS; i++)
+        for (i = 0; i < actions; i++)
             if (agent_data.at(loop_id)->qvalue[state][i] >
                 agent_data.at(loop_id)->qvalue[state][action_max])
                 action_max = i;
@@ -68,8 +64,8 @@ double QLearnerOld::getMax_Q(int state, const std::string& loop_id) {
     /* Q-Learning */
     /* Select best overall action (disregarding current state) */
     maxQ = agent_data.at(loop_id)->qvalue[0][0];
-    for (i = 1; i < STATES; i++)
-        for (j = 0; j < ACTIONS; j++)
+    for (i = 1; i < states; i++)
+        for (j = 0; j < actions; j++)
             if (agent_data.at(loop_id)->qvalue[i][j] > maxQ) {
                 maxQ = agent_data.at(loop_id)->qvalue[i][j];
                 agent_data.at(loop_id)->state = j;

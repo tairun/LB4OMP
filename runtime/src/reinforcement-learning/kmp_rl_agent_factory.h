@@ -15,11 +15,13 @@ public:
 
     /* Creates and return a pointer to a learning agent with the specified type
      * and options. */
-    static RLAgent *create_agent(const std::string &loop_id, int type, int states, int actions, int offset);
+    static RLAgent* create_agent(const std::string &loop_id, int type, int states, int actions, int offset);
 
 private:
-    static std::unordered_map<std::string, int> rl_timesteps; // We need to keep track of the elapsed timesteps. TODO: Is this already done?
-    static std::unordered_map<std::string, RLAgent *> agents; // Keep a reference to all the agents for every loop.
+    //static std::unordered_map<std::string, int> timesteps; // We need to keep track of the elapsed timesteps. TODO: Is this already done?
+    static std::unordered_map<std::string, int>& GetTimesteps();
+    //static std::unordered_map<std::string, RLAgent *> agents; // Keep a reference to all the agents for every loop.
+    static std::unordered_map<std::string, RLAgent*>& GetAgents();
 
     /* Disallow creating an instance of this object */
     RLAgentFactory() = default;

@@ -23,7 +23,7 @@ public:
                                       alpha(0.0),
                                       gamma(0.0)
     {
-        std::cout << "We got here again 5" << std::endl;
+        std::cout << "We got here again 4" << std::endl;
         count = new int[states];
         qvalue = new double *[states];
 
@@ -37,8 +37,10 @@ public:
                 qvalue[s][a] = -299.0;
             }
 
+        std::cout << "We got here again 4.5" << std::endl;
         alpha = std::stod(std::getenv("KMP_RL_ALPHA"));
         gamma = std::stod(std::getenv("KMP_RL_GAMMA"));
+        std::cout << "We got here again 5" << std::endl;
     }
 
 private:

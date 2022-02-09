@@ -10,7 +10,7 @@
 QLearnerOld::QLearnerOld(const std::string& loop_id, int states, int actions) : RLAgent(states, actions) {
     std::cout << "We got here again 3" << std::endl;
     auto* data = new RLInfo(states, actions);
-    std::cout << "We got here again 4" << std::endl;
+    std::cout << "We got here again 6" << std::endl;
     agent_data.insert(std::make_pair(loop_id, data));
 }
 

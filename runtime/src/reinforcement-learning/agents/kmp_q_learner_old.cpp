@@ -1,5 +1,6 @@
 #include <string>
 #include <unordered_map>
+#include <iostream>
 
 #include "kmp_rl_info.h"
 #include "kmp_rl_agent.h"
@@ -7,7 +8,9 @@
 
 // public
 QLearnerOld::QLearnerOld(const std::string& loop_id, int states, int actions) : RLAgent(states, actions) {
+    std::cout << "We got here again 3" << std::endl;
     auto* data = new RLInfo(states, actions);
+    std::cout << "We got here again 4" << std::endl;
     agent_data.insert(std::make_pair(loop_id, data));
 }
 

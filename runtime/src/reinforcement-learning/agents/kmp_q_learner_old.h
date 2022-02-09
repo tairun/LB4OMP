@@ -1,15 +1,15 @@
 #include <string>
 
-#include "kmp_rl_agent.h"
+#include "kmp_rl_agent_old.h"
 #include "kmp_rl_info.h"
 
-class QLearnerOld : public RLAgent {
+class QLearnerOld : public RLAgentOld {
 public:
     explicit QLearnerOld(const std::string& loop_id, int states, int actions);
 
     ~QLearnerOld() = default;
 
-    int doLearning(std::string loop_id, int timestep, double reward_signal) override;
+    int doLearning(const std::string& loop_id, int timestep, double reward_signal) override;
 
 private:
     /*

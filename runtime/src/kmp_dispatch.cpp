@@ -1004,7 +1004,7 @@ void auto_DLS_Search(int gtid, int N, int P, int option) {
     }
 
     /* -------------------------- START Reinforcement Learning Extensions -------------------------*/
-    else if (option == 6)
+    else if (option == 6 || option == 7)
     {
         std::cout << "Will call setup method from factory next" << std::endl;
         std::string loop_id = autoLoopName;
@@ -1379,7 +1379,7 @@ void __kmp_dispatch_init_algorithm(ident_t *loc, int gtid,
 
             if ((chunk >= 2) &&
                 (chunk <=
-                 6)) // AUTO by Ali, Reinforcement Learning by Luc (need <= 6)
+                 7)) // AUTO by Ali, Reinforcement Learning by Luc (need <= 7)
             {
                 AUTO_FLAG = 1; // Set auto flag
             } else {

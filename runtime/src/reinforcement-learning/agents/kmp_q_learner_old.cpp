@@ -7,14 +7,14 @@
 #include "kmp_q_learner_old.h"
 
 // public
-QLearnerOld::QLearnerOld(const std::string& loop_id, int states, int actions) : RLAgent(states, actions) {
-    std::cout << "We got here again 3" << std::endl;
+QLearnerOld::QLearnerOld(const std::string& loop_id, int states, int actions) : RLAgent(states, actions)
+{
     auto* data = new RLInfo(states, actions);
-    std::cout << "We got here again 6" << std::endl;
     agent_data.insert(std::make_pair(loop_id, data));
 }
 
-int QLearnerOld::doLearning(std::string loop_id, int timestep, double reward_signal) {
+int QLearnerOld::doLearning(std::string loop_id, int timestep, double reward_signal)
+{
     int method = computeMethod(timestep, loop_id);
     getReward(reward_signal, method, loop_id);
 
@@ -22,7 +22,8 @@ int QLearnerOld::doLearning(std::string loop_id, int timestep, double reward_sig
 }
 
 // private
-int QLearnerOld::getState(int timestep, const std::string& loop_id) {
+int QLearnerOld::getState(int timestep, const std::string& loop_id)
+{
     if (timestep < (states * actions)) {
         if ((timestep % actions) == 0) {
             if ((timestep % (states * actions)) == 0) {
@@ -36,7 +37,8 @@ int QLearnerOld::getState(int timestep, const std::string& loop_id) {
     return agent_data.at(loop_id)->state;
 }
 
-int QLearnerOld::selectAction(int timestep, int state, const std::string& loop_id) {
+int QLearnerOld::selectAction(int timestep, int state, const std::string& loop_id)
+{
     int i, action, action_max;
 
     if (timestep < (states * actions)) {
@@ -53,7 +55,8 @@ int QLearnerOld::selectAction(int timestep, int state, const std::string& loop_i
     return action;
 }
 
-int QLearnerOld::computeMethod(int timestep, const std::string& loop_id) {
+int QLearnerOld::computeMethod(int timestep, const std::string& loop_id)
+{
     int state = 0, method = 0;
 
     state = getState(timestep, loop_id);
@@ -61,7 +64,8 @@ int QLearnerOld::computeMethod(int timestep, const std::string& loop_id) {
     return method;
 }
 
-double QLearnerOld::getMax_Q(int state, const std::string& loop_id) {
+double QLearnerOld::getMax_Q(int state, const std::string& loop_id)
+{
     double maxQ;
     int i, j;
     /* Q-Learning */
@@ -87,7 +91,8 @@ double QLearnerOld::getMax_Q(int state, const std::string& loop_id) {
     return maxQ;
 }
 
-void QLearnerOld::getReward(double exectime, int action, const std::string& loop_id) {
+void QLearnerOld::getReward(double exectime, int action, const std::string& loop_id)
+{
 
     double qval, qbest;
     int reward, state;
@@ -121,7 +126,8 @@ void QLearnerOld::getReward(double exectime, int action, const std::string& loop
 }
 
 /*
-void QLearnerOld::printQValues(std::string loop_id) {
+void QLearnerOld::printQValues(std::string loop_id)
+{
     int s, a;
 
     printf("<-start-qvalues->:%s\n", loop_id.c_str());
@@ -133,7 +139,8 @@ void QLearnerOld::printQValues(std::string loop_id) {
     }
 }
 
-void QLearnerOld::printDlsFreq(std::string loop_id) {
+void QLearnerOld::printDlsFreq(std::string loop_id)
+{
     int aidx;
     printf("<-start-dls-freq->:%s\n", loop_id.c_str());
     for (aidx = 0; aidx < ACTIONS; aidx++)

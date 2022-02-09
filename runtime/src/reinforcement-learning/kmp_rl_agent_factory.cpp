@@ -7,6 +7,7 @@
 
 int RLAgentFactory::rlAgentSearch(const std::string& loop_id, int agent_type, double reward_signal, int portfolio_size) {
     //TODO: Make print statement here (with thread ID)
+    std::cout << "We got here with " << loop_id << std::endl;
     if (!RLAgentFactory::GetTimesteps().count(loop_id)) {
         RLAgentFactory::GetTimesteps().insert(std::make_pair(loop_id, 0));
 

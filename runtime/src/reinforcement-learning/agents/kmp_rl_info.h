@@ -20,7 +20,7 @@ public:
                                       lowTime(-99.0),
                                       highTime(-999.0),
                                       bestqvalue(0.0),
-                                      alpha(0.0),
+                                      alpha(0.6),
                                       gamma(0.0)
     {
         std::cout << "We got here again 4" << std::endl;
@@ -38,8 +38,19 @@ public:
             }
 
         std::cout << "We got here again 4.5" << std::endl;
-        alpha = std::stod(std::getenv("KMP_RL_ALPHA"));
-        gamma = std::stod(std::getenv("KMP_RL_GAMMA"));
+
+        if (std::getenv("KMP_RL_ALPHA") != NULL) {
+           alpha = std::stod(std::getenv("KMP_RL_ALPHA"));
+        } else {
+            std::cout << "Couldn't read ALPHA from env." << std::endl;
+        }
+
+        if (std::getenv("KMP_RL_GAMMA") != NULL) {
+            gamma = std::stod(std::getenv("KMP_RL_GAMMA"));
+        } else {
+            std::cout << "Couldn't read GAMMA from env." << std::endl;
+        }
+
         std::cout << "We got here again 5" << std::endl;
     }
 

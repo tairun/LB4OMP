@@ -9,6 +9,7 @@ int RLAgentFactory::rlAgentSearch(const std::string& loop_id, int agent_type, do
     //TODO: Make print statement here (with thread ID)
     std::cout << "We got here with " << loop_id << std::endl;
     if (!RLAgentFactory::GetTimesteps().count(loop_id)) {
+        std::cout << "We got here again" << std::endl;
         RLAgentFactory::GetTimesteps().insert(std::make_pair(loop_id, 0));
 
         auto agent = create_agent(loop_id, agent_type, portfolio_size, portfolio_size, 6);

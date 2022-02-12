@@ -7,21 +7,21 @@
 #include "kmp_sarsa_learner_old.h"
 
 // public
-SARSALearnerOld::SARSALearnerOld(const std::string& loop_id, int states, int actions) : RLAgentOld(states, actions)
+SARSALearnerOld::SARSALearnerOld(int states, int actions) : RLAgentOld(states, actions)
 {
     agent_data = new RLInfo(states, actions);
 }
 
-int SARSALearnerOld::doLearning(const std::string& loop_id, int timestep, double reward_signal)
+int SARSALearnerOld::doLearning(int timestep, double reward_signal)
 {
-    int method = computeMethod(timestep, loop_id);
-    getReward(reward_signal, method, loop_id);
+    int method = computeMethod(timestep);
+    getReward(reward_signal, method);
 
     return method;
 }
 
 // private
-int SARSALearnerOld::getState(int timestep, const std::string& loop_id)
+int SARSALearnerOld::getState(int timestep)
 {
     if (timestep < (states * actions)) {
         if ((timestep % actions) == 0) {
@@ -36,7 +36,7 @@ int SARSALearnerOld::getState(int timestep, const std::string& loop_id)
     return agent_data->state;
 }
 
-int SARSALearnerOld::selectAction(int timestep, int state, const std::string& loop_id)
+int SARSALearnerOld::selectAction(int timestep, int state)
 {
     int i, action, action_max;
 
@@ -54,16 +54,16 @@ int SARSALearnerOld::selectAction(int timestep, int state, const std::string& lo
     return action;
 }
 
-int SARSALearnerOld::computeMethod(int timestep, const std::string& loop_id)
+int SARSALearnerOld::computeMethod(int timestep)
 {
     int state = 0, method = 0;
 
-    state = getState(timestep, loop_id);
-    method = selectAction(timestep, state, loop_id);
+    state = getState(timestep);
+    method = selectAction(timestep, state);
     return method;
 }
 
-double SARSALearnerOld::getMax_Q(int state, const std::string& loop_id)
+double SARSALearnerOld::getMax_Q(int state)
 {
     double maxQ;
     int i, j;
@@ -76,10 +76,10 @@ double SARSALearnerOld::getMax_Q(int state, const std::string& loop_id)
         agent_data->state = j;
     }
 
-    return maxQ;
+return maxQ;
 }
 
-void SARSALearnerOld::getReward(double exectime, int action, const std::string& loop_id)
+void SARSALearnerOld::getReward(double exectime, int action)
 {
 
     double qval, qbest;
@@ -104,13 +104,13 @@ void SARSALearnerOld::getReward(double exectime, int action, const std::string& 
 
     state = agent_data->state;
     qval = agent_data->qvalue[state][action];
-    qbest = getMax_Q(state, loop_id);
+    qbest = getMax_Q(state);
     agent_data->qvalue[state][action] =
             qval + agent_data->alpha *
                    (reward + (agent_data->gamma * qbest) -
                     qval); // Do the actual learning
 
-    return;
+return;
 }
 
 /*

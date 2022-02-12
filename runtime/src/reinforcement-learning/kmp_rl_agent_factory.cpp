@@ -3,7 +3,8 @@
 
 #include "kmp_rl_agent_factory.h"
 #include "agents/kmp_q_learner_old.h"
-//#include "agents/kmp_sarsa_learner_old.h"
+#include "agents/kmp_sarsa_learner_old.h"
+#include "agents/kmp_r_learner.h"
 
 int RLAgentFactory::rlAgentSearch(const std::string& loop_id, int agent_type, double reward_signal, int portfolio_size)
 {
@@ -15,7 +16,7 @@ int RLAgentFactory::rlAgentSearch(const std::string& loop_id, int agent_type, do
         return 0;
     } else {
         auto* agent = RLAgentFactory::GetAgents().find(loop_id)->second;
-        int new_method = agent->doLearning(loop_id, RLAgentFactory::GetTimesteps().at(loop_id), reward_signal);
+        int new_method = agent->doLearning(RLAgentFactory::GetTimesteps().at(loop_id), reward_signal);
         RLAgentFactory::GetTimesteps().at(loop_id)++;
         return new_method;
     }
@@ -23,16 +24,19 @@ int RLAgentFactory::rlAgentSearch(const std::string& loop_id, int agent_type, do
 
 RLAgent* RLAgentFactory::create_agent(const std::string& loop_id, int agent_type, int states, int actions, int offset = 0)
 {
-    RLAgent *agent = nullptr;
+    RLAgent* agent = nullptr;
     int new_type = agent_type - offset;
 
     switch (new_type) {
         case (0): // Q-Learner Old
-            agent = new QLearnerOld(loop_id, states, actions);
+            agent = new QLearnerOld(states, actions);
             break;
-        //case (1): // SARSA-Learner Old
-        //    agent = new SarsaLearnerOld();
-        //    break;
+        case (1): // SARSA-Learner Old
+            agent = new SARSALearnerOld(states, actions);
+            break;
+        case (2): // R-Learner (New)
+            agent = new RLearner(states, actions);
+            break;
         default:
             std::cout << "Reinforcement Learning: Unknown agent type specified in options json: " << agent_type << std::endl;
     }

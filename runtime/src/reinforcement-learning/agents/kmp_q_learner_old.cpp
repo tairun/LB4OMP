@@ -1,5 +1,4 @@
 #include <string>
-#include <unordered_map>
 #include <iostream>
 
 #include "kmp_rl_info.h"
@@ -7,21 +6,21 @@
 #include "kmp_q_learner_old.h"
 
 // public
-QLearnerOld::QLearnerOld(const std::string& loop_id, int states, int actions) : RLAgentOld(states, actions)
+QLearnerOld::QLearnerOld(int states, int actions) : RLAgentOld(states, actions)
 {
     agent_data = new RLInfo(states, actions);
 }
 
-int QLearnerOld::doLearning(const std::string& loop_id, int timestep, double reward_signal)
+int QLearnerOld::doLearning(int timestep, double reward_signal)
 {
-    int method = computeMethod(timestep, loop_id);
-    getReward(reward_signal, method, loop_id);
+    int method = computeMethod(timestep);
+    getReward(reward_signal, method);
 
     return method;
 }
 
 // private
-int QLearnerOld::getState(int timestep, const std::string& loop_id)
+int QLearnerOld::getState(int timestep)
 {
     if (timestep < (states * actions)) {
         if ((timestep % actions) == 0) {
@@ -36,7 +35,7 @@ int QLearnerOld::getState(int timestep, const std::string& loop_id)
     return agent_data->state;
 }
 
-int QLearnerOld::selectAction(int timestep, int state, const std::string& loop_id)
+int QLearnerOld::selectAction(int timestep, int state)
 {
     int i, action, action_max;
 
@@ -54,16 +53,16 @@ int QLearnerOld::selectAction(int timestep, int state, const std::string& loop_i
     return action;
 }
 
-int QLearnerOld::computeMethod(int timestep, const std::string& loop_id)
+int QLearnerOld::computeMethod(int timestep)
 {
     int state = 0, method = 0;
 
-    state = getState(timestep, loop_id);
-    method = selectAction(timestep, state, loop_id);
+    state = getState(timestep);
+    method = selectAction(timestep, state);
     return method;
 }
 
-double QLearnerOld::getMax_Q(int state, const std::string& loop_id)
+double QLearnerOld::getMax_Q(int state)
 {
     double maxQ;
     int i, j;
@@ -90,7 +89,7 @@ double QLearnerOld::getMax_Q(int state, const std::string& loop_id)
     return maxQ;
 }
 
-void QLearnerOld::getReward(double exectime, int action, const std::string& loop_id)
+void QLearnerOld::getReward(double exectime, int action)
 {
 
     double qval, qbest;
@@ -115,13 +114,11 @@ void QLearnerOld::getReward(double exectime, int action, const std::string& loop
 
     state = agent_data->state;
     qval = agent_data->qvalue[state][action];
-    qbest = getMax_Q(state, loop_id);
+    qbest = getMax_Q(state);
     agent_data->qvalue[state][action] =
             qval + agent_data->alpha *
                    (reward + (agent_data->gamma * qbest) -
                     qval); // Do the actual learning
-
-    return;
 }
 
 /*

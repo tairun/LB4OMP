@@ -5,17 +5,17 @@
 
 class QLearnerOld : public RLAgentOld {
 public:
-    explicit QLearnerOld(const std::string& loop_id, int states, int actions);
+    explicit QLearnerOld(int states, int actions);
 
     ~QLearnerOld() = default;
 
-    int doLearning(const std::string& loop_id, int timestep, double reward_signal) override;
+    int doLearning(int timestep, double reward_signal) override;
 
 private:
     /*
      * Get the state for a specific loop.
      */
-    int getState(int timestep, const std::string& loop_id);
+    int getState(int timestep);
 
     /*
      * Implements greedy policy`
@@ -24,19 +24,19 @@ private:
      * choice:int: current loop id // We don't need this parameter here, because
      * loop ID is "global"
      */
-    int selectAction(int timestep, int state, const std::string& loop_id);
+    int selectAction(int timestep, int state);
 
     /*
      * Gets the new DLS method via the selectAction function
      */
-    int computeMethod(int timestep, const std::string& loop_id);
+    int computeMethod(int timestep);
 
-    double getMax_Q(int state, const std::string& loop_id);
+    double getMax_Q(int state);
 
     /*
      * Updates the qvalue according to the Bellman equation depending on the loop
      * the loop in this timestep *action:int: seleceted action in previous step
      * choice:int: current loop id
      */
-    void getReward(double exectime, int action, const std::string& loop_id);
+    void getReward(double exectime, int action);
 };

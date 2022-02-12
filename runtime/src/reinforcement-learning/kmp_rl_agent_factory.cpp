@@ -14,8 +14,9 @@ int RLAgentFactory::rlAgentSearch(const std::string& loop_id, int agent_type, do
         RLAgentFactory::GetAgents().insert(std::make_pair(loop_id, agent));
         return 0;
     } else {
-        auto agent = RLAgentFactory::GetAgents().find(loop_id)->second;
+        auto* agent = RLAgentFactory::GetAgents().find(loop_id)->second;
         int new_method = agent->doLearning(loop_id, RLAgentFactory::GetTimesteps().at(loop_id), reward_signal);
+        RLAgentFactory::GetTimesteps().at(loop_id)++;
         return new_method;
     }
 }

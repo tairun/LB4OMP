@@ -66,7 +66,7 @@ int SARSALearnerOld::computeMethod(int timestep)
 double SARSALearnerOld::getMax_Q(int state)
 {
     double maxQ;
-    int i, j;
+    int j;
     /* SARSA*/
     /* Select best action based on qvalue of current state */
     maxQ = agent_data->qvalue[state][0];

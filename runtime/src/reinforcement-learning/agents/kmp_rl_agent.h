@@ -2,8 +2,8 @@
 
 #include <string>
 #include <iostream>
-
 #include "../kmp_loopdata.h"
+
 
 class RLAgent {
 public:

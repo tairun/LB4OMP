@@ -2,9 +2,8 @@
 
 #include <string>
 #include <unordered_map>
-
 #include "agents/kmp_rl_agent.h"
-#include "kmp_agent_type.h"
+
 
 class RLAgentFactory {
 public:

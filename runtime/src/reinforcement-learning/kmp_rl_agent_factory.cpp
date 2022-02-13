@@ -5,6 +5,8 @@
 #include "agents/kmp_sarsa_learner_old.h"
 #include "agents/kmp_r_learner.h"
 
+
+// public
 int RLAgentFactory::rlAgentSearch(const std::string& loop_id, int agent_type, LoopData* stats, int portfolio_size)
 {
     //TODO: Make print statement here (with thread ID)
@@ -45,6 +47,7 @@ RLAgent* RLAgentFactory::create_agent(int agent_type, int states, int actions, i
     return agent;
 }
 
+// private
 std::unordered_map<std::string, int>& RLAgentFactory::GetTimesteps()
 {
     static auto* timesteps = new std::unordered_map<std::string, int>();

@@ -1,9 +1,9 @@
 #pragma once
 
 #include <string>
-
 #include "kmp_rl_info.h"
 #include "kmp_rl_agent.h"
+
 
 class RLAgentOld : public RLAgent {
 public:

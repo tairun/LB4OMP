@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+
 /* Struct to manage data of the reinforcement learning agent */
 class RLInfo
 {

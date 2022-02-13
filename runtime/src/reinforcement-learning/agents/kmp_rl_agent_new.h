@@ -4,6 +4,7 @@
 #include "../kmp_loopdata.h"
 #include "kmp_rl_agent.h"
 
+
 class RLAgentNew : public RLAgent {
 public:
     RLAgentNew(int numStates, int numActions) : RLAgent(numStates, numActions),

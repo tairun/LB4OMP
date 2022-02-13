@@ -4,6 +4,7 @@
 #include "kmp_rl_agent_old.h"
 #include "kmp_q_learner_old.h"
 
+
 // public
 QLearnerOld::QLearnerOld(int states, int actions) : RLAgentOld(states, actions)
 {

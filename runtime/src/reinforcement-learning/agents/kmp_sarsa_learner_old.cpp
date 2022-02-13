@@ -1,7 +1,5 @@
 #include <string>
-#include <unordered_map>
 #include <iostream>
-
 #include "kmp_rl_info.h"
 #include "kmp_rl_agent_old.h"
 #include "kmp_sarsa_learner_old.h"
@@ -73,11 +71,12 @@ int SARSALearnerOld::selectAction(int timestep, int state)
 
 int SARSALearnerOld::computeMethod(int timestep)
 {
-    int state = 0, method = 0;
+    int cState, nMethod;
 
-    state = getState(timestep);
-    method = selectAction(timestep, state);
-    return method;
+    cState = getState(timestep);
+    nMethod = selectAction(timestep, cState);
+
+    return nMethod;
 }
 
 double SARSALearnerOld::getMax_Q(int state)
@@ -126,8 +125,6 @@ void SARSALearnerOld::getReward(double exectime, int action)
             qval + agent_data->alpha *
                    (reward + (agent_data->gamma * qbest) -
                     qval); // Do the actual learning
-
-return;
 }
 
 /*

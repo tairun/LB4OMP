@@ -1,6 +1,5 @@
 #include <string>
 #include <iostream>
-
 #include "kmp_rl_info.h"
 #include "kmp_rl_agent_old.h"
 #include "kmp_q_learner_old.h"
@@ -73,11 +72,11 @@ int QLearnerOld::selectAction(int timestep, int state)
 
 int QLearnerOld::computeMethod(int timestep)
 {
-    int state = 0, method = 0;
+    int cState, nMethod;
 
-    state = getState(timestep);
-    method = selectAction(timestep, state);
-    return method;
+    cState = getState(timestep);
+    nMethod = selectAction(timestep, cState);
+    return nMethod;
 }
 
 double QLearnerOld::getMax_Q(int state)

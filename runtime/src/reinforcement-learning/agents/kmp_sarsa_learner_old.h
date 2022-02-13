@@ -1,7 +1,7 @@
-#include <string>
+#pragma once
 
+#include <string>
 #include "kmp_rl_agent_old.h"
-#include "kmp_rl_info.h"
 
 class SARSALearnerOld : public RLAgentOld {
 public:

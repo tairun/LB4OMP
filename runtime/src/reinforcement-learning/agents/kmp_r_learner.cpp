@@ -1,8 +1,5 @@
 #include <string>
 #include <iostream>
-
-#include "kmp_rl_agent_old.h"
-#include "kmp_q_learner_old.h"
 #include "kmp_r_learner.h"
 
 

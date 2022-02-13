@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-
 #include "../kmp_loopdata.h"
 
 class RLAgentNew : public RLAgent {

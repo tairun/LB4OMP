@@ -16,7 +16,7 @@ public:
     }
 
     /* Take reward signal and perform the learning process. Returns the decisions from the agent. */
-    virtual int doLearning(int timestep, LoopData *data) = 0;
+    virtual int doLearning(int timestep, LoopData* data) = 0;
 
 private:
 

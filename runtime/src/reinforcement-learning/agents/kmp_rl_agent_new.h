@@ -2,6 +2,7 @@
 
 #include <string>
 #include "../kmp_loopdata.h"
+#include "kmp_rl_agent.h"
 
 class RLAgentNew : public RLAgent {
 public:

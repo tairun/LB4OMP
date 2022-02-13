@@ -10,7 +10,7 @@ public:
 
     ~RLearner() = default;
 
-    int doLearning(int timestep, LoopData* stats) override;
+    int doLearning(int timestep, LoopData* stats) override = 0;
 
 private:
 

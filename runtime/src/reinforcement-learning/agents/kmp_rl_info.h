@@ -9,20 +9,23 @@ public:
     int state;
     int trialstate;
     int *count;
-    double lowTime, highTime;
+    double low, high;
     double **qvalue;
     double bestqvalue;
 
     double alpha;
     double gamma;
 
+    std::string reward_input;
+
     RLInfo(int states, int actions) : state(0),
                                       trialstate(0),
-                                      lowTime(-99.0),
-                                      highTime(-999.0),
+                                      low(-99.0),
+                                      high(-999.0),
                                       bestqvalue(0.0),
                                       alpha(0.6),
-                                      gamma(0.6)
+                                      gamma(0.6),
+                                      reward_input("looptime")
     {
         count = new int[states];
         qvalue = new double *[states];
@@ -37,16 +40,22 @@ public:
                 qvalue[s][a] = -299.0;
             }
 
-        if (std::getenv("KMP_RL_ALPHA") != NULL) {
+        if (std::getenv("KMP_RL_ALPHA") != nullptr) {
            alpha = std::stod(std::getenv("KMP_RL_ALPHA"));
         } else {
             std::cout << "Couldn't read ALPHA from env." << std::endl;
         }
 
-        if (std::getenv("KMP_RL_GAMMA") != NULL) {
+        if (std::getenv("KMP_RL_GAMMA") != nullptr) {
             gamma = std::stod(std::getenv("KMP_RL_GAMMA"));
         } else {
             std::cout << "Couldn't read GAMMA from env." << std::endl;
+        }
+
+        if (std::getenv("KMP_RL_REWARD") != nullptr) {
+            reward_input = std::getenv("KMP_RL_REWARD");
+        } else {
+            std::cout << "Couldn't read REWARD from env." << std::endl;
         }
     }
 

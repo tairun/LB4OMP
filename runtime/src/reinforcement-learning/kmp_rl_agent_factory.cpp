@@ -6,23 +6,25 @@
 #include "agents/kmp_sarsa_learner_old.h"
 #include "agents/kmp_r_learner.h"
 
-int RLAgentFactory::rlAgentSearch(const std::string& loop_id, int agent_type, double reward_signal, int portfolio_size)
+int RLAgentFactory::rlAgentSearch(const std::string& loop_id, int agent_type, LoopData* stats, int portfolio_size)
 {
     //TODO: Make print statement here (with thread ID)
     if (!RLAgentFactory::GetTimesteps().count(loop_id)) {
         RLAgentFactory::GetTimesteps().insert(std::make_pair(loop_id, 1));
-        auto* agent = create_agent(loop_id, agent_type, portfolio_size, portfolio_size, 6);
+        auto* agent = create_agent(agent_type, portfolio_size, portfolio_size, 6);
         RLAgentFactory::GetAgents().insert(std::make_pair(loop_id, agent));
-        return 0;
+        std::cout << "[Reinforcement Learning] Agent created" << std::endl;
+        return 0; // Selects first DLS method for exploration
     } else {
         auto* agent = RLAgentFactory::GetAgents().find(loop_id)->second;
-        int new_method = agent->doLearning(RLAgentFactory::GetTimesteps().at(loop_id), reward_signal);
+        int new_method = agent->doLearning(RLAgentFactory::GetTimesteps().at(loop_id), stats);
+        std::cout << "[Reinforcement Learning] Timestep " << RLAgentFactory::GetTimesteps().at(loop_id) << " completed. New method is " << new_method << std::endl;
         RLAgentFactory::GetTimesteps().at(loop_id)++;
         return new_method;
     }
 }
 
-RLAgent* RLAgentFactory::create_agent(const std::string& loop_id, int agent_type, int states, int actions, int offset = 0)
+RLAgent* RLAgentFactory::create_agent(int agent_type, int states, int actions, int offset = 0)
 {
     RLAgent* agent = nullptr;
     int new_type = agent_type - offset;
@@ -38,7 +40,7 @@ RLAgent* RLAgentFactory::create_agent(const std::string& loop_id, int agent_type
             agent = new RLearner(states, actions);
             break;
         default:
-            std::cout << "Reinforcement Learning: Unknown agent type specified in options json: " << agent_type << std::endl;
+            std::cout << "[Reinforcement Learning] Unknown agent type specified: " << agent_type << std::endl;
     }
 
     return agent;

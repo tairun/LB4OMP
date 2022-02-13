@@ -12,7 +12,7 @@ RLearner::RLearner(int states, int actions) : RLAgentNew(states, actions)
 
 }
 
-int RLearner::doLearning(int timestep, double reward_signal)
+int RLearner::doLearning(int timestep, LoopData* stats)
 {
     return 0;
 }

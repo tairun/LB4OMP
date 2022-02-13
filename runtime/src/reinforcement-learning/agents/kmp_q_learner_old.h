@@ -9,7 +9,7 @@ public:
 
     ~QLearnerOld() = default;
 
-    int doLearning(int timestep, double reward_signal) override;
+    int doLearning(int timestep, LoopData *stats) override;
 
 private:
     /*

@@ -11,11 +11,11 @@ public:
     /* Destructor */
     ~RLAgentFactory() = default;
 
-    static int rlAgentSearch(const std::string &loop_id, int agent_type, double reward_signal, int portfolio_size);
+    static int rlAgentSearch(const std::string &loop_id, int agent_type, LoopData* stats, int portfolio_size);
 
     /* Creates and return a pointer to a learning agent with the specified type
      * and options. */
-    static RLAgent* create_agent(const std::string &loop_id, int type, int states, int actions, int offset);
+    static RLAgent* create_agent(int type, int states, int actions, int offset);
 
 private:
     //static std::unordered_map<std::string, int> timesteps; // We need to keep track of the elapsed timesteps. TODO: Is this already done?

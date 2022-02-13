@@ -23,6 +23,7 @@
  */
 
 /* -------------------------- START Reinforcement Learning Extensions -------------------------*/
+#include "kmp_loopdata.h"
 #include "reinforcement-learning/kmp_rl_agent_factory.h"
 /* -------------------------- END Reinforcement Learning Extensions ---------------------------*/
 #include "kmp.h"
@@ -99,57 +100,41 @@ std::atomic<int> autoWait(1);
 
 const char *autoLoopName;
 
-typedef struct {
-    int autoSearch;
-    int cDLS; // current DLS
-    int bestDLS; //Best DLS
-    int searchTrials; // number of trials to find the best DLS
-    int cChunk; //current chunk size
-    int bestChunk; // chunk size of the best DLS technique
-    double cTime; // current DLS time
-    double bestTime; // loop time of the best DLS
-    double cLB; // load imbalance of the current DLS
-    double bestLB; // load imbalance of the best DLS
-} LoopData;
-
 std::unordered_map<std::string, LoopData> autoLoopData; //holds loop data
 
 
 // LB4OMP extended DLS portfolio ...scheduling techniques are ordered according to their overhead/scheduling/load balancing capacity
 std::vector<sched_type> autoDLSPortfolio{
-        kmp_sch_static_chunked, // STATIC    ... 0
-        kmp_sch_dynamic_chunked,       //     ... 1
-        kmp_sch_trapezoidal, // TSS          ... 2
-        kmp_sch_guided_analytical_chunked,// ... 3 LLVM RTL original auto, which is guided with minimum chunk size
-        kmp_sch_guided_iterative_chunked, //  ... 4 GSS
+        kmp_sch_static_chunked,             // STATIC ... 0
+        kmp_sch_dynamic_chunked,            // ... 1
+        kmp_sch_trapezoidal,                // TSS ... 2
+        kmp_sch_guided_analytical_chunked,  // ... 3 LLVM RTL original auto, which is guided with minimum chunk size
+        kmp_sch_guided_iterative_chunked,   // ... 4 GSS
         //--------------LB4OMP_extensions----------
-        //kmp_sch_fsc,  // requires profiling
-        //kmp_sch_tap,  // requires profiling
-        //kmp_sch_fac,  // requires profiling
-        //kmp_sch_faca, // requires profiling
-        kmp_sch_fac2a,                      //  ... 5
-        // kmp_sch_fac2,                      // fac2a is more optimized implementation
-        kmp_sch_static_steal,             // ... 6 static_steal
-        //kmp_sch_wf,                         //  not needed on homogeneous cores
-        //kmp_sch_bold,  // requires profiling
-        kmp_sch_awf_b,                      //  ... 7
-        kmp_sch_awf_c,                     //   ... 8
-        kmp_sch_awf_d,                    //   ... 9
-        kmp_sch_awf_e,                   //    ... 10
-        kmp_sch_af_a,                   //     ... 11
-        //kmp_sch_af,                    //      af_a is more optimized implementation
+        //kmp_sch_fsc,                      // requires profiling
+        //kmp_sch_tap,                      // requires profiling
+        //kmp_sch_fac,                      // requires profiling
+        //kmp_sch_faca,                     // requires profiling
+        kmp_sch_fac2a,                      // ... 5
+        // kmp_sch_fac2,                    // fac2a is more optimized implementation
+        kmp_sch_static_steal,               // ... 6 static_steal
+        //kmp_sch_wf,                       // not needed on homogeneous cores
+        //kmp_sch_bold,                     // requires profiling
+        kmp_sch_awf_b,                      // ... 7
+        kmp_sch_awf_c,                      // ... 8
+        kmp_sch_awf_d,                      // ... 9
+        kmp_sch_awf_e,                      // ... 10
+        kmp_sch_af_a,                       // ... 11
+        //kmp_sch_af,                       //  af_a is more optimized implementation
 };
 
 enum DLSPortfolio {
     STATIC, SS, TSS, GSS_LLVM, GSS, mFAC2, static_steal, AWFB, AWFC, AWFD, AWFE, mAF
 };
 
-
 // ------------------------------------------ end Auto extension variables --------------------
 
-
 std::unordered_map<std::string, std::vector<double> > means_sigmas;
-
 
 // ------------------------------------- AWF data -----------------------------------------------------
 typedef struct {
@@ -159,7 +144,6 @@ typedef struct {
     std::vector<double> executionTimes;
     std::vector<double> sumExecutionTimes;
     std::vector<double> weights;
-
 } AWFDataRecord;
 
 std::unordered_map<std::string, AWFDataRecord> AWFData; // AWF weights
@@ -186,7 +170,6 @@ std::string globalLoopline;
 long globalNIterations;
 
 std::atomic<int> chunkStart(0);
-
 
 double t1;
 double t2;
@@ -224,7 +207,6 @@ void store_chunk_sizes(int p_lb, int p_ub, int tid) {
     chunkSizeInfo[tindex + 2] = p_ub - p_lb + 1;
     chunkSizeInfo[tindex + 3] = tid;
 }
-
 
 void read_profiling_data(std::string loopLocation) {
     std::vector<std::string> loopNames;
@@ -269,7 +251,6 @@ void init_loop_timer(const char *loopLine, long ub) {
 
         timeInit = std::chrono::high_resolution_clock::now();
 
-
         if (currentLoopMap.find(loopLine) == currentLoopMap.end()) {
             currentLoopMap.insert(std::pair<std::string, int>(loopLine, 1));
         } else {
@@ -278,7 +259,6 @@ void init_loop_timer(const char *loopLine, long ub) {
 
     }
 }
-
 
 // -------------------------- LB4OMP AUTO Extension -------------------------------------------------------//
 //  June 2020
@@ -306,7 +286,6 @@ int goldenChunkSize(int N, int P, int AUTO_FLAG) {
     return chunkSize;
 
 }
-
 
 void autoSetChunkSize(int N, int P) {
 
@@ -435,8 +414,6 @@ void autoBinarySearch(int N, int P) {
         autoLoopData.at(autoLoopName).cDLS = 0;
     }
 
-
-
     //increment search trials
     autoLoopData.at(autoLoopName).searchTrials++;
 
@@ -445,7 +422,6 @@ void autoBinarySearch(int N, int P) {
     autoLoopData.at(autoLoopName).bestDLS = currentPortfolioIndex;
     autoLoopData.at(autoLoopName).bestChunk = autoLoopData.at(autoLoopName).cChunk;
 }
-
 
 void autoRandomSearch(int N, int P) {
 
@@ -502,8 +478,6 @@ void autoRandomSearch(int N, int P) {
 //  <------------------------|------------------------->
 //              -3          0          3             (%)
 
-
-
 double DlbISDegraded(double deltaLB) {
 
     if ((deltaLB >= 3)) {
@@ -516,7 +490,6 @@ double DlbISDegraded(double deltaLB) {
 
 }
 
-
 double DlbISImproved(double deltaLB) {
 
     if ((deltaLB < -3)) {
@@ -528,7 +501,6 @@ double DlbISImproved(double deltaLB) {
     }
 
 }
-
 
 double DlbISNoChange(double deltaLB) {
 
@@ -543,7 +515,6 @@ double DlbISNoChange(double deltaLB) {
     }
 }
 
-
 // Membership functions for ΔTpar
 //
 //
@@ -557,8 +528,6 @@ double DlbISNoChange(double deltaLB) {
 //            /    \     |     /    \
 //  <--------------------|---------------------->
 //          -1   -0.5    0    0.5    1           (%)
-
-
 
 double DTparISNoChange(double DTpar) {
 
@@ -585,7 +554,6 @@ double DTparISDegraded(double DTpar) {
 
 }
 
-
 double DTparISImproved(double DTpar) {
 
     if ((DTpar > -0.5)) {
@@ -597,8 +565,6 @@ double DTparISImproved(double DTpar) {
     }
 
 }
-
-
 
 // Tpar
 //
@@ -613,7 +579,6 @@ double DTparISImproved(double DTpar) {
 //  0 |------------------------------>
 //    0   0.01  0.03        1     10
 
-
 double TparISLong(double Tpar) {
     if (Tpar <= 1) {
         return 0;
@@ -624,7 +589,6 @@ double TparISLong(double Tpar) {
         return 0.11 * Tpar - 0.11;
     }
 }
-
 
 double TparISMedium(double Tpar) {
 
@@ -640,7 +604,6 @@ double TparISMedium(double Tpar) {
 
 }
 
-
 double TparISShort(double Tpar) {
 
     if (Tpar <= 0.01) {
@@ -651,7 +614,6 @@ double TparISShort(double Tpar) {
     {
         return -50 * Tpar + 1.5;
     }
-
 }
 
 // LB
@@ -667,7 +629,6 @@ double TparISShort(double Tpar) {
 //  0 |------------------------------>
 //    0     1    2     4       5  10 (%)
 
-
 double LBISHigh(double LB) {
     if (LB <= 4) {
         return 0;
@@ -678,7 +639,6 @@ double LBISHigh(double LB) {
         return 0.166 * LB - 0.64;
     }
 }
-
 
 double LBISModerate(double LB) {
 
@@ -724,9 +684,6 @@ double LBISLow(double LB) {
 //  0 |-------------------------------------------->
 //    0    2     3       6     7                 14
 
-
-
-
 // ΔDLS
 //
 //
@@ -741,12 +698,7 @@ double LBISLow(double LB) {
 //<--------------------|----------------------->
 //-4          -1       0       1            4
 
-
-
-
 void autoFuzzySearch(int N, int P) {
-
-
 
 /* Step 1  ..... Fuzzification .... */
 
@@ -758,16 +710,11 @@ void autoFuzzySearch(int N, int P) {
 // 3. ΔTpar  ... Improved | NoChange | Degraded
 // 4. ΔLB    ... Improved | NoChange | Degraded
 
-
 //Output
 // 1. DLS   ... which DLS to select
 // 2. ΔDLS  ... how far we should change the current one
 
-
-
-
 /*** see the membership functions above ***/
-
 
     double DTpar = (autoLoopData.at(autoLoopName).cTime - autoLoopData.at(autoLoopName).bestTime) /
                    autoLoopData.at(autoLoopName).cTime * 100;
@@ -793,9 +740,6 @@ void autoFuzzySearch(int N, int P) {
     double DLSISLessAggressive = 0;
     double DLSISSame = 0;
     int selectedDLS;
-
-
-
 
 // Step 2 ... Rules
 
@@ -851,8 +795,6 @@ void autoFuzzySearch(int N, int P) {
         printf("[ATUO] DLSISSAME: %lf, DLSISMoreAggressive: %lf, DLSISLessAggressive: %lf \n", DLSISSame, DLSISMoreAggressive, DLSISLessAggressive);
 #endif
     }
-
-
 
 // Step 3 ..... Defuzzification
 
@@ -979,7 +921,6 @@ void auto_DLS_Search(int gtid, int N, int P, int option) {
     printf(" LoopName: %s, DLS: %d, time: %lf , LB: %lf, chunk: %d \n", autoLoopName, currentPortfolioIndex, autoLoopData.at(autoLoopName).cTime, autoLoopData.at(autoLoopName).cLB, autoLoopData.at(autoLoopName).cChunk);
 #endif
 
-
     //Auto options 2 - 5 random, exhaustive, binary, expert, 1 is the default LLVM auto (GSS_LLVM)
     if (option == 2) {
         // set DLS
@@ -1006,21 +947,19 @@ void auto_DLS_Search(int gtid, int N, int P, int option) {
     /* -------------------------- START Reinforcement Learning Extensions -------------------------*/
     else if (option == 6 || option == 7)
     {
-        std::cout << "Will call setup method from factory next" << std::endl;
         std::string loop_id = autoLoopName;
-        int new_method = RLAgentFactory::rlAgentSearch(loop_id, option, autoLoopData.at(autoLoopName).cTime, (int)autoDLSPortfolio.size() - 1);
+        int new_method = RLAgentFactory::rlAgentSearch(loop_id, option, &autoLoopData.at(autoLoopName), (int)autoDLSPortfolio.size() - 1);
         autoSetChunkSize(N, P); // set chunk size
         autoLoopData.at(autoLoopName).cDLS = new_method;
     }
-    /* Add more methods here */
+    /* Add more Reinforcement Learning methods here */
     /* -------------------------- END Reinforcement Learning Extensions ---------------------------*/
 
     else // normal LLVM auto - it will not reach to this part if chunk is higher
         // than 4
     {
         // Error ...it should not reach that part of the code
-        std::cout
-                << "[Auto] invalid option ... this part should not be reachable \n";
+        std::cout << "[Auto] invalid option ... this part should not be reachable \n";
     }
     currentPortfolioIndex = autoLoopData.at(autoLoopName).cDLS;
 }
@@ -1116,6 +1055,7 @@ void end_auto_loop_timer(int nproc, int tid) {
             autoLoopData.at(autoLoopName).autoSearch = 1;
         }
         autoLoopData.at(autoLoopName).cLB = autoLBPercentIm; // update LB
+        //TODO@Luc: Create update function for robustness
 
     }
 }

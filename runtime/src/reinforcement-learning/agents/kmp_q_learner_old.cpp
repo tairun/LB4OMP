@@ -11,8 +11,26 @@ QLearnerOld::QLearnerOld(int states, int actions) : RLAgentOld(states, actions)
     agent_data = new RLInfo(states, actions);
 }
 
-int QLearnerOld::doLearning(int timestep, double reward_signal)
+int QLearnerOld::doLearning(int timestep, LoopData* stats)
 {
+    double reward_signal;
+
+    if (reward_input == "looptime")
+    {
+        reward_signal = stats->cTime;
+    } else if (reward_input == "loadimbalance")
+    {
+        reward_signal = stats->cLB;
+    } else if (reward_input == "robustness")
+    {
+        std::cout << "Reinforcement Learning: Not yet implemented" << std::endl;
+        reward_signal = stats->cTime;
+    } else
+    {
+        std::cout << "Reinforcement Learning: Invalid reward signal specified in env: " << reward_input << std::endl;
+    }
+
+
     int method = computeMethod(timestep);
     getReward(reward_signal, method);
 
@@ -96,19 +114,19 @@ void QLearnerOld::getReward(double exectime, int action)
     int reward, state;
 
     // Good case
-    if ((exectime) < agent_data->lowTime) {
-        agent_data->lowTime = exectime;
+    if ((exectime) < agent_data->low) {
+        agent_data->low = exectime;
         reward = 2;
     }
     // Neutral case
-    if ((exectime > agent_data->lowTime) &&
-        (exectime < agent_data->highTime)) {
-        agent_data->lowTime = exectime;
+    if ((exectime > agent_data->low) &&
+        (exectime < agent_data->high)) {
+        agent_data->low = exectime;
         reward = 0;
     }
     // Bad case
-    if (exectime > agent_data->highTime) {
-        agent_data->highTime = exectime;
+    if (exectime > agent_data->high) {
+        agent_data->high = exectime;
         reward = -2;
     }
 

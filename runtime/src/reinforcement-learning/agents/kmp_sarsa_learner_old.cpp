@@ -5,30 +5,15 @@
 #include "kmp_sarsa_learner_old.h"
 
 // public
-SARSALearnerOld::SARSALearnerOld(int states, int actions) : RLAgentOld(states, actions)
+SARSALearnerOld::SARSALearnerOld(int states, int actions) :
+                 RLAgentOld(states, actions, "SARSA Learner (old version)")
 {
     agent_data = new RLInfo(states, actions);
 }
 
-int SARSALearnerOld::doLearning(int timestep, LoopData* stats)
+int SARSALearnerOld::step(int timestep, LoopData* stats)
 {
-    double reward_signal;
-
-    if (reward_input == "looptime")
-    {
-        reward_signal = stats->cTime;
-    } else if (reward_input == "loadimbalance")
-    {
-        reward_signal = stats->cLB;
-    } else if (reward_input == "robustness")
-    {
-        std::cout << "Reinforcement Learning: Not yet implemented" << std::endl;
-        reward_signal = stats->cTime;
-    } else
-    {
-        std::cout << "Reinforcement Learning: Invalid reward signal specified in env: " << reward_input << std::endl;
-    }
-
+    double reward_signal = getRewardSignal(stats);
     int method = computeMethod(timestep);
     getReward(reward_signal, method);
 

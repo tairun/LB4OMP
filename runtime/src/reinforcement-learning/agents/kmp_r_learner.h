@@ -4,13 +4,13 @@
 #include "kmp_rl_agent_new.h"
 
 
-class RLearner : public RLAgentNew {
+class RLearner : public RLAgent {
 public:
     explicit RLearner(int states, int actions);
 
     ~RLearner() = default;
 
-    int doLearning(int timestep, LoopData* stats) override;
+    int step(int timestep, LoopData* stats) override;
 
 private:
 

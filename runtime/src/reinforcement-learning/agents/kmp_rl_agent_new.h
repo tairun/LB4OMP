@@ -1,20 +1,21 @@
 #pragma once
 
 #include <string>
+#include <utility>
 #include "../kmp_loopdata.h"
 #include "kmp_rl_agent.h"
 
 
 class RLAgentNew : public RLAgent {
 public:
-    RLAgentNew(int numStates, int numActions) : RLAgent(numStates, numActions),
-                                                state(0),
-                                                trialstate(0),
-                                                low(-99.0),
-                                                high(-999.0),
-                                                bestqvalue(0.0),
-                                                alpha(0.6),
-                                                gamma(0.6)
+    RLAgentNew(int numStates, int numActions, std::string agentName) : RLAgent(numStates, numActions, std::move(agentName)),
+               state(0),
+               trialstate(0),
+               low(-99.0),
+               high(-999.0),
+               bestqvalue(0.0),
+               alpha(0.6),
+               gamma(0.6)
     {
         count = new int[states];
         qvalue = new double *[states];
@@ -29,12 +30,14 @@ public:
                 qvalue[s][a] = -299.0;
             }
 
+        // Read learning rate from env
         if (std::getenv("KMP_RL_ALPHA") != nullptr) {
             alpha = std::stod(std::getenv("KMP_RL_ALPHA"));
         } else {
             std::cout << "Couldn't read ALPHA from env." << std::endl;
         }
 
+        // Read discount factor from env
         if (std::getenv("KMP_RL_GAMMA") != nullptr) {
             gamma = std::stod(std::getenv("KMP_RL_GAMMA"));
         } else {
@@ -43,7 +46,7 @@ public:
     }
 
     /* Take reward signal and perform the learning process. Returns the decisions from the agent. */
-    int doLearning(int timestep, LoopData* stats) override = 0;
+    int step(int timestep, LoopData* stats) override = 0;
 
 private:
 

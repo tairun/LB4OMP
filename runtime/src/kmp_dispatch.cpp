@@ -947,10 +947,10 @@ void auto_DLS_Search(int gtid, int N, int P, int option) {
     /* -------------------------- START Reinforcement Learning Extensions -------------------------*/
     else if (option >= 6 && option <= 12)
     /*
-     * (6): QLearnerOld
-     * (7): SARSALearnerOld
-     * (8): QLearner
-     * (9): SARSALearner
+     * (6):  QLearnerOld
+     * (7):  SARSALearnerOld
+     * (8):  QLearner
+     * (9):  SARSALearner
      * (10): DoubleQLearner
      * (11): QVLearner
      * (12): RLearner

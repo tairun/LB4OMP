@@ -59,6 +59,9 @@ RLAgent* RLAgentFactory::create_agent(int agent_type, int states, int actions, i
         case (7):
             agent = new DeepQLearner(states, actions);
             break;
+        case (8):
+            agent = new ChunkLearner(states, actions);
+            break;
         default:
             std::cout << "[Reinforcement Learning] Unknown agent type specified: " << agent_type << std::endl;
     }

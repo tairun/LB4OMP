@@ -20,7 +20,7 @@ private:
     double gamma;
     double epsilon;
 
-    /* The Policy chooses an action according to the learned experience of the agent. */
+    /* The policy chooses an action according to the learned experience of the agent. */
     int policy();
 
     /* The reward function is designed to convert the actions into a number representation. */

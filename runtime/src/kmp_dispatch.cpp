@@ -945,12 +945,33 @@ void auto_DLS_Search(int gtid, int N, int P, int option) {
     }
 
     /* -------------------------- START Reinforcement Learning Extensions -------------------------*/
-    else if (option == 6 || option == 7)
+    else if (option >= 6 && option <= 12)
+    /*
+     * (6):  QLearnerOld
+     * (7):  SARSALearnerOld
+     * (8):  QLearner
+     * (9):  SARSALearner
+     * (10): DoubleQLearner
+     * (11): QVLearner
+     * (12): RLearner
+     * (12): DeepQLearner
+     * */
     {
         std::string loop_id = autoLoopName;
         int new_method = RLAgentFactory::rlAgentSearch(loop_id, option, &autoLoopData.at(autoLoopName), (int)autoDLSPortfolio.size() - 1);
         autoSetChunkSize(N, P); // set chunk size
         autoLoopData.at(autoLoopName).cDLS = new_method;
+    }
+    else if (option == 13)
+    /*
+     * (13): Direct chunk selection with reinforcement learning
+     * */
+    {
+        std::string loop_id = autoLoopName;
+        int chunks = RLAgentFactory::rlAgentSearch(loop_id, option, &autoLoopData.at(autoLoopName), (int)autoDLSPortfolio.size() - 1);
+        //autoSetChunkSize(N, P); // set chunk size
+        autoLoopData.at(autoLoopName).cDLS = 0; // set static, we are only interested in the chunks
+        autoLoopData.at(autoLoopName).cChunk = chunks;
     }
     /* Add more Reinforcement Learning methods here */
     /* -------------------------- END Reinforcement Learning Extensions ---------------------------*/
@@ -1318,8 +1339,7 @@ void __kmp_dispatch_init_algorithm(ident_t *loc, int gtid,
         if (schedule == kmp_sch_auto) {
 
             if ((chunk >= 2) &&
-                (chunk <=
-                 7)) // AUTO by Ali, Reinforcement Learning by Luc (need <= 7)
+                (chunk <= 13)) // AUTO by Ali, Reinforcement Learning by Luc (need <= 13)
             {
                 AUTO_FLAG = 1; // Set auto flag
             } else {

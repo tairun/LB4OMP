@@ -4,33 +4,16 @@
 #include "kmp_rl_agent_old.h"
 #include "kmp_q_learner_old.h"
 
-
 // public
-QLearnerOld::QLearnerOld(int states, int actions) : RLAgentOld(states, actions)
+QLearnerOld::QLearnerOld(int states, int actions) :
+             RLAgentOld(states, actions, "Q Learner (old version)")
 {
     agent_data = new RLInfo(states, actions);
 }
 
-int QLearnerOld::doLearning(int timestep, LoopData* stats)
+int QLearnerOld::step(int timestep, LoopData* stats)
 {
-    double reward_signal;
-
-    if (reward_input == "looptime")
-    {
-        reward_signal = stats->cTime;
-    } else if (reward_input == "loadimbalance")
-    {
-        reward_signal = stats->cLB;
-    } else if (reward_input == "robustness")
-    {
-        std::cout << "Reinforcement Learning: Not yet implemented" << std::endl;
-        reward_signal = stats->cTime;
-    } else
-    {
-        std::cout << "Reinforcement Learning: Invalid reward signal specified in env: " << reward_input << std::endl;
-    }
-
-
+    double reward_signal = getRewardSignal(stats);
     int method = computeMethod(timestep);
     getReward(reward_signal, method);
 

@@ -38,21 +38,24 @@ public:
         for (int s = 0; s < states; s++)
             for (int a = 0; a < actions; a++) {
                 count[a] = 0;
-                qvalue[s][a] = -299.0;
+                qvalue[s][a] = 0.0;
             }
 
+        // Read learning rate from env
         if (std::getenv("KMP_RL_ALPHA") != nullptr) {
            alpha = std::stod(std::getenv("KMP_RL_ALPHA"));
         } else {
             std::cout << "Couldn't read ALPHA from env." << std::endl;
         }
 
+        // Read discount factor from env
         if (std::getenv("KMP_RL_GAMMA") != nullptr) {
             gamma = std::stod(std::getenv("KMP_RL_GAMMA"));
         } else {
             std::cout << "Couldn't read GAMMA from env." << std::endl;
         }
 
+        // Read learning rate from env
         if (std::getenv("KMP_RL_REWARD") != nullptr) {
             reward_input = std::getenv("KMP_RL_REWARD");
         } else {

@@ -4,12 +4,13 @@
 
 
 // public
-RLearner::RLearner(int states, int actions) : RLAgentNew(states, actions)
+RLearner::RLearner(int states, int actions) :
+          RLAgent(states, actions, "R Learner")
 {
 
 }
 
-int RLearner::doLearning(int timestep, LoopData* stats)
+int RLearner::step(int timestep, LoopData* stats)
 {
     return 0;
 }

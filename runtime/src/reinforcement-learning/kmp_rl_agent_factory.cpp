@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+
 #include "kmp_rl_agent_factory.h"
 #include "agents/kmp_q_learner_old.h"
 #include "agents/kmp_sarsa_learner_old.h"
@@ -9,6 +10,7 @@
 #include "agents/kmp_qv_learner.h"
 #include "agents/kmp_r_learner.h"
 #include "agents/kmp_deepq_learner.h"
+
 
 // public
 int RLAgentFactory::rlAgentSearch(const std::string& loop_id, int agent_type, LoopData* stats, int portfolio_size)

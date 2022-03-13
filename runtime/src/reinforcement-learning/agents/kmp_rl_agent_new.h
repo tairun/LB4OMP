@@ -17,15 +17,15 @@ public:
                alpha(0.6),
                gamma(0.6)
     {
-        count = new int[states];
-        qvalue = new double *[states];
+        count = new int[state_space];
+        qvalue = new double *[state_space];
 
-        for (int i = 0; i < states; i++) {
-            qvalue[i] = new double[actions];
+        for (int i = 0; i < state_space; i++) {
+            qvalue[i] = new double[action_space];
         }
 
-        for (int s = 0; s < states; s++)
-            for (int a = 0; a < actions; a++) {
+        for (int s = 0; s < state_space; s++)
+            for (int a = 0; a < action_space; a++) {
                 count[a] = 0;
                 qvalue[s][a] = -299.0;
             }

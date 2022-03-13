@@ -13,7 +13,7 @@ SARSALearnerOld::SARSALearnerOld(int states, int actions) :
 
 int SARSALearnerOld::step(int timestep, LoopData* stats)
 {
-    double reward_signal = getRewardSignal(stats);
+    double reward_signal = get_reward_signal(stats);
     int method = computeMethod(timestep);
     getReward(reward_signal, method);
 
@@ -23,9 +23,9 @@ int SARSALearnerOld::step(int timestep, LoopData* stats)
 // private
 int SARSALearnerOld::getState(int timestep)
 {
-    if (timestep < (states * actions)) {
-        if ((timestep % actions) == 0) {
-            if ((timestep % (states * actions)) == 0) {
+    if (timestep < (state_space * action_space)) {
+        if ((timestep % action_space) == 0) {
+            if ((timestep % (state_space * action_space)) == 0) {
                 agent_data->trialstate = 0;
             } else {
                 agent_data->trialstate++;
@@ -40,11 +40,11 @@ int SARSALearnerOld::selectAction(int timestep, int state)
 {
     int i, action, action_max;
 
-    if (timestep < (states * actions)) {
-        action = timestep % actions;
+    if (timestep < (state_space * action_space)) {
+        action = timestep % action_space;
     } else {
         action_max = 0;
-        for (i = 0; i < actions; i++)
+        for (i = 0; i < action_space; i++)
             if (agent_data->qvalue[state][i] >
                 agent_data->qvalue[state][action_max])
                 action_max = i;
@@ -71,7 +71,7 @@ double SARSALearnerOld::getMax_Q(int state)
     /* SARSA*/
     /* Select best action based on qvalue of current state */
     maxQ = agent_data->qvalue[state][0];
-    for (j = 1; j < actions; j++)
+    for (j = 1; j < action_space; j++)
     if (agent_data->qvalue[state][j] > maxQ) {
         maxQ = agent_data->qvalue[state][j];
         agent_data->state = j;

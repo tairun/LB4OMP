@@ -1,34 +1,15 @@
 #include "kmp_rl_agent.h"
 
-class SARSALearner : public RLAgent {
+class SARSALearner : public RLAgent
+{
 public:
-    explicit SARSALearner(int numStates, int numActions);
+    explicit SARSALearner(int num_states, int num_actions);
 
     ~SARSALearner() = default;
 
-    int step(int timestep, LoopData *stats) override;
-
 private:
-    int state;
-    int *count;
-    double low, high;
-    double** qTableA;
-    double** qTableB;
-    double** qTableSum;
-
-    double alpha;
-    double gamma;
-    double epsilon;
-
-    /* The policy chooses an action according to the learned experience of the agent. */
-    int policy();
-
-    /* The reward function is designed to convert the actions into a number representation. */
-    double reward(double rewardSignal);
+    double** q_table;
 
     /* Updates the internal values of the agent. */
-    void updateQTable(int nextState, double rewardValue);
-
-    /* Returns the index of the largest value in an array. */
-    int argMax(double** table, int nextState);
+    void update(int next_state, int next_action, double reward_value) override;
 };

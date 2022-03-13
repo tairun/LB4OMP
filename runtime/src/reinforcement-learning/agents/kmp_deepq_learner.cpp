@@ -1,33 +1,27 @@
 #include <random>
 #include <algorithm>
-#include "kmp_doubleq_learner.h"
+#include "kmp_deepq_learner.h"
 
 // public
-DoubleQLearner::DoubleQLearner(int num_states, int num_actions) :
-                RLAgent(num_states, num_actions, "DoubleQ Learner", q_table_sum)
+DeepQLearner::DeepQLearner(int num_states, int num_actions) :
+              RLAgent(num_states, num_actions, "DoubleQ Learner", nullptr)
 {
     count = new int[state_space];
-    q_table_a = new double *[state_space];
-    q_table_b = new double *[state_space];
-    q_table_sum = new double *[state_space];
+    q_table = new double *[state_space];
 
     for (int i = 0; i < state_space; i++) {
-        q_table_a[i] = new double[action_space];
-        q_table_b[i] = new double[action_space];
-        q_table_sum[i] = new double[action_space];
+        q_table[i] = new double[action_space];
     }
 
     for (int s = 0; s < state_space; s++)
         for (int a = 0; a < action_space; a++) {
             count[a] = 0;
-            q_table_a[s][a] = 0.0;
-            q_table_b[s][a] = 0.0;
-            q_table_sum[s][a] = 0.0;
+            q_table[s][a] = 0.0;
         }
 }
 
 // private
-void DoubleQLearner::update(int next_state, int next_action, double reward_value)
+void DeepQLearner::update(int next_state, int next_action, double reward_value)
 {
     std::default_random_engine re(time(0));
     std::uniform_real_distribution<double> uniform(0, 1);

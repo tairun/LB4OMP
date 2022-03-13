@@ -1,34 +1,17 @@
 #include "kmp_rl_agent.h"
 
-class DoubleQLearner : public RLAgent {
+class DoubleQLearner : public RLAgent
+{
 public:
-    explicit DoubleQLearner(int numStates, int numActions);
+    explicit DoubleQLearner(int num_states, int num_actions);
 
     ~DoubleQLearner() = default;
 
-    int step(int timestep, LoopData *stats) override;
-
 private:
-    int state;
-    int *count;
-    double low, high;
-    double** qTableA;
-    double** qTableB;
-    double** qTableSum;
-
-    double alpha;
-    double gamma;
-    double epsilon;
-
-    /* The Policy chooses an action according to the learned experience of the agent. */
-    int policy();
-
-    /* The reward function is designed to convert the actions into a number representation. */
-    double reward(double rewardSignal);
+    double** q_table_a;
+    double** q_table_b;
+    double** q_table_sum;
 
     /* Updates the internal values of the agent. */
-    void updateQTable(int nextState, double rewardValue);
-
-    /* Returns the index of the largest value in an array. */
-    int argMax(double** table, int nextState);
+    void update(int next_state, int next_action, double reward_value) override;
 };

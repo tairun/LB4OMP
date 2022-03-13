@@ -13,7 +13,7 @@ QLearnerOld::QLearnerOld(int states, int actions) :
 
 int QLearnerOld::step(int timestep, LoopData* stats)
 {
-    double reward_signal = getRewardSignal(stats);
+    double reward_signal = get_reward_signal(stats);
     int method = computeMethod(timestep);
     getReward(reward_signal, method);
 
@@ -23,9 +23,9 @@ int QLearnerOld::step(int timestep, LoopData* stats)
 // private
 int QLearnerOld::getState(int timestep)
 {
-    if (timestep < (states * actions)) {
-        if ((timestep % actions) == 0) {
-            if ((timestep % (states * actions)) == 0) {
+    if (timestep < (state_space * action_space)) {
+        if ((timestep % action_space) == 0) {
+            if ((timestep % (state_space * action_space)) == 0) {
                 agent_data->trialstate = 0;
             } else {
                 agent_data->trialstate++;
@@ -40,11 +40,11 @@ int QLearnerOld::selectAction(int timestep, int state)
 {
     int i, action, action_max;
 
-    if (timestep < (states * actions)) {
-        action = timestep % actions;
+    if (timestep < (state_space * action_space)) {
+        action = timestep % action_space;
     } else {
         action_max = 0;
-        for (i = 0; i < actions; i++)
+        for (i = 0; i < action_space; i++)
             if (agent_data->qvalue[state][i] >
                 agent_data->qvalue[state][action_max])
                 action_max = i;
@@ -70,8 +70,8 @@ double QLearnerOld::getMax_Q(int state)
     /* Q-Learning */
     /* Select best overall action (disregarding current state) */
     maxQ = agent_data->qvalue[0][0];
-    for (i = 1; i < states; i++)
-        for (j = 0; j < actions; j++)
+    for (i = 1; i < state_space; i++)
+        for (j = 0; j < action_space; j++)
             if (agent_data->qvalue[i][j] > maxQ) {
                 maxQ = agent_data->qvalue[i][j];
                 agent_data->state = j;

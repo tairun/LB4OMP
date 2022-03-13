@@ -88,8 +88,13 @@ else()
     reinforcement-learning/kmp_rl_agent_factory.cpp
     reinforcement-learning/agents/kmp_q_learner_old.cpp
     reinforcement-learning/agents/kmp_sarsa_learner_old.cpp
+    reinforcement-learning/agents/kmp_q_learner.cpp
+    reinforcement-learning/agents/kmp_sarsa_learner.cpp
+    reinforcement-learning/agents/kmp_expected_sarsa_learner.cpp
     reinforcement-learning/agents/kmp_doubleq_learner.cpp
+    reinforcement-learning/agents/kmp_qv_learner.cpp
     reinforcement-learning/agents/kmp_r_learner.cpp
+    reinforcement-learning/agents/kmp_deepq_learner.cpp
     # END Reinforcement Learning Extensions
     kmp_dispatch.cpp
     kmp_lock.cpp

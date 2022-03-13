@@ -28,8 +28,10 @@ public:
         std::cout << "[Reinforcement Learning] Using reward signal: " << reward_input << std::endl;
     }
 
-    /* Takes reward and performs the learning process. Returns the prediction for the next action from the agent. */
-    int step(int timestep, LoopData* stats)
+    /*
+     * Takes reward and performs the learning process. Returns the prediction for the next action from the agent.
+     * */
+    virtual int step(int timestep, LoopData* stats)
     {
         int next_action, next_state;
         double reward_value = reward(stats);           // Convert the reward signal into the actual reward value

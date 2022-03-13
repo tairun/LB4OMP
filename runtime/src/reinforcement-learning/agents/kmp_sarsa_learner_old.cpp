@@ -6,7 +6,7 @@
 
 // public
 SARSALearnerOld::SARSALearnerOld(int states, int actions) :
-                 RLAgentOld(states, actions, "SARSA Learner (old version)")
+        RLAgentOld(0, 0, std::string(), nullptr, states, actions, "SARSA Learner (old version)")
 {
     agent_data = new RLInfo(states, actions);
 }
@@ -110,6 +110,12 @@ void SARSALearnerOld::getReward(double exectime, int action)
             qval + agent_data->alpha *
                    (reward + (agent_data->gamma * qbest) -
                     qval); // Do the actual learning
+}
+/***************************************************************/
+
+void SARSALearnerOld::update(int next_state, int next_action, double reward_value)
+{
+    // Does nothing, just need this method because of interface.
 }
 
 /*

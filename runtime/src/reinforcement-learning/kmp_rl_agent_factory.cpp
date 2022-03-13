@@ -6,6 +6,7 @@
 #include "agents/kmp_sarsa_learner_old.h"
 #include "agents/kmp_q_learner.h"
 #include "agents/kmp_sarsa_learner.h"
+#include "agents/kmp_expected_sarsa_learner.h"
 #include "agents/kmp_doubleq_learner.h"
 #include "agents/kmp_qv_learner.h"
 #include "agents/kmp_r_learner.h"
@@ -15,18 +16,18 @@
 // public
 int RLAgentFactory::rlAgentSearch(const std::string& loop_id, int agent_type, LoopData* stats, int portfolio_size)
 {
-    if (!RLAgentFactory::GetTimesteps().count(loop_id)) {
-        RLAgentFactory::GetTimesteps().insert(std::make_pair(loop_id, 1));
+    if (!RLAgentFactory::get_timesteps().count(loop_id)) {
+        RLAgentFactory::get_timesteps().insert(std::make_pair(loop_id, 1));
         std::cout << "[Reinforcement Learning] Creating agent for loop: " << loop_id << std::endl;
         auto* agent = create_agent(agent_type, portfolio_size, portfolio_size, 6);
-        RLAgentFactory::GetAgents().insert(std::make_pair(loop_id, agent));
+        RLAgentFactory::get_agents().insert(std::make_pair(loop_id, agent));
         std::cout << "[Reinforcement Learning] Agent created" << std::endl;
         return 0; // Selects first DLS method for exploration
     } else {
-        auto* agent = RLAgentFactory::GetAgents().find(loop_id)->second;
-        int new_method = agent->step(RLAgentFactory::GetTimesteps().at(loop_id), stats);
-        std::cout << "[Reinforcement Learning] Timestep " << RLAgentFactory::GetTimesteps().at(loop_id) << " completed. New method is " << new_method << std::endl;
-        RLAgentFactory::GetTimesteps().at(loop_id)++;
+        auto* agent = RLAgentFactory::get_agents().find(loop_id)->second;
+        int new_method = agent->step(RLAgentFactory::get_timesteps().at(loop_id), stats);
+        std::cout << "[Reinforcement Learning] Timestep " << RLAgentFactory::get_timesteps().at(loop_id) << " completed. New method is " << new_method << std::endl;
+        RLAgentFactory::get_timesteps().at(loop_id)++;
         return new_method;
     }
 }
@@ -47,23 +48,28 @@ RLAgent* RLAgentFactory::create_agent(int agent_type, int states, int actions, i
             agent = new QLearner(states, actions);
             break;
         case (3):
-            agent = new SARSALearner(states, actions);
-            break;
-        case (4):
             agent = new DoubleQLearner(states, actions);
             break;
+        case (4):
+            agent = new SARSALearner(states, actions);
+            break;
         case (5):
-            agent = new QVLearner(states, actions);
+            agent = new ExpectedSARSALearner(states, actions);
             break;
         case (6):
-            agent = new RLearner(states, actions);
+            agent = new QVLearner(states, actions);
             break;
         case (7):
-            agent = new DeepQLearner(states, actions);
+            agent = new RLearner(states, actions);
             break;
         case (8):
+            agent = new DeepQLearner(states, actions);
+            break;
+        /*
+         * case (9):
             agent = new ChunkLearner(states, actions);
             break;
+        */
         default:
             std::cout << "[Reinforcement Learning] Unknown agent type specified: " << agent_type << std::endl;
     }
@@ -72,13 +78,13 @@ RLAgent* RLAgentFactory::create_agent(int agent_type, int states, int actions, i
 }
 
 // private
-std::unordered_map<std::string, int>& RLAgentFactory::GetTimesteps()
+std::unordered_map<std::string, int>& RLAgentFactory::get_timesteps()
 {
     static auto* timesteps = new std::unordered_map<std::string, int>();
     return *timesteps;
 }
 
-std::unordered_map<std::string, RLAgent*>& RLAgentFactory::GetAgents()
+std::unordered_map<std::string, RLAgent*>& RLAgentFactory::get_agents()
 {
     static auto* agents = new std::unordered_map<std::string, RLAgent*>();
     return *agents;

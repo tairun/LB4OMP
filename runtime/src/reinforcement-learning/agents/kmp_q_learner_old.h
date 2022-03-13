@@ -31,7 +31,9 @@ private:
     double getMax_Q(int state);
 
     /*
-     * Updates the qvalue according to the Bellman equation depending on the loop in this timestep.
+     * Updates the Q-Value according to the Bellman equation depending on the loop in this timestep.
      */
     void getReward(double exectime, int action);
+
+    void update(int next_state, int next_action, double reward_value) override;
 };

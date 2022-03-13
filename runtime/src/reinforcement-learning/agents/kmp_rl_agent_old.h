@@ -8,7 +8,8 @@
 
 class RLAgentOld : public RLAgent {
 public:
-    RLAgentOld(int numStates, int numActions, std::string agentName) : RLAgent(numStates, numActions, std::move(agentName)) {
+    explicit RLAgentOld(int num_states, int num_actions, std::string agentName) :
+             RLAgent(num_states, num_actions, std::move(agentName), nullptr) {
 
     }
 
@@ -18,6 +19,7 @@ public:
     int step(int timestep, LoopData* stats) override = 0;
 
 private:
+    void update(int next_state, int next_action, double reward_value) override = 0;
 
 protected:
 

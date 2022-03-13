@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+
 #include "kmp_rl_info.h"
 #include "kmp_rl_agent_old.h"
 #include "kmp_q_learner_old.h"
@@ -78,7 +79,7 @@ double QLearnerOld::getMax_Q(int state)
             }
 
     /* SARSA*/
-    /* Select best action based on qvalue of current state */
+    /* Select best action based on Q-Value of current state */
     /*
     maxQ = agent_data->qvalue[state][0];
     for (j = 1; j < ACTIONS; j++)
@@ -120,6 +121,12 @@ void QLearnerOld::getReward(double exectime, int action)
             qval + agent_data->alpha *
                    (reward + (agent_data->gamma * qbest) -
                     qval); // Do the actual learning
+}
+/***************************************************************/
+
+void QLearnerOld::update(int next_state, int next_action, double reward_value)
+{
+    // Does nothing, just need this method because of interface.
 }
 
 /*

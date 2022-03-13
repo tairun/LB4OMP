@@ -28,5 +28,8 @@ QVLearner::QVLearner(int num_states, int num_actions) :
 // private
 void QVLearner::update(int next_state, int next_action, double reward_value)
 {
-    qTableSum[current_state][nextState] = qTableA[current_state][nextState] + qTableB[current_state][nextState]; // Update the combined table (sum) to find best action in next step
+    v_table[current_state] += alpha * (reward_value + (gamma * v_table[next_state] - v_table[current_state]));
+    q_table[current_state][next_action] += alpha * (reward_value + gamma * v_table[next_state] - q(current_state, next_action));
+
+    //qTableSum[current_state][nextState] = qTableA[current_state][nextState] + qTableB[current_state][nextState]; // Update the combined table (sum) to find best action in next step
 }

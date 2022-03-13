@@ -6,23 +6,24 @@
 DoubleQLearner::DoubleQLearner(int num_states, int num_actions) :
                 RLAgent(num_states, num_actions, "DoubleQ Learner", q_table_sum)
 {
-    count = new int[state_space];
-    q_table_a = new double *[state_space];
-    q_table_b = new double *[state_space];
+    // Initialize first dimension of table
+    q_table_a   = new double *[state_space];
+    q_table_b   = new double *[state_space];
     q_table_sum = new double *[state_space];
 
+    // Initialize second dimension of table
     for (int i = 0; i < state_space; i++) {
-        q_table_a[i] = new double[action_space];
-        q_table_b[i] = new double[action_space];
+        q_table_a[i]   = new double[action_space];
+        q_table_b[i]   = new double[action_space];
         q_table_sum[i] = new double[action_space];
     }
 
-    for (int s = 0; s < state_space; s++)
-        for (int a = 0; a < action_space; a++) {
-            count[a] = 0;
-            q_table_a[s][a] = 0.0;
-            q_table_b[s][a] = 0.0;
-            q_table_sum[s][a] = 0.0;
+    // Initialize values of table
+    for (int a = 0; a < state_space; a++)
+        for (int s = 0; s < action_space; s++) {
+            q_table_a[s][a]   = 0.0f;
+            q_table_b[s][a]   = 0.0f;
+            q_table_sum[s][a] = 0.0f;
         }
 }
 

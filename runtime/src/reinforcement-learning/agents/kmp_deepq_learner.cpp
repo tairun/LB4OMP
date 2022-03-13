@@ -6,18 +6,7 @@
 DeepQLearner::DeepQLearner(int num_states, int num_actions) :
               RLAgent(num_states, num_actions, "DoubleQ Learner", nullptr)
 {
-    count = new int[state_space];
-    q_table = new double *[state_space];
-
-    for (int i = 0; i < state_space; i++) {
-        q_table[i] = new double[action_space];
-    }
-
-    for (int s = 0; s < state_space; s++)
-        for (int a = 0; a < action_space; a++) {
-            count[a] = 0;
-            q_table[s][a] = 0.0;
-        }
+    // TODO: Implementation
 }
 
 // private

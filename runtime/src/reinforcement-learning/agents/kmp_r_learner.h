@@ -1,7 +1,8 @@
 #pragma once
 
 #include <string>
-#include "kmp_rl_agent_new.h"
+
+#include "kmp_rl_agent.h"
 
 
 class RLearner : public RLAgent {

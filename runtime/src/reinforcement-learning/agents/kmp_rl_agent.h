@@ -11,10 +11,10 @@
 
 class RLAgent {
 public:
-    RLAgent(int num_states, int num_actions, std::string agent_name, double** table) : state_space(num_states),
-                                                                       action_space(num_actions),
-                                                                       name(std::move(agent_name)),
-                                                                       q(table)
+    RLAgent(int num_states, int num_actions, std::string agent_name, double** ref_table) : state_space(num_states),
+                                                                                       action_space(num_actions),
+                                                                                       name(std::move(agent_name)),
+                                                                                       table(ref_table)
     {
         count = new int[state_space];
 
@@ -35,7 +35,7 @@ public:
     {
         int next_action, next_state;
         double reward_value = reward(stats);           // Convert the reward signal into the actual reward value
-        next_action = policy(q);                  // Predict the next action according to the policy and Q-Values
+        next_action = policy(table);                  // Predict the next action according to the policy and Q-Values
         next_state = next_action;                      // In our scenario the next action and desired state is the same
         update(next_state, next_action, reward_value); // Update the Q-Values based on the learning algorithm
 
@@ -52,11 +52,11 @@ public:
     }
 
 private:
-    double** q;
+    double** table; // Pointer to table to lookup the best next action
 
     /* The policy chooses an action according to the learned experience of the agent. */
     /* Implements the Epsilon-Greedy action selection. */
-    int policy(double** table)
+    int policy(double** ref_table)
     {
         std::default_random_engine re(time(0));
         std::uniform_real_distribution<double> uniform(0, 1);
@@ -75,7 +75,7 @@ private:
             // Evaluate Q-Table for action with highest Q-Value
             for (int i = 0; i < action_space; i++)
             {
-                if (table[current_state][i] >= maxQ)
+                if (ref_table[current_state][i] >= maxQ)
                 {
                     action_candidates.push_back(i);
                 }
@@ -95,8 +95,6 @@ protected:
     int action_space;      // Amount of action available to the agent
     int current_state{0};  // We always start with static scheduling method as initial state (it's the first method from the portfolio)
     int current_action{0}; // Set action also to selecting the static scheduling method
-
-    int *count;            // Saves the amount which an action has been taken
 
     double alpha{0.85f};   // Learning rate
     double gamma{0.95f};   // Discount factor
@@ -204,19 +202,43 @@ protected:
     /*
      * Searches for the best action (index) for a given state (using the Q-Values).
      * */
-    int arg_max(double** table, int next_state) const
+    int arg_max(double** ref_table, int next_state) const
     {
         int best_index = 0;
         double best_current = -9999;
 
         for (int i = 0; i < action_space; i++)
         {
-            if (table[next_state][i] > best_current)
+            if (ref_table[next_state][i] > best_current)
             {
-                best_current = table[next_state][i];
+                best_current = ref_table[next_state][i];
                 best_index = i;
             }
         }
         return best_index;
+    }
+
+    /*
+     * Returns a pointer to the Q-Values (array) stored for a particular state.
+     * */
+    double* q(int state) {
+        return table[state];
+    }
+
+    /*
+ * Returns the Q-Value stored for a particular state-action pair.
+ * */
+    double q(int state, int action) {
+        return table[state][action];
+    }
+
+    double sum(const double* array) const
+    {
+        double sum = 0;
+
+        for (int i = 0; i < action_space; i++)
+            sum += array[i];
+
+        return sum;
     }
 };

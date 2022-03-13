@@ -11,13 +11,11 @@
 
 class RLAgent {
 public:
-    RLAgent(int num_states, int num_actions, std::string agent_name, double** ref_table) : state_space(num_states),
-                                                                                       action_space(num_actions),
-                                                                                       name(std::move(agent_name)),
-                                                                                       table(ref_table)
+    RLAgent(int num_states, int num_actions, std::string agent_name, double** table_ref) : state_space(num_states),
+                                                                                           action_space(num_actions),
+                                                                                           name(std::move(agent_name)),
+                                                                                           table(table_ref)
     {
-        count = new int[state_space];
-
         alpha   = read_env_double("KMP_RL_ALPHA");     // Read learning rate from env
         gamma   = read_env_double("KMP_RL_GAMMA");     // Read discount factor from env
         epsilon = read_env_double("KMP_RL_EPSILON"); // Read exploration rate from env
@@ -107,64 +105,16 @@ protected:
     std::string name;
     std::string reward_input{"looptime"};
 
+    /*----------------------------------------------------------------------------*/
+    /*                            MEMBER FUNCTIONS                                */
+    /*----------------------------------------------------------------------------*/
+
     /* Updates the internal values of the agent. */
     virtual void update(int next_state, int next_action, double reward_value) = 0;
 
-    /****************************************************************************/
-
-    /* Reads the environment variable with the name 'var_name' and parses it as a string */
-    static std::string read_env_string(const char* var_name)
-    {
-        if (std::getenv(var_name) != nullptr)
-        {
-            return std::string(std::getenv(var_name));
-        }
-        else
-        {
-            std::cout << "[Reinforcement Learning] Couldn't read '" << var_name << "' from env." << std::endl;
-        }
-    }
-
-    /* Reads the environment variable with the name 'var_name' and parses it as a double */
-    static double read_env_double(const char* var_name)
-    {
-        if (std::getenv(var_name) != nullptr)
-        {
-            return std::stod(std::getenv(var_name));
-        }
-        else
-        {
-            std::cout << "[Reinforcement Learning] Couldn't read '" << var_name << "' from env." << std::endl;
-        }
-    }
-
-    /* Reads the reward signal variable and return the  */
-    double get_reward_signal(LoopData* stats)
-    {
-        double reward_signal = 0;
-
-        if (reward_input == "looptime")
-        {
-            reward_signal = stats->cTime;
-        }
-        else if (reward_input == "loadimbalance")
-        {
-            reward_signal = stats->cLB;
-        }
-        else if (reward_input == "robustness")
-        {
-            std::cout << "[Reinforcement Learning] Not yet implemented: " << reward_input << std::endl;
-            reward_signal = stats->cTime;
-        }
-        else
-        {
-            std::cout << "[Reinforcement Learning] Invalid reward signal specified in env: " << reward_input << std::endl;
-        }
-
-        return reward_signal;
-    }
-
-    /* Transforms the reward signal into the reward value */
+    /*
+     * Transforms the reward signal into the reward value.
+     * */
     double reward(LoopData* stats)
     {
         double reward_signal = get_reward_signal(stats);
@@ -221,22 +171,89 @@ protected:
     /*
      * Returns a pointer to the Q-Values (array) stored for a particular state.
      * */
-    double* q(int state) {
+    double* Q(int state)
+    {
         return table[state];
     }
 
     /*
- * Returns the Q-Value stored for a particular state-action pair.
- * */
-    double q(int state, int action) {
+     * Returns the Q-Value stored for a particular state-action pair.
+     * */
+    double Q(int state, int action)
+    {
         return table[state][action];
     }
 
-    double sum(const double* array) const
-    {
-        double sum = 0;
+    /*----------------------------------------------------------------------------*/
+    /*                              UTIL FUNCTIONS                                */
+    /*----------------------------------------------------------------------------*/
 
-        for (int i = 0; i < action_space; i++)
+    /*
+     * Reads the environment variable with the name 'var_name' and parses it as a string.
+     * */
+    static std::string read_env_string(const char* var_name)
+    {
+        if (std::getenv(var_name) != nullptr)
+        {
+            return std::string(std::getenv(var_name));
+        }
+        else
+        {
+            std::cout << "[Reinforcement Learning] Couldn't read '" << var_name << "' from env." << std::endl;
+        }
+    }
+
+    /*
+     * Reads the environment variable with the name 'var_name' and parses it as a double.
+     * */
+    static double read_env_double(const char* var_name)
+    {
+        if (std::getenv(var_name) != nullptr)
+        {
+            return std::stod(std::getenv(var_name));
+        }
+        else
+        {
+            std::cout << "[Reinforcement Learning] Couldn't read '" << var_name << "' from env." << std::endl;
+        }
+    }
+
+    /*
+     * Checks the 'reward_input' member variable and returns the corresponding reward signal.
+     * */
+    double get_reward_signal(LoopData* stats)
+    {
+        double reward_signal = 0;
+
+        if (reward_input == "looptime")
+        {
+            reward_signal = stats->cTime;
+        }
+        else if (reward_input == "loadimbalance")
+        {
+            reward_signal = stats->cLB;
+        }
+        else if (reward_input == "robustness")
+        {
+            std::cout << "[Reinforcement Learning] Not yet implemented: " << reward_input << std::endl;
+            reward_signal = stats->cTime;
+        }
+        else
+        {
+            std::cout << "[Reinforcement Learning] Invalid reward signal specified in env: " << reward_input << std::endl;
+        }
+
+        return reward_signal;
+    }
+
+    /*
+     * Returns the sum of values (double) in an array.
+     * */
+    static double sum(const double* array, int length)
+    {
+        double sum = 0.0f;
+
+        for (int i = 0; i < length; i++)
             sum += array[i];
 
         return sum;

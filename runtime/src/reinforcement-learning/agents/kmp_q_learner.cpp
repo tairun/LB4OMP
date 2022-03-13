@@ -26,5 +26,5 @@ QLearner::QLearner(int num_states, int num_actions) :
 void QLearner::update(int next_state, int next_action, double reward_value)
 {
     int best_action = arg_max(q_table, next_state);
-    q_table[current_state][current_action] += alpha * (reward_value + gamma * q_table[next_state][best_action] - q_table[current_state][current_action]);
+    q_table[current_state][current_action] += alpha * (reward_value + gamma * Q(next_state, best_action) - Q(current_state, current_action));
 }

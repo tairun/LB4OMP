@@ -1,5 +1,6 @@
-#include <random>
 #include <algorithm>
+#include <random>
+
 #include "kmp_expected_sarsa_learner.h"
 
 // public
@@ -26,6 +27,6 @@ ExpectedSARSALearner::ExpectedSARSALearner(int numStates, int numActions) :
 void ExpectedSARSALearner::update(int next_state, int next_action, double reward_value)
 {
     int best_action = arg_max(q_table, next_state);
-    double expected_return = (1 - epsilon) * q(next_state, best_action) + (epsilon / action_space) * sum(q(next_state));
-    q_table[current_state][next_action] += alpha * (reward_value + gamma * expected_return - q(current_state, next_action));
+    double expected_return = (1 - epsilon) * Q(next_state, best_action) + (epsilon / action_space) * sum(Q(next_state), action_space);
+    q_table[current_state][next_action] += alpha * (reward_value + gamma * expected_return - Q(current_state, next_action));
 }

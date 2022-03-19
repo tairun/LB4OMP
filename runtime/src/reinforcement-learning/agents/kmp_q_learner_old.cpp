@@ -122,7 +122,8 @@ void QLearnerOld::getReward(double exectime, int action)
                    (reward + (agent_data->gamma * qbest) -
                     qval); // Do the actual learning
 }
-/***************************************************************/
+
+/****************************************************************************/
 
 void QLearnerOld::update(int next_state, int next_action, double reward_value)
 {

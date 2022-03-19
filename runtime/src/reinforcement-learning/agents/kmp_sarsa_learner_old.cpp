@@ -6,7 +6,7 @@
 
 // public
 SARSALearnerOld::SARSALearnerOld(int states, int actions) :
-        RLAgentOld(0, 0, std::string(), nullptr, states, actions, "SARSA Learner (old version)")
+                 RLAgentOld(states, actions, "SARSA Learner (old version)")
 {
     agent_data = new RLInfo(states, actions);
 }
@@ -111,7 +111,7 @@ void SARSALearnerOld::getReward(double exectime, int action)
                    (reward + (agent_data->gamma * qbest) -
                     qval); // Do the actual learning
 }
-/***************************************************************/
+/********************************************************************************/
 
 void SARSALearnerOld::update(int next_state, int next_action, double reward_value)
 {

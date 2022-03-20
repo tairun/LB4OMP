@@ -273,6 +273,7 @@ int goldenChunkSize(int N, int P, int AUTO_FLAG) {
 
     // default for auto to use goldenChunk unless user do not want to by explicitly export KMP_Golden_Chunksize
     golden = AUTO_FLAG;
+
     if (std::getenv("KMP_Golden_Chunksize") != NULL) {
         golden = atoi(std::getenv("KMP_Golden_Chunksize"));
     }
@@ -293,10 +294,13 @@ void autoSetChunkSize(int N, int P) {
     if (autoLoopData.at(autoLoopName).cDLS == STATIC) // STATIC
     {
         autoLoopData.at(autoLoopName).cChunk = N / P;
-    } else if (autoLoopData.at(autoLoopName).cDLS == SS) // SS
+    }
+    else if (autoLoopData.at(autoLoopName).cDLS == SS) // SS
     {
         autoLoopData.at(autoLoopName).cChunk = 1;
-    } else {
+    }
+    else
+    {
         autoLoopData.at(autoLoopName).cChunk = 1;
     }
 
@@ -945,35 +949,41 @@ void auto_DLS_Search(int gtid, int N, int P, int option) {
     }
 
     /* -------------------------- START Reinforcement Learning Extensions -------------------------*/
-    else if (option >= 6 && option <= 12)
+    else if (option >= 6 && option <= 14)
     /*
      * (6):  QLearnerOld
      * (7):  SARSALearnerOld
      * (8):  QLearner
-     * (9):  SARSALearner
-     * (10): DoubleQLearner
-     * (11): QVLearner
-     * (12): RLearner
-     * (12): DeepQLearner
+     * (9):  DoubleQLearner
+     * (10): SARSALearner
+     * (11): ExpectedSARSALearner
+     * (12): QVLearner
+     * (13): RLearner
+     * (14): DeepQLearner
+     * (15): ChunkLearner
      * */
     {
         std::string loop_id = autoLoopName;
-        int new_method = RLAgentFactory::rlAgentSearch(loop_id, option, &autoLoopData.at(autoLoopName), (int)autoDLSPortfolio.size() - 1);
+        int new_method = RLAgentFactory::rlAgentSearch(loop_id, option, &autoLoopData.at(autoLoopName), (int)autoDLSPortfolio.size());
         autoSetChunkSize(N, P); // set chunk size
         autoLoopData.at(autoLoopName).cDLS = new_method;
     }
-    else if (option == 13)
+    else if (option == 15)
     /*
-     * (13): Direct chunk selection with reinforcement learning
+     * (15): Direct chunk selection with reinforcement learning
      * */
     {
+        autoLoopData.at(autoLoopName).n = N;
+        autoLoopData.at(autoLoopName).p = P;
         std::string loop_id = autoLoopName;
-        int chunks = RLAgentFactory::rlAgentSearch(loop_id, option, &autoLoopData.at(autoLoopName), (int)autoDLSPortfolio.size() - 1);
-        //autoSetChunkSize(N, P); // set chunk size
-        autoLoopData.at(autoLoopName).cDLS = 0; // set static, we are only interested in the chunks
-        autoLoopData.at(autoLoopName).cChunk = chunks;
+
+        //TODO@kurluc00: Make sure portfolio_size is odd number!
+        int chunk_size = RLAgentFactory::rlAgentSearch(loop_id, option, &autoLoopData.at(autoLoopName), (int)autoDLSPortfolio.size());
+
+        autoLoopData.at(autoLoopName).cDLS = 1; // set self-scheduling, we are only interested in the chunk_size
+        autoLoopData.at(autoLoopName).cChunk = chunk_size;
     }
-    /* Add more Reinforcement Learning methods here */
+    /* -------------------------- Add more Reinforcement Learning methods here --------------------*/
     /* -------------------------- END Reinforcement Learning Extensions ---------------------------*/
 
     else // normal LLVM auto - it will not reach to this part if chunk is higher

@@ -1,6 +1,9 @@
 #pragma once
 
 typedef struct {
+    int n;
+    int p;
+    int num_it;
     int autoSearch;
     int cDLS;           // current DLS
     int bestDLS;        // Best DLS

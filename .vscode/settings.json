@@ -88,5 +88,6 @@
         "semaphore": "cpp",
         "cinttypes": "cpp"
     },
-    "cmake.configureOnOpen": true
+    "cmake.configureOnOpen": true,
+    "esbonio.sphinx.confDir": ""
 }

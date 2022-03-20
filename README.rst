@@ -1,4 +1,38 @@
-> This repository is a fork of the original code at: https://github.com/unibas-dmi-hpc/LB4OMP. It extends the original work with a automatic method for scheduling algorithm selection based on reinforcement learning.
+| This repository is a fork of the original code at: https://github.com/unibas-dmi-hpc/LB4OMP. It extends the original work with a automatic method for scheduling algorithm selection based on reinforcement learning.
+
+================================
+REINFORCEMENT LEARNING EXTENSION
+================================
+
+This extension provides a reinforcement learning implementation of common learning algorithm for RL agents to select a dynamic loop scheduling algorithm
+automatically during runtime.
+The following learning algorithms are supported:
+
++------------+------------------+-------------+-------------------------+
+| Auto-Index | Method Name      | Description | Parameters (defaults)   |
+|            |                  |             +-------+-------+---------+
+|            |                  |             | alpha | gamma | epsilon |
++------------+------------------+-------------+-------+-------+---------+
+|      6     | Q-Learning (Old) |             |       |       |         |
++------------+------------------+-------------+-------+-------+---------+
+|      7     | SARSA (Old)      |             |       |       |         |
++------------+------------------+-------------+-------+-------+---------+
+|      8     | Q-Learning       |             |       |       |         |
++------------+------------------+-------------+-------+-------+---------+
+|      9     | DoubleQ-Learning |             |       |       |         |
++------------+------------------+-------------+-------+-------+---------+
+|     10     | SARSA            |             |       |       |         |
++------------+------------------+-------------+-------+-------+---------+
+|     11     | Expected SARSA   |             |       |       |         |
++------------+------------------+-------------+-------+-------+---------+
+|     12     | QV-Learning      |             |       |       |         |
++------------+------------------+-------------+-------+-------+---------+
+|     13     | R-Learning       |             |       |       |         |
++------------+------------------+-------------+-------+-------+---------+
+|     14     | DeepQ-Learning   |             |       |       |         |
++------------+------------------+-------------+-------+-------+---------+
+|     15     | Chunk Learning   |             |       |       |         |
++------------+------------------+-------------+-------+-------+---------+
 
 ======
 LB4OMP

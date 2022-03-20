@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <ctime>
+#include <cmath>
 #include <iostream>
 #include <random>
 #include <string>
@@ -22,7 +23,8 @@ public:
         //lamdba  = read_env_double("KMP_RL_LAMBDA");           // Read discount factor from env
         //tau     = read_env_double("KMP_RL_TAU");          // Read exploration rate from env
         reward_input = read_env_string("KMP_RL_REWARD");
-        alpha_decay_rate = read_env_double("KMP_RL_ALPHA_DECAY");
+        alpha_decay_factor = read_env_double("KMP_RL_ALPHA_DECAY");
+        epsilon_decay_factor = read_env_double("KMP_RL_EPS_DECAY");
 
         std::cout << "[Reinforcement Learning] Configuring agent as: " << name << std::endl;
         std::cout << "[Reinforcement Learning] Using reward signal: " << reward_input << std::endl;
@@ -31,22 +33,20 @@ public:
     /*
      * Takes reward and performs the learning process. Returns the prediction for the next action from the agent.
      * */
-    virtual int step(int timestep, LoopData* stats)
+    virtual int step(int episode, int timestep, LoopData* stats)
     {
         int next_action, next_state;
         double reward_value = reward(stats);           // Convert the reward signal into the actual reward value
-        next_action = policy(table);                  // Predict the next action according to the policy and Q-Values
+        next_action = policy(table);           // Predict the next action according to the policy and Q-Values
         next_state = next_action;                      // In our scenario the next action and desired state is the same
         update(next_state, next_action, reward_value); // Update the Q-Values based on the learning algorithm
 
         current_state = next_state;                    // Update the state in the class
         current_action = next_action;                  // Update the action in the class
 
-        // Decay learning rate if the value is not zero
-        if ((bool)alpha_decay_rate)
-        {
-            alpha = alpha * alpha_decay_rate;
-        }
+        // Decay
+        alpha_decay(episode);
+        epsilon_decay(episode);
 
         return next_state;
     }
@@ -54,20 +54,46 @@ public:
 private:
     double** table; // Pointer to table to lookup the best next action
 
+protected:
+    int state_space;       // Amount of states in the environment
+    int action_space;      // Amount of action available to the agent
+    int current_state{0};  // We always start with static scheduling method as initial state (it's the first method from the portfolio)
+    int current_action{0}; // Set action also to selecting the static scheduling method
+
+    double alpha{0.85f};        // Learning rate
+    double alpha_min{0.10f};    // Learning rate
+    double gamma{0.95f};        // Discount factor
+    double epsilon{1.00f};      // Exploration rate
+    double epsilon_min{0.10f};  // Exploration rate
+    double lamdba{0.00f};       // QV-Learning specific
+    double tau{0.00f};          // QV-Learning specific
+    double low{-99.00f}, high{-999.00f};
+    double alpha_decay_factor{0.90f};
+    double epsilon_decay_factor{0.90f};
+
+    std::string name;
+    std::string reward_input{"looptime"};
+
+    /*----------------------------------------------------------------------------*/
+    /*                            MEMBER FUNCTIONS                                */
+    /*----------------------------------------------------------------------------*/
+
     /* The policy chooses an action according to the learned experience of the agent. */
     /* Implements the Epsilon-Greedy action selection. */
-    int policy(double** ref_table)
+    virtual int policy(double** ref_table)
     {
         std::default_random_engine re(time(0));
         std::uniform_real_distribution<double> uniform(0, 1);
 
         // Switches between exploration and exploitation with the probability of epsilon (or 1-epsilon)
-        if (uniform(re) < epsilon) // Explore (random action)
+        if (uniform(re) < epsilon)
+        // Explore (random action)
         {
             int next_action = sample_action(); // Chooses action (which is equal to the next state)
             return next_action;
         }
-        else // Exploit (previous knowledge)
+        else
+        // Exploit (previous knowledge)
         {
             int maxQ = -9999;
             std::vector<int> action_candidates;
@@ -83,33 +109,12 @@ private:
 
             // Selects a random action if multiple actions have the same Q-Value
             std::uniform_int_distribution<int> uniform2(0, (int)action_candidates.size());
-            int next_state_index = uniform2(re);
-            int next_state = action_candidates[next_state_index];
+            int next_action_index = uniform2(re);
+            int next_action = action_candidates[next_action_index];
 
-            return next_state;
+            return next_action;
         }
     }
-
-protected:
-    int state_space;       // Amount of states in the environment
-    int action_space;      // Amount of action available to the agent
-    int current_state{0};  // We always start with static scheduling method as initial state (it's the first method from the portfolio)
-    int current_action{0}; // Set action also to selecting the static scheduling method
-
-    double alpha{0.85f};   // Learning rate
-    double gamma{0.95f};   // Discount factor
-    double epsilon{0.10f}; // Exploration rate
-    double lamdba{0.00f};  // QV-Learning specific
-    double tau{0.00f};     // QV-Learning specific
-    double low{-99.0f}, high{-999.0f};
-    double alpha_decay_rate{0.0f};
-
-    std::string name;
-    std::string reward_input{"looptime"};
-
-    /*----------------------------------------------------------------------------*/
-    /*                            MEMBER FUNCTIONS                                */
-    /*----------------------------------------------------------------------------*/
 
     /* Updates the internal values of the agent. */
     virtual void update(int next_state, int next_action, double reward_value) = 0;
@@ -119,6 +124,7 @@ protected:
      * */
     double reward(LoopData* stats)
     {
+        //TODO@kurluc00: Explore negative vs. positive Rewards discussion for agents.
         double reward_signal = get_reward_signal(stats);
 
         // Good case
@@ -259,5 +265,15 @@ protected:
             sum += array[i];
 
         return sum;
+    }
+
+    void alpha_decay(int episode)
+    {
+        alpha = fmax(alpha * (episode * alpha_decay_factor), alpha_min);
+    }
+
+    void epsilon_decay(int episode)
+    {
+        epsilon = fmax(epsilon * (episode * epsilon_decay_factor), epsilon_min);
     }
 };

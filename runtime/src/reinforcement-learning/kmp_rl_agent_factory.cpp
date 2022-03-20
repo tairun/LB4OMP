@@ -1,3 +1,9 @@
+// -------------------------- Reinforcement Learning Extension ---------------------------------//
+//  June 2022
+//  Luc Kury, <luc.kury@unibas.ch>
+//  University of Basel, Switzerland
+//  --------------------------------------------------------------------------------------------//
+
 #include <string>
 #include <iostream>
 
@@ -11,6 +17,7 @@
 #include "agents/kmp_qv_learner.h"
 #include "agents/kmp_r_learner.h"
 #include "agents/kmp_deepq_learner.h"
+#include "agents/kmp_chunk_learner.h"
 
 
 // public
@@ -20,21 +27,22 @@ int RLAgentFactory::rlAgentSearch(const std::string& loop_id, int agent_type, Lo
     {
         RLAgentFactory::get_timesteps().insert(std::make_pair(loop_id, 1));
         std::cout << "[Reinforcement Learning] Creating agent for loop: " << loop_id << std::endl;
-        auto* agent = create_agent(agent_type, portfolio_size, portfolio_size, 6);
+        auto* agent = create_agent(agent_type, stats,portfolio_size, portfolio_size, 6);
         RLAgentFactory::get_agents().insert(std::make_pair(loop_id, agent));
         std::cout << "[Reinforcement Learning] Agent created" << std::endl;
         return 0; // Selects first DLS method for exploration
-    } else
+    }
+    else
     {
         auto* agent = RLAgentFactory::get_agents().find(loop_id)->second;
-        int new_method = agent->step(RLAgentFactory::get_timesteps().at(loop_id), stats);
+        int new_method = agent->step(0, RLAgentFactory::get_timesteps().at(loop_id), stats);
         std::cout << "[Reinforcement Learning] Timestep " << RLAgentFactory::get_timesteps().at(loop_id) << " completed. New method is " << new_method << std::endl;
         RLAgentFactory::get_timesteps().at(loop_id)++;
         return new_method;
     }
 }
 
-RLAgent* RLAgentFactory::create_agent(int agent_type, int states, int actions, int offset = 0)
+RLAgent* RLAgentFactory::create_agent(int agent_type, LoopData* stats, int states, int actions, int offset = 0)
 {
     RLAgent* agent = nullptr;
     int new_type = agent_type - offset;
@@ -68,11 +76,9 @@ RLAgent* RLAgentFactory::create_agent(int agent_type, int states, int actions, i
         case (8):
             agent = new DeepQLearner(states, actions);
             break;
-        /*
-         * case (9):
-            agent = new ChunkLearner(states, actions);
+        case (9):
+            agent = new ChunkLearner(states, actions, stats);
             break;
-        */
         default:
             std::cout << "[Reinforcement Learning] Unknown agent type specified: " << agent_type << std::endl;
     }

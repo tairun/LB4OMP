@@ -14,7 +14,7 @@ public:
     /*
     * Creates and returns a pointer to a learning agent with the specified type and options.
     * */
-    static RLAgent* create_agent(int type, int states, int actions, int offset);
+    static RLAgent* create_agent(int type, LoopData* stats, int states, int actions, int offset);
 
     /*
      * Main method for Reinforcement Learning AUTO method in LB4OMP.

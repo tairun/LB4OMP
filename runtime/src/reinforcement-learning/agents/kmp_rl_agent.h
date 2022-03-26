@@ -15,8 +15,8 @@
 #include <string>
 
 #include "../kmp_loopdata.h"
-#include "../initializers/kmp_base_init.h"
-#include "../policies/kmp_base_policy.h"
+//#include "../initializers/kmp_base_init.h"
+//#include "../policies/kmp_base_policy.h"
 
 
 class RLAgent {
@@ -94,8 +94,6 @@ public:
 
 private:
     double** table{nullptr}; // Pointer to table to lookup the best next action
-    BaseInit* init_provider{nullptr};
-    BasePolicy* policy_provider{nullptr};
 
 protected:
     int state_space;       // Amount of states in the environment

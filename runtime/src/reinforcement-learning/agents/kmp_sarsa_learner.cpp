@@ -1,8 +1,8 @@
-#include <algorithm>
-#include <ctime>
 #include <random>
 
+#include "kmp_rl_agent.h"
 #include "kmp_sarsa_learner.h"
+
 
 // public
 SARSALearner::SARSALearner(int num_states, int num_actions) :

@@ -1,7 +1,8 @@
-#include <algorithm>
 #include <random>
 
+#include "kmp_rl_agent.h"
 #include "kmp_expected_sarsa_learner.h"
+
 
 // public
 ExpectedSARSALearner::ExpectedSARSALearner(int numStates, int numActions) :

@@ -1,7 +1,9 @@
-#include <algorithm>
+
 #include <random>
 
+#include "kmp_rl_agent.h"
 #include "kmp_qv_learner.h"
+
 
 // public
 QVLearner::QVLearner(int num_states, int num_actions) :

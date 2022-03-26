@@ -1,7 +1,8 @@
-#include <algorithm>
 #include <random>
 
+#include "kmp_rl_agent.h"
 #include "kmp_doubleq_learner.h"
+
 
 // public
 DoubleQLearner::DoubleQLearner(int num_states, int num_actions) :

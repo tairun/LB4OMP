@@ -1,8 +1,8 @@
-#include <algorithm>
-#include <ctime>
 #include <random>
 
+#include "kmp_rl_agent.h"
 #include "kmp_q_learner.h"
+
 
 // public
 QLearner::QLearner(int num_states, int num_actions) :

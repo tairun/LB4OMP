@@ -1,7 +1,8 @@
-#include <algorithm>
 #include <random>
 
+#include "kmp_rl_agent.h"
 #include "kmp_r_learner.h"
+
 
 // public
 RLearner::RLearner(int num_states, int num_actions) :

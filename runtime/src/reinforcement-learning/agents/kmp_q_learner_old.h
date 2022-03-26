@@ -33,7 +33,7 @@ private:
     /*
      * Updates the Q-Value according to the Bellman equation depending on the loop in this timestep.
      */
-    void getReward(double exectime, int action);
+    double getReward(double exectime, int action);
 
     void update(int next_state, int next_action, double reward_value) override;
 };

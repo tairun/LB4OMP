@@ -2,6 +2,7 @@
 #include <random>
 
 #include "kmp_deepq_learner.h"
+#include "../../thirdparty/MiniDNN/include/MiniDNN.h"
 
 // public
 DeepQLearner::DeepQLearner(int num_states, int num_actions) :

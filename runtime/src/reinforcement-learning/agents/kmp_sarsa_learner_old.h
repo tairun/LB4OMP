@@ -39,7 +39,7 @@ private:
      * the loop in this timestep *action:int: seleceted action in previous step
      * choice:int: current loop id
      */
-    void getReward(double exectime, int action);
+    double getReward(double exectime, int action);
 
     void update(int next_state, int next_action, double reward_value) override;
 };

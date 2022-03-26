@@ -1,3 +1,10 @@
+// -------------------------- Reinforcement Learning Extension ---------------------------------//
+//  June 2022
+//  Master Thesis
+//  Luc Kury, <luc.kury@unibas.ch>
+//  University of Basel, Switzerland
+//  --------------------------------------------------------------------------------------------//
+
 #pragma once
 
 #include <algorithm>
@@ -8,6 +15,8 @@
 #include <string>
 
 #include "../kmp_loopdata.h"
+#include "../initializers/kmp_base_init.h"
+#include "../policies/kmp_base_policy.h"
 
 
 class RLAgent {
@@ -19,9 +28,9 @@ public:
     {
         alpha   = read_env_double("KMP_RL_ALPHA");     // Read learning rate from env
         gamma   = read_env_double("KMP_RL_GAMMA");     // Read discount factor from env
-        epsilon = read_env_double("KMP_RL_EPSILON"); // Read exploration rate from env
+        epsilon = read_env_double("KMP_RL_EPSILON");   // Read exploration rate from env
         //lamdba  = read_env_double("KMP_RL_LAMBDA");           // Read discount factor from env
-        //tau     = read_env_double("KMP_RL_TAU");          // Read exploration rate from env
+        //tau     = read_env_double("KMP_RL_TAU");              // Read exploration rate from env
         reward_input = read_env_string("KMP_RL_REWARD");
         alpha_decay_factor = read_env_double("KMP_RL_ALPHA_DECAY");
         epsilon_decay_factor = read_env_double("KMP_RL_EPS_DECAY");
@@ -37,7 +46,7 @@ public:
     {
         int next_action, next_state;
         double reward_value = reward(stats);           // Convert the reward signal into the actual reward value
-        next_action = policy(table);           // Predict the next action according to the policy and Q-Values
+        next_action = policy(episode, timestep, table);           // Predict the next action according to the policy and Q-Values
         next_state = next_action;                      // In our scenario the next action and desired state is the same
         update(next_state, next_action, reward_value); // Update the Q-Values based on the learning algorithm
 
@@ -51,8 +60,42 @@ public:
         return next_state;
     }
 
+    /*
+    * Chooses a random action from the action space uniformly.
+    * */
+    int sample_action() const
+    {
+        std::default_random_engine re(time(nullptr));
+        std::uniform_int_distribution<int> uniform(0, action_space);
+
+        return uniform(re);
+    }
+
+    // Getters
+    double get_epsilon() const {
+        return epsilon;
+    }
+
+    int get_state_space() const {
+        return state_space;
+    }
+
+    int get_action_space() const {
+        return action_space;
+    }
+
+    double** get_table() const {
+        return table;
+    }
+
+    int get_current_state() const {
+        return current_state;
+    }
+
 private:
-    double** table; // Pointer to table to lookup the best next action
+    double** table{nullptr}; // Pointer to table to lookup the best next action
+    BaseInit* init_provider{nullptr};
+    BasePolicy* policy_provider{nullptr};
 
 protected:
     int state_space;       // Amount of states in the environment
@@ -80,9 +123,9 @@ protected:
 
     /* The policy chooses an action according to the learned experience of the agent. */
     /* Implements the Epsilon-Greedy action selection. */
-    virtual int policy(double** ref_table)
+    virtual int policy(int episode, int timestep, double** ref_table)
     {
-        std::default_random_engine re(time(0));
+        std::default_random_engine re(time(nullptr));
         std::uniform_real_distribution<double> uniform(0, 1);
 
         // Switches between exploration and exploitation with the probability of epsilon (or 1-epsilon)
@@ -144,17 +187,6 @@ protected:
             high = reward_signal;
             return -2.0;
         }
-    }
-
-    /*
-     * Chooses a random action from the action space uniformly.
-     * */
-    int sample_action() const
-    {
-        std::default_random_engine re(time(0));
-        std::uniform_int_distribution<int> uniform(0, action_space);
-
-        return uniform(re);
     }
 
     /*

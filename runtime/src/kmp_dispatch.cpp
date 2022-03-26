@@ -24,7 +24,7 @@
 
 /* -------------------------- START Reinforcement Learning Extensions -------------------------*/
 #include "kmp_loopdata.h"
-#include "reinforcement-learning/kmp_rl_agent_factory.h"
+#include "reinforcement-learning/kmp_rl_agent_provider.h"
 /* -------------------------- END Reinforcement Learning Extensions ---------------------------*/
 #include "kmp.h"
 #include <iostream>
@@ -963,8 +963,8 @@ void auto_DLS_Search(int gtid, int N, int P, int option) {
      * (15): ChunkLearner
      * */
     {
-        std::string loop_id = autoLoopName;
-        int new_method = RLAgentFactory::rlAgentSearch(loop_id, option, &autoLoopData.at(autoLoopName), (int)autoDLSPortfolio.size());
+        //std::string loop_id = autoLoopName;
+        int new_method = RLAgentProvider::rlAgentSearch(autoLoopName, option, &autoLoopData.at(autoLoopName), (int)autoDLSPortfolio.size());
         autoSetChunkSize(N, P); // set chunk size
         autoLoopData.at(autoLoopName).cDLS = new_method;
     }
@@ -975,15 +975,14 @@ void auto_DLS_Search(int gtid, int N, int P, int option) {
     {
         autoLoopData.at(autoLoopName).n = N;
         autoLoopData.at(autoLoopName).p = P;
-        std::string loop_id = autoLoopName;
+        //std::string loop_id = autoLoopName;
 
-        //TODO@kurluc00: Make sure portfolio_size is odd number!
-        int chunk_size = RLAgentFactory::rlAgentSearch(loop_id, option, &autoLoopData.at(autoLoopName), (int)autoDLSPortfolio.size());
+        int chunk_size = RLAgentProvider::rlAgentSearch(autoLoopName, option, &autoLoopData.at(autoLoopName), (int)autoDLSPortfolio.size());
 
         autoLoopData.at(autoLoopName).cDLS = 1; // set self-scheduling, we are only interested in the chunk_size
         autoLoopData.at(autoLoopName).cChunk = chunk_size;
     }
-    /* -------------------------- Add more Reinforcement Learning methods here --------------------*/
+    /* --------------------- >>>> Add more Reinforcement Learning methods here <<<< ---------------*/
     /* -------------------------- END Reinforcement Learning Extensions ---------------------------*/
 
     else // normal LLVM auto - it will not reach to this part if chunk is higher

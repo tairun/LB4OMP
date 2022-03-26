@@ -6,10 +6,10 @@
 #include "agents/kmp_rl_agent.h"
 
 
-class RLAgentFactory {
+class RLAgentProvider {
 public:
     /* Destructor */
-    ~RLAgentFactory() = default;
+    ~RLAgentProvider() = default;
 
     /*
     * Creates and returns a pointer to a learning agent with the specified type and options.
@@ -45,5 +45,5 @@ private:
     static std::unordered_map<std::string, RLAgent*>& get_agents();
 
     /* Prevent instancing of this object */
-    RLAgentFactory() = default;
+    RLAgentProvider() = default;
 };

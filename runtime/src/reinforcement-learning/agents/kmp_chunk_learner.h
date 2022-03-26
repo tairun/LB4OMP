@@ -1,10 +1,12 @@
 // -------------------------- Reinforcement Learning Extension ---------------------------------//
 //  June 2022
+//  Master Thesis
 //  Luc Kury, <luc.kury@unibas.ch>
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
 #include "kmp_rl_agent.h"
+#include "../initializers/kmp_base_init.h"
 
 
 /*
@@ -19,13 +21,13 @@ public:
     ~ChunkLearner() = default;
 
 private:
-    double** q_table;
-    int* chunk_sizes;
+    double** q_table{nullptr};
+    int* chunk_sizes{nullptr};
 
     /* The policy chooses an action according to the learned experience of the agent. */
     /* Implements the Epsilon-Greedy action selection. */
     /* We need to adapt the policy function for the Chunk Learner to return the chunk size instead of the action index. */
-    int policy(double** ref_table) override;
+    int policy(int episode, int timestep, RLAgent& agent);
 
     /* Updates the internal values of the agent. */
     void update(int next_state, int next_action, double reward_value) override;
@@ -37,5 +39,5 @@ private:
     static bool is_even(int x);
 
     /* Initializes array of available chunk sizes. Returns index of chunk size which is closest to the golden ratio.  */
-    static int init_chunk_array(int* array, int size, int n, int p);
+    static int get_chunks(int* array, int size, int n, int p);
 };

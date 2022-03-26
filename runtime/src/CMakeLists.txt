@@ -85,7 +85,7 @@ else()
     kmp_wait_release.cpp
     kmp_affinity.cpp
     # START Reinforcement Learning Extensions
-    reinforcement-learning/kmp_rl_agent_factory.cpp
+    reinforcement-learning/kmp_rl_agent_provider.cpp
     reinforcement-learning/agents/kmp_q_learner_old.cpp
     reinforcement-learning/agents/kmp_sarsa_learner_old.cpp
     reinforcement-learning/agents/kmp_q_learner.cpp
@@ -96,6 +96,10 @@ else()
     reinforcement-learning/agents/kmp_r_learner.cpp
     reinforcement-learning/agents/kmp_deepq_learner.cpp
     reinforcement-learning/agents/kmp_chunk_learner.cpp
+
+    reinforcement-learning/initializers/kmp_zero_init.cpp
+
+    reinforcement-learning/policies/kmp_epsilon_greedy_policy.cpp
     # END Reinforcement Learning Extensions
     kmp_dispatch.cpp
     kmp_lock.cpp

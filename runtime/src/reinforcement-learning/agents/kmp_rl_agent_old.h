@@ -16,7 +16,7 @@ public:
     RLInfo* agent_data{}; // Saving the state of the agent between timesteps
 
     /* Take reward signal and perform the learning process. Returns the decisions from the agent. */
-    int step(int timestep, LoopData* stats) override = 0;
+    virtual int step(int timestep, LoopData* stats) = 0;
 
 private:
     void update(int next_state, int next_action, double reward_value) override = 0;

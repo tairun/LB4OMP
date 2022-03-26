@@ -1,5 +1,4 @@
 #include <string>
-#include <iostream>
 #include "kmp_rl_info.h"
 #include "kmp_rl_agent_old.h"
 #include "kmp_sarsa_learner_old.h"
@@ -15,7 +14,8 @@ int SARSALearnerOld::step(int timestep, LoopData* stats)
 {
     double reward_signal = get_reward_signal(stats);
     int method = computeMethod(timestep);
-    getReward(reward_signal, method);
+    double reward = getReward(reward_signal, method);
+    update(current_state, method, reward);
 
     return method;
 }
@@ -51,6 +51,7 @@ int SARSALearnerOld::selectAction(int timestep, int state)
         action = action_max;
     }
     agent_data->count[action] += 1;
+
     return action;
 }
 
@@ -80,11 +81,9 @@ double SARSALearnerOld::getMax_Q(int state)
 return maxQ;
 }
 
-void SARSALearnerOld::getReward(double exectime, int action)
+double SARSALearnerOld::getReward(double exectime, int action)
 {
-
-    double qval, qbest;
-    int reward, state;
+    int reward;
 
     // Good case
     if ((exectime) < agent_data->low) {
@@ -103,6 +102,9 @@ void SARSALearnerOld::getReward(double exectime, int action)
         reward = -2;
     }
 
+    return reward;
+
+    /*
     state = agent_data->state;
     qval = agent_data->qvalue[state][action];
     qbest = getMax_Q(state);
@@ -110,35 +112,18 @@ void SARSALearnerOld::getReward(double exectime, int action)
             qval + agent_data->alpha *
                    (reward + (agent_data->gamma * qbest) -
                     qval); // Do the actual learning
+    */
 }
 /********************************************************************************/
 
 void SARSALearnerOld::update(int next_state, int next_action, double reward_value)
 {
     // Does nothing, just need this method because of interface.
-}
+    double qval, qbest;
+    int state;
 
-/*
-void SARSALearnerOld::printQValues(std::string loop_id)
-{
-    int s, a;
-
-    printf("<-start-qvalues->:%s\n", loop_id.c_str());
-    for (s = 0; s < STATES; s++) {
-        for (a = 0; a < ACTIONS; a++) {
-            printf("%6.2lf,", agent_data.at(loop_id).qvalue[s][a]);
-        }
-        printf("\n");
-    }
+    state = agent_data->state;
+    qval = agent_data->qvalue[state][next_action];
+    qbest = getMax_Q(state);
+    agent_data->qvalue[state][next_action] = qval + agent_data->alpha * (reward_value + (agent_data->gamma * qbest) - qval); // Do the actual learning
 }
-
-void SARSALearnerOld::printDlsFreq(std::string loop_id)
-{
-    int aidx;
-    printf("<-start-dls-freq->:%s\n", loop_id.c_str());
-    for (aidx = 0; aidx < ACTIONS; aidx++)
-        printf("%3.0d,", agent_data.at(loop_id).count[aidx]);
-    printf("\n");
-    return;
-}
-*/

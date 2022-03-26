@@ -1,5 +1,6 @@
 // -------------------------- Reinforcement Learning Extension ---------------------------------//
 //  June 2022
+//  Master Thesis
 //  Luc Kury, <luc.kury@unibas.ch>
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
@@ -7,7 +8,7 @@
 #include <string>
 #include <iostream>
 
-#include "kmp_rl_agent_factory.h"
+#include "kmp_rl_agent_provider.h"
 #include "agents/kmp_q_learner_old.h"
 #include "agents/kmp_sarsa_learner_old.h"
 #include "agents/kmp_q_learner.h"
@@ -21,28 +22,28 @@
 
 
 // public
-int RLAgentFactory::rlAgentSearch(const std::string& loop_id, int agent_type, LoopData* stats, int portfolio_size)
+int RLAgentProvider::rlAgentSearch(const std::string& loop_id, int agent_type, LoopData* stats, int portfolio_size)
 {
-    if (!RLAgentFactory::get_timesteps().count(loop_id))
+    if (!RLAgentProvider::get_timesteps().count(loop_id))
     {
-        RLAgentFactory::get_timesteps().insert(std::make_pair(loop_id, 1));
+        RLAgentProvider::get_timesteps().insert(std::make_pair(loop_id, 1));
         std::cout << "[Reinforcement Learning] Creating agent for loop: " << loop_id << std::endl;
         auto* agent = create_agent(agent_type, stats,portfolio_size, portfolio_size, 6);
-        RLAgentFactory::get_agents().insert(std::make_pair(loop_id, agent));
+        RLAgentProvider::get_agents().insert(std::make_pair(loop_id, agent));
         std::cout << "[Reinforcement Learning] Agent created" << std::endl;
         return 0; // Selects first DLS method for exploration
     }
     else
     {
-        auto* agent = RLAgentFactory::get_agents().find(loop_id)->second;
-        int new_method = agent->step(0, RLAgentFactory::get_timesteps().at(loop_id), stats);
-        std::cout << "[Reinforcement Learning] Timestep " << RLAgentFactory::get_timesteps().at(loop_id) << " completed. New method is " << new_method << std::endl;
-        RLAgentFactory::get_timesteps().at(loop_id)++;
+        auto* agent = RLAgentProvider::get_agents().find(loop_id)->second;
+        int new_method = agent->step(0, RLAgentProvider::get_timesteps().at(loop_id), stats);
+        std::cout << "[Reinforcement Learning] Timestep " << RLAgentProvider::get_timesteps().at(loop_id) << " completed. New method is " << new_method << std::endl;
+        RLAgentProvider::get_timesteps().at(loop_id)++;
         return new_method;
     }
 }
 
-RLAgent* RLAgentFactory::create_agent(int agent_type, LoopData* stats, int states, int actions, int offset = 0)
+RLAgent* RLAgentProvider::create_agent(int agent_type, LoopData* stats, int states, int actions, int offset = 0)
 {
     RLAgent* agent = nullptr;
     int new_type = agent_type - offset;
@@ -87,13 +88,13 @@ RLAgent* RLAgentFactory::create_agent(int agent_type, LoopData* stats, int state
 }
 
 // private
-std::unordered_map<std::string, int>& RLAgentFactory::get_timesteps()
+std::unordered_map<std::string, int>& RLAgentProvider::get_timesteps()
 {
     static auto* timesteps = new std::unordered_map<std::string, int>();
     return *timesteps;
 }
 
-std::unordered_map<std::string, RLAgent*>& RLAgentFactory::get_agents()
+std::unordered_map<std::string, RLAgent*>& RLAgentProvider::get_agents()
 {
     static auto* agents = new std::unordered_map<std::string, RLAgent*>();
     return *agents;

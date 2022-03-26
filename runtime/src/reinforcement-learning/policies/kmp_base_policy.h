@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "../agents/kmp_rl_agent.h"
+#include "reinforcement-learning/agents/kmp_rl_agent.h"
 
 
 class BasePolicy

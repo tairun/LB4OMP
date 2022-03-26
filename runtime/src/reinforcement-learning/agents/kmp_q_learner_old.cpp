@@ -1,7 +1,7 @@
 #include <string>
-#include <iostream>
 
 #include "kmp_rl_info.h"
+#include "kmp_rl_agent.h"
 #include "kmp_rl_agent_old.h"
 #include "kmp_q_learner_old.h"
 

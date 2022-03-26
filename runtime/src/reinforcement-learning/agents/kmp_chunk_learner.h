@@ -5,6 +5,8 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
+#pragma once
+
 #include "kmp_rl_agent.h"
 #include "../initializers/kmp_base_init.h"
 

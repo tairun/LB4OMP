@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include "kmp_rl_agent_provider.h"
+#include "agents/kmp_rl_agent.h"
 #include "agents/kmp_q_learner_old.h"
 #include "agents/kmp_sarsa_learner_old.h"
 #include "agents/kmp_q_learner.h"

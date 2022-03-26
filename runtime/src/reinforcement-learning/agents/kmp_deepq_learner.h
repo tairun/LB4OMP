@@ -1,7 +1,7 @@
-
+#pragma once
 
 #include "kmp_rl_agent.h"
-#include "../../thirdparty/MiniDNN/include/MiniDNN.h"
+//#include "../../thirdparty/MiniDNN/include/MiniDNN.h"
 
 class DeepQLearner : public RLAgent {
 public:

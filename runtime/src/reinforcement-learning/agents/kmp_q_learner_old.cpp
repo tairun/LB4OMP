@@ -92,9 +92,7 @@ double QLearnerOld::getMax_Q(int state)
 
 double QLearnerOld::getReward(double exectime, int action)
 {
-
-    double qval, qbest;
-    int reward, state;
+    int reward;
 
     // Good case
     if ((exectime) < agent_data->low) {

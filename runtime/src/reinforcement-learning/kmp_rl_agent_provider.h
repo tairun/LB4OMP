@@ -8,8 +8,11 @@
 
 class RLAgentProvider {
 public:
-    /* Destructor */
-    ~RLAgentProvider() = default;
+    RLAgentProvider(const RLAgentProvider&) = delete;
+
+    static RLAgentProvider& Get();
+    static std::unordered_map<std::string, int>& get_timesteps();
+    static std::unordered_map<std::string, RLAgent*>& get_agents();
 
     /*
     * Creates and returns a pointer to a learning agent with the specified type and options.
@@ -21,29 +24,19 @@ public:
      * */
     static int rlAgentSearch(const std::string &loop_id, int agent_type, LoopData* stats, int portfolio_size);
 
+
     /*
      * Stores timestep data for logging.
      * */
-    static void add_csv_data()
-    {
-
-    }
+    static void add_csv_data();
 
     /*
      * Writes timestep data to file.
      * */
-    static void write_csv_data()
-    {
-
-    }
-
+    static void write_csv_data();
 
 private:
-    //static std::unordered_map<std::string, int> timesteps; // We need to keep track of the elapsed timesteps. TODO: Is this already done?
-    static std::unordered_map<std::string, int>& get_timesteps();
-    //static std::unordered_map<std::string, RLAgent *> agents; // Keep a reference to all the agents for every loop.
-    static std::unordered_map<std::string, RLAgent*>& get_agents();
-
-    /* Prevent instancing of this object */
     RLAgentProvider() = default;
+    std::unordered_map<std::string, int> timesteps;
+    std::unordered_map<std::string, RLAgent*> agents;
 };

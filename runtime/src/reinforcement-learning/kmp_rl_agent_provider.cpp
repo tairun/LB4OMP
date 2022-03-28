@@ -21,6 +21,10 @@
 #include "agents/kmp_deepq_learner.h"
 #include "agents/kmp_chunk_learner.h"
 
+RLAgentProvider& RLAgentProvider::Get() {
+    static RLAgentProvider instance;
+    return instance;
+}
 
 // public
 int RLAgentProvider::rlAgentSearch(const std::string& loop_id, int agent_type, LoopData* stats, int portfolio_size)
@@ -90,15 +94,22 @@ RLAgent* RLAgentProvider::create_agent(int agent_type, LoopData* stats, int stat
     return agent;
 }
 
-// private
 std::unordered_map<std::string, int>& RLAgentProvider::get_timesteps()
 {
-    static auto* timesteps = new std::unordered_map<std::string, int>();
-    return *timesteps;
+        return Get().timesteps;
 }
 
 std::unordered_map<std::string, RLAgent*>& RLAgentProvider::get_agents()
 {
-    static auto* agents = new std::unordered_map<std::string, RLAgent*>();
-    return *agents;
+    return Get().agents;
+}
+
+void RLAgentProvider::add_csv_data()
+{
+
+}
+
+void RLAgentProvider::write_csv_data()
+{
+
 }

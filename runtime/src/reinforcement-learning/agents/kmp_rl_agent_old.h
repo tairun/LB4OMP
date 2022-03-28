@@ -9,7 +9,7 @@
 class RLAgentOld : public RLAgent {
 public:
     explicit RLAgentOld(int num_states, int num_actions, std::string agentName) :
-             RLAgent(num_states, num_actions, std::move(agentName), nullptr) {
+             RLAgent(num_states, num_actions, std::move(agentName)) {
 
     }
 

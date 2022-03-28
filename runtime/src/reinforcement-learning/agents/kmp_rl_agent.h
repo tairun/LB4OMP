@@ -130,16 +130,20 @@ protected:
         std::default_random_engine re(1337);
         std::uniform_real_distribution<double> uniform(0, 1);
 
+        std::cout << "[RLAgent::policy] HERE1" << std::endl;
+
         // Switches between exploration and exploitation with the probability of epsilon (or 1-epsilon)
         if (uniform(re) < epsilon)
         // Explore (random action)
         {
+            std::cout << "[RLAgent::policy] HERE2" << std::endl;
             int next_action = sample_action(); // Chooses action (which is equal to the next state)
             return next_action;
         }
         else
         // Exploit (previous knowledge)
         {
+            std::cout << "[RLAgent::policy] HERE3" << std::endl;
             int maxQ = -9999;
             std::vector<int> action_candidates;
 

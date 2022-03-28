@@ -20,7 +20,7 @@ SARSALearnerOld::SARSALearnerOld(int states, int actions) :
     agent_data = new RLInfo(states, actions);
 }
 
-int SARSALearnerOld::step(int timestep, LoopData* stats)
+int SARSALearnerOld::step(int epoch, int timestep, LoopData* stats)
 {
     double reward_signal = get_reward_signal(stats);
     int method = computeMethod(timestep);

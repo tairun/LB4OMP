@@ -10,7 +10,7 @@ public:
 
     ~SARSALearnerOld() = default;
 
-    int step(int timestep, LoopData* stats) override;
+    int step(int epoch, int timestep, LoopData* stats) override;
 
 private:
     /*

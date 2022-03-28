@@ -27,8 +27,8 @@ int RLAgentProvider::rlAgentSearch(const std::string& loop_id, int agent_type, L
 {
     if (!RLAgentProvider::get_timesteps().count(loop_id))
     {
-        RLAgentProvider::get_timesteps().insert(std::make_pair(loop_id, 1));
         std::cout << "[Reinforcement Learning] Creating agent for loop: " << loop_id << std::endl;
+        RLAgentProvider::get_timesteps().insert(std::make_pair(loop_id, 1));
         auto* agent = create_agent(agent_type, stats,portfolio_size, portfolio_size, 6);
         RLAgentProvider::get_agents().insert(std::make_pair(loop_id, agent));
         std::cout << "[Reinforcement Learning] Agent created" << std::endl;
@@ -36,7 +36,9 @@ int RLAgentProvider::rlAgentSearch(const std::string& loop_id, int agent_type, L
     }
     else
     {
+        std::cout << "[Reinforcement Learning] Grabbing agent ..." << std::endl;
         auto* agent = RLAgentProvider::get_agents().find(loop_id)->second;
+        std::cout << "[Reinforcement Learning] Grabbing timestep info ..." << std::endl;
         int new_method = agent->step(0, RLAgentProvider::get_timesteps().at(loop_id), stats);
         std::cout << "[Reinforcement Learning] Timestep " << RLAgentProvider::get_timesteps().at(loop_id) << " completed. New method is " << new_method << std::endl;
         RLAgentProvider::get_timesteps().at(loop_id)++;

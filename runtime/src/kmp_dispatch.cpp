@@ -964,6 +964,7 @@ void auto_DLS_Search(int gtid, int N, int P, int option) {
      * */
     {
         //std::string loop_id = autoLoopName;
+        std::cout << "Calling Agent Provider ..." << std::endl;
         int new_method = RLAgentProvider::rlAgentSearch(autoLoopName, option, &autoLoopData.at(autoLoopName), (int)autoDLSPortfolio.size());
         autoSetChunkSize(N, P); // set chunk size
         autoLoopData.at(autoLoopName).cDLS = new_method;

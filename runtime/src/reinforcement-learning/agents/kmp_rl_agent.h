@@ -127,7 +127,7 @@ protected:
     {
         std::cout << "[RLAgent::policy] Applying policy ..." << std::endl;
 
-        std::default_random_engine re(time(nullptr));
+        std::default_random_engine re(1337);
         std::uniform_real_distribution<double> uniform(0, 1);
 
         // Switches between exploration and exploitation with the probability of epsilon (or 1-epsilon)

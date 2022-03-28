@@ -8,7 +8,7 @@
 
 class RLAgentProvider {
 public:
-    RLAgentProvider(const RLAgentProvider&) = delete;
+    RLAgentProvider(const RLAgentProvider&) = delete;   // Disable copy constructor
 
     static RLAgentProvider& Get();
     static std::unordered_map<std::string, int>& get_timesteps();
@@ -36,7 +36,7 @@ public:
     static void write_csv_data();
 
 private:
-    RLAgentProvider() = default;
-    std::unordered_map<std::string, int> timesteps;
-    std::unordered_map<std::string, RLAgent*> agents;
+    RLAgentProvider() = default;    // Make this class a singleton effectively
+    std::unordered_map<std::string, int> timesteps;   // Save timestep progress
+    std::unordered_map<std::string, RLAgent*> agents; // Save agent references across timesteps
 };

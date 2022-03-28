@@ -144,13 +144,21 @@ protected:
         // Exploit (previous knowledge)
         {
             std::cout << "[RLAgent::policy] HERE3" << std::endl;
-            int maxQ = -9999;
+            double maxQ = -9999.0f;
             std::vector<int> action_candidates;
+
+            std::cout << "Value of ref_table pointer: " << ref_table << std::endl;
 
             // Evaluate Q-Table for action with highest Q-Value
             for (int i = 0; i < action_space; i++)
             {
-                if (ref_table[current_state][i] >= maxQ)
+                if (ref_table[current_state][i] > maxQ)
+                {
+                    action_candidates.clear();
+                    action_candidates.push_back(i);
+                    maxQ = ref_table[current_state][i];
+                }
+                else if (ref_table[current_state][i] == maxQ)
                 {
                     action_candidates.push_back(i);
                 }

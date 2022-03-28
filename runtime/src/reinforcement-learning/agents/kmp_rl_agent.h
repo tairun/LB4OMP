@@ -35,8 +35,8 @@ public:
         alpha_decay_factor = read_env_double("KMP_RL_ALPHA_DECAY");
         epsilon_decay_factor = read_env_double("KMP_RL_EPS_DECAY");
 
-        std::cout << "[Reinforcement Learning] Configuring agent as: " << name << std::endl;
-        std::cout << "[Reinforcement Learning] Using reward signal: " << reward_input << std::endl;
+        std::cout << "[RLAgent::RLAgent] Configuring agent as: " << name << std::endl;
+        std::cout << "[RLAgent::RLAgent] Using reward signal: " << reward_input << std::endl;
     }
 
     /*
@@ -44,10 +44,12 @@ public:
      * */
     virtual int step(int episode, int timestep, LoopData* stats)
     {
+        std::cout << "[RLAgent::step] Starting learning ..." << std::endl;
         int next_action, next_state;
         double reward_value = reward(stats);           // Convert the reward signal into the actual reward value
         next_action = policy(episode, timestep, table);           // Predict the next action according to the policy and Q-Values
         next_state = next_action;                      // In our scenario the next action and desired state is the same
+        std::cout << "[RLAgent::update] Updating agent data ..." << std::endl;
         update(next_state, next_action, reward_value); // Update the Q-Values based on the learning algorithm
 
         current_state = next_state;                    // Update the state in the class
@@ -123,6 +125,8 @@ protected:
     /* Implements the Epsilon-Greedy action selection. */
     virtual int policy(int episode, int timestep, double** ref_table)
     {
+        std::cout << "[RLAgent::policy] Applying policy ..." << std::endl;
+
         std::default_random_engine re(time(nullptr));
         std::uniform_real_distribution<double> uniform(0, 1);
 
@@ -165,6 +169,8 @@ protected:
      * */
     double reward(LoopData* stats)
     {
+        std::cout << "[RLAgent::reward] Getting reward ..." << std::endl;
+
         //TODO@kurluc00: Explore negative vs. positive Rewards discussion for agents.
         double reward_signal = get_reward_signal(stats);
 
@@ -237,7 +243,7 @@ protected:
         }
         else
         {
-            std::cout << "[Reinforcement Learning] Couldn't read '" << var_name << "' from env." << std::endl;
+            std::cout << "[RLAgent::read_env_string] Couldn't read '" << var_name << "' from env. Using default." << std::endl;
         }
     }
 
@@ -252,7 +258,7 @@ protected:
         }
         else
         {
-            std::cout << "[Reinforcement Learning] Couldn't read '" << var_name << "' from env." << std::endl;
+            std::cout << "[RLAgent::read_env_double] Couldn't read '" << var_name << "' from env. Using default." << std::endl;
         }
     }
 
@@ -273,12 +279,12 @@ protected:
         }
         else if (reward_input == "robustness")
         {
-            std::cout << "[Reinforcement Learning] Not yet implemented: " << reward_input << std::endl;
+            std::cout << "[RLAgent::get_reward_signal] Not yet implemented: " << reward_input << std::endl;
             reward_signal = stats->cTime;
         }
         else
         {
-            std::cout << "[Reinforcement Learning] Invalid reward signal specified in env: " << reward_input << std::endl;
+            std::cout << "[RLAgent::get_reward_signal] Invalid reward signal specified in env: " << reward_input << std::endl;
         }
 
         return reward_signal;

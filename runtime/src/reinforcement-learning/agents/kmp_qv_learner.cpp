@@ -13,7 +13,7 @@
 
 // public
 QVLearner::QVLearner(int num_states, int num_actions) :
-           RLAgent(num_states, num_actions, "QV Learner", q_table)
+           RLAgent(num_states, num_actions, "QV Learner")
 {
     // Initialize first dimension of table
     v_table = new double[state_space];
@@ -31,6 +31,8 @@ QVLearner::QVLearner(int num_states, int num_actions) :
         for (int a = 0; a < action_space; a++)
             q_table[s][a] = 0.0f;
     }
+
+    set_table(q_table);
 }
 
 // private

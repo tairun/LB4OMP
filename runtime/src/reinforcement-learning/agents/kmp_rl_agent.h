@@ -21,10 +21,9 @@
 
 class RLAgent {
 public:
-    RLAgent(int num_states, int num_actions, std::string agent_name, double** table_ref) : state_space(num_states),
-                                                                                           action_space(num_actions),
-                                                                                           name(std::move(agent_name)),
-                                                                                           table(table_ref)
+    RLAgent(int num_states, int num_actions, std::string agent_name) : state_space(num_states),
+                                                                       action_space(num_actions),
+                                                                       name(std::move(agent_name))
     {
         alpha   = read_env_double("KMP_RL_ALPHA");     // Read learning rate from env
         gamma   = read_env_double("KMP_RL_GAMMA");     // Read discount factor from env
@@ -92,6 +91,11 @@ public:
 
     int get_current_state() const {
         return current_state;
+    }
+
+    void set_table(double** table_ref)
+    {
+        table = table_ref;
     }
 
 private:

@@ -130,7 +130,6 @@ double QLearnerOld::getReward(double exectime, int action)
 
 void QLearnerOld::update(int next_state, int next_action, double reward_value)
 {
-    // Does nothing, just need this method because of interface.
     double qval, qbest;
     int state;
 

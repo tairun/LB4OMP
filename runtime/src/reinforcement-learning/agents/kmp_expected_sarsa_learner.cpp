@@ -13,7 +13,7 @@
 
 // public
 ExpectedSARSALearner::ExpectedSARSALearner(int numStates, int numActions) :
-                      RLAgent(numStates, numActions, "SARSA Learner", q_table)
+                      RLAgent(numStates, numActions, "SARSA Learner")
 {
     // Initialize first dimension of table
     q_table = new double *[state_space];
@@ -29,6 +29,8 @@ ExpectedSARSALearner::ExpectedSARSALearner(int numStates, int numActions) :
             q_table[s][a] = 0.0f;
         }
     }
+
+    set_table(q_table);
 }
 
 // private

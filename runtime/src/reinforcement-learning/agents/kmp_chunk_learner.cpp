@@ -16,7 +16,7 @@
 
 // public
 ChunkLearner::ChunkLearner(int num_states, int num_actions, LoopData* stats) :
-              RLAgent(num_states, num_actions, "Chunk Learner", q_table)
+              RLAgent(num_states, num_actions, "Chunk Learner")
 {
     /*
      * Make sure, length of chunk size array is odd.

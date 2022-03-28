@@ -5,7 +5,7 @@
 
 // public
 DeepQLearner::DeepQLearner(int num_states, int num_actions)
-    : RLAgent(num_states, num_actions, "DQN Learner", nullptr) {
+    : RLAgent(num_states, num_actions, "DQN Learner") {
   // TODO: Implementation
 }
 

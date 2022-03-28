@@ -13,7 +13,7 @@
 
 // public
 SARSALearner::SARSALearner(int num_states, int num_actions) :
-              RLAgent(num_states, num_actions, "SARSA Learner", q_table)
+              RLAgent(num_states, num_actions, "SARSA Learner")
 {
     // Initialize first dimension of table
     q_table = new double *[state_space];
@@ -30,6 +30,8 @@ SARSALearner::SARSALearner(int num_states, int num_actions) :
             q_table[s][a] = 0.0f;
         }
     }
+
+    set_table(q_table);
 }
 
 // private

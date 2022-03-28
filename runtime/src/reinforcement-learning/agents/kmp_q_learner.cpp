@@ -13,7 +13,7 @@
 
 // public
 QLearner::QLearner(int num_states, int num_actions) :
-          RLAgent(num_states, num_actions, "Q Learner", q_table)
+          RLAgent(num_states, num_actions, "Q Learner")
 {
     // Initialize first dimension of table
     q_table = new double *[state_space];
@@ -27,6 +27,8 @@ QLearner::QLearner(int num_states, int num_actions) :
     for (int s = 0; s < state_space; s++)
         for (int a = 0; a < action_space; a++)
             q_table[s][a] = 0.0f;
+
+    set_table(q_table);
 }
 
 // private

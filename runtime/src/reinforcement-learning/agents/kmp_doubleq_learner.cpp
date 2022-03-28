@@ -6,7 +6,7 @@
 
 // public
 DoubleQLearner::DoubleQLearner(int num_states, int num_actions) :
-                RLAgent(num_states, num_actions, "DoubleQ Learner", q_table_sum)
+                RLAgent(num_states, num_actions, "DoubleQ Learner")
 {
     // Initialize first dimension of table
     q_table_a   = new double *[state_space];
@@ -27,6 +27,8 @@ DoubleQLearner::DoubleQLearner(int num_states, int num_actions) :
             q_table_b[s][a]   = 0.0f;
             q_table_sum[s][a] = 0.0f;
         }
+
+    set_table(q_table_sum);
 }
 
 // private

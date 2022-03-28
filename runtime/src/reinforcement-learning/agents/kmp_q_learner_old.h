@@ -10,7 +10,7 @@ public:
 
     ~QLearnerOld() = default;
 
-    int step(int timestep, LoopData *stats) override;
+    int step(int episode, int timestep, LoopData *stats) override;
 
 private:
     /*

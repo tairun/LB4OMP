@@ -67,7 +67,7 @@ public:
     * */
     int sample_action() const
     {
-        std::default_random_engine re(time(nullptr));
+        std::default_random_engine re(1337); //TODO@kurluc00: Properly seed the random engine.
         std::uniform_int_distribution<int> uniform(0, action_space);
 
         return uniform(re);

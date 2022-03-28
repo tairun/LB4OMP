@@ -20,8 +20,10 @@ QLearnerOld::QLearnerOld(int states, int actions) :
     agent_data = new RLInfo(states, actions);
 }
 
-int QLearnerOld::step(int timestep, LoopData* stats)
+int QLearnerOld::step(int episode, int timestep, LoopData* stats)
 {
+    std::cout << "[QLearnerOld::step] Starting learning ..." << std::endl;
+
     double reward_signal = get_reward_signal(stats);
     int method = computeMethod(timestep);
     double reward = getReward(reward_signal, method);

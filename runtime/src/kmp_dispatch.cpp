@@ -964,7 +964,7 @@ void auto_DLS_Search(int gtid, int N, int P, int option) {
      * */
     {
         //std::string loop_id = autoLoopName;
-        std::cout << "[Reinforcement Learning] Calling Agent Provider ..." << std::endl;
+        std::cout << "[Reinforcement Learning] Calling Agent Provider ... (with option " << option << ")" << std::endl;
         int new_method = RLAgentProvider::rlAgentSearch(autoLoopName, option, &autoLoopData.at(autoLoopName), (int)autoDLSPortfolio.size());
         autoSetChunkSize(N, P); // set chunk size
         autoLoopData.at(autoLoopName).cDLS = new_method;
@@ -1246,7 +1246,7 @@ void __kmp_dispatch_init_algorithm(ident_t *loc, int gtid,
     AUTO_iLoopTimer
 
 #ifdef KMP_DEBUG
-                                                                                                                            typedef typename traits_t<T>::signed_t ST;
+typedef typename traits_t<T>::signed_t ST;
   {
     char *buff;
     // create format specifiers before the debug output
@@ -1349,7 +1349,7 @@ void __kmp_dispatch_init_algorithm(ident_t *loc, int gtid,
         if (schedule == kmp_sch_auto) {
 
             if ((chunk >= 2) &&
-                (chunk <= 13)) // AUTO by Ali, Reinforcement Learning by Luc (need <= 13)
+                (chunk <= 15)) // AUTO by Ali, Reinforcement Learning by Luc (need <= 15)
             {
                 AUTO_FLAG = 1; // Set auto flag
             } else {
@@ -1465,16 +1465,20 @@ void __kmp_dispatch_init_algorithm(ident_t *loc, int gtid,
                 //set a new loop record and set autoSearch to 1
                 LoopData data =
                         {
+                                -1,
+                                -1,
+                                -1,
                                 1,  //autoSearch;
-                                -1,  // current DLS index or last tried
-                                -1,  //Best DLS
+                                -1,     // current DLS index or last tried
+                                -1,   //Best DLS
                                 0,  // searchTrials ...number of trials to find the best DLS
-                                0,  //current chunk size
+                                0,    //current chunk size
                                 0,  // chunk size of the best DLS technique
-                                -1.0,  // current DLS time
-                                -1.0,  // loop time of the best DLS
-                                -1.0,  // load imbalance of the current DLS
-                                -1.0   // load imbalance of the best DLS
+                                -1,    // current DLS time
+                                -1,  // loop time of the best DLS
+                                -1,      // load imbalance of the current DLS
+                                -1.0,  // load imbalance of the best DLS
+                                -1.0
                         };
 
                 //create a new record

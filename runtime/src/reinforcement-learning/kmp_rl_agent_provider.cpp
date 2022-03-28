@@ -55,6 +55,8 @@ RLAgent* RLAgentProvider::create_agent(int agent_type, LoopData* stats, int stat
     RLAgent* agent = nullptr;
     int new_type = agent_type - offset;
 
+    std::cout << "[Reinforcement Learning] Creating agent with option: " << agent_type << "(offset: " << new_type << ")" << std::endl;
+
     switch (new_type)
     {
         case (0):

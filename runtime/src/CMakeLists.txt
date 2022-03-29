@@ -85,7 +85,7 @@ else()
     kmp_wait_release.cpp
     kmp_affinity.cpp
     # START Reinforcement Learning Extensions
-    reinforcement-learning/kmp_rl_agent_provider.cpp
+          reinforcement-learning/kmp_agent_provider.cpp
     reinforcement-learning/agents/kmp_q_learner_old.cpp
     reinforcement-learning/agents/kmp_sarsa_learner_old.cpp
     reinforcement-learning/agents/kmp_q_learner.cpp

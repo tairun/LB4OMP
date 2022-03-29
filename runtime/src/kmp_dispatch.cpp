@@ -24,7 +24,7 @@
 
 /* -------------------------- START Reinforcement Learning Extensions -------------------------*/
 #include "kmp_loopdata.h"
-#include "reinforcement-learning/kmp_rl_agent_provider.h"
+#include "reinforcement-learning/kmp_agent_provider.h"
 /* -------------------------- END Reinforcement Learning Extensions ---------------------------*/
 #include "kmp.h"
 #include <iostream>
@@ -965,7 +965,7 @@ void auto_DLS_Search(int gtid, int N, int P, int option) {
     {
         //std::string loop_id = autoLoopName;
         std::cout << "[Reinforcement Learning] Calling Agent Provider ... (with option " << option << ")" << std::endl;
-        int new_method = RLAgentProvider::rlAgentSearch(autoLoopName, option, &autoLoopData.at(autoLoopName), (int)autoDLSPortfolio.size());
+        int new_method = AgentProvider::rlAgentSearch(autoLoopName, option, &autoLoopData.at(autoLoopName), (int)autoDLSPortfolio.size());
         autoSetChunkSize(N, P); // set chunk size
         autoLoopData.at(autoLoopName).cDLS = new_method;
     }
@@ -978,7 +978,7 @@ void auto_DLS_Search(int gtid, int N, int P, int option) {
         autoLoopData.at(autoLoopName).p = P;
         //std::string loop_id = autoLoopName;
 
-        int chunk_size = RLAgentProvider::rlAgentSearch(autoLoopName, option, &autoLoopData.at(autoLoopName), (int)autoDLSPortfolio.size());
+        int chunk_size = AgentProvider::rlAgentSearch(autoLoopName, option, &autoLoopData.at(autoLoopName), (int)autoDLSPortfolio.size());
 
         autoLoopData.at(autoLoopName).cDLS = 1; // set self-scheduling, we are only interested in the chunk_size
         autoLoopData.at(autoLoopName).cChunk = chunk_size;

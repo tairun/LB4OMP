@@ -13,11 +13,11 @@
 #include "agents/kmp_rl_agent.h"
 
 
-class RLAgentProvider {
+class AgentProvider {
 public:
-    RLAgentProvider(const RLAgentProvider&) = delete;   // Disable copy constructor
+    AgentProvider(const AgentProvider&) = delete;   // Disable copy constructor
 
-    static RLAgentProvider& Get();
+    static AgentProvider& Get();
     static std::unordered_map<std::string, int>& get_timesteps();
     static std::unordered_map<std::string, RLAgent*>& get_agents();
 
@@ -43,7 +43,7 @@ public:
     static void write_csv_data();
 
 private:
-    RLAgentProvider() = default;    // Make this class a singleton effectively
+    AgentProvider() = default;    // Make this class a singleton effectively
     std::unordered_map<std::string, int> timesteps;   // Save timestep progress
     std::unordered_map<std::string, RLAgent*> agents; // Save agent references across timesteps
 };

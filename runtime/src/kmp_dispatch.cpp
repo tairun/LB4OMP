@@ -1138,7 +1138,6 @@ void print_loop_timer(enum sched_type schedule, int tid_for_timer,
     std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(
             mytime - timeInit);
 
-
     if (fileData == NULL || strcmp(fileData, "") == 0) {
         std::cout << "Please export KMP_TIME_LOOPS in your environment with the path for the storing the loop times\n";
         exit(-1);
@@ -1146,23 +1145,22 @@ void print_loop_timer(enum sched_type schedule, int tid_for_timer,
     //TODO@kurluc00: For the love of god use commas to separate stuff that will be parsed by a script (┛ಠ_ಠ)┛彡┻━┻
     //fileMutex.lock();
     ofs.open(fileData, std::ofstream::out | std::ofstream::app);
-    ofs << "LoopOccurrence: " << currentLoopMap.at(globalLoopline) << ",Location: " << globalLoopline << ",#iterations "
-        << globalNIterations << ",threadID: " << tid_for_timer << ",threadTime: " << time_span.count() << std::endl;
-
+    ofs << "LoopOccurrence:" << currentLoopMap.at(globalLoopline) << ",Location:" << globalLoopline << ",#iterations:"
+        << globalNIterations << ",threadID:" << tid_for_timer << ",threadTime:" << time_span.count() << std::endl;
 
     if (count == (nThreads - 1)) {
         //mytime = std::chrono::high_resolution_clock::now();
         timeEnd = mytime;
         loopEnter = 0; // end loop execution instance
 
-        ofs << "Location: " << globalLoopline << ",#iterations " << globalNIterations << ",LoopTime: "
-            << time_span.count() << ",Schedule: " << DLS[schedule] << ",Chunk: " << global_chunk
+        ofs << "Location:" << globalLoopline << ",#iterations:" << globalNIterations << ",LoopTime:"
+            << time_span.count() << ",Schedule:" << DLS[schedule] << ",Chunk:" << global_chunk
             << std::endl; //modified to print the current schedule and chunk size
 
         if (currentChunkIndex != -1 && chunkSizeInfo != NULL) {
             for (int i = 0; i < currentChunkIndex; i += 4) {
-                ofs << "chunkLocation: " << globalLoopline << ",lower " << chunkSizeInfo[i] << ",upper "
-                    << chunkSizeInfo[i + 1] << ",chunksize " << chunkSizeInfo[i + 2] << ",tid " << chunkSizeInfo[i + 3]
+                ofs << "chunkLocation: " << globalLoopline << ",lower: " << chunkSizeInfo[i] << ",upper:"
+                    << chunkSizeInfo[i + 1] << ",chunksize:" << chunkSizeInfo[i + 2] << ",tid:" << chunkSizeInfo[i + 3]
                     << std::endl;
             }
 
@@ -2791,7 +2789,7 @@ typedef typename traits_t<T>::signed_t ST;
                 }
                 std::fstream ofs;
                 ofs.open(fileData, std::ofstream::out | std::ofstream::app);
-                ofs << "Location: " << loc->psource << " ";
+                ofs << "Location: " << loc->psource << ",";
                 ofs.close();
             }
             // reset shared variables first time

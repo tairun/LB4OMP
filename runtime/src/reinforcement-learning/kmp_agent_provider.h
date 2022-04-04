@@ -29,7 +29,7 @@ public:
     /*
      * Main method for Reinforcement Learning AUTO method in LB4OMP.
      * */
-    static int rlAgentSearch(const std::string &loop_id, int agent_type, LoopData* stats, int portfolio_size);
+    static int search(const std::string &loop_id, int agent_type, LoopData* stats, int portfolio_size);
 
 
     /*

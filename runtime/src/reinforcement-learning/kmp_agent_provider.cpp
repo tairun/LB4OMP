@@ -28,25 +28,25 @@ AgentProvider& AgentProvider::Get() {
 }
 
 // public
-int AgentProvider::rlAgentSearch(const std::string& loop_id, int agent_type, LoopData* stats, int portfolio_size)
+int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* stats, int portfolio_size)
 {
-    std::cout << "[AgentProvider::rlAgentSearch] Loop: " << loop_id << std::endl;
+    std::cout << "[AgentProvider::search] Loop: " << loop_id << std::endl;
     if (!AgentProvider::get_timesteps().count(loop_id))
     {
-        std::cout << "[AgentProvider::rlAgentSearch] Creating agent for loop: " << loop_id << std::endl;
+        std::cout << "[AgentProvider::search] Creating agent for loop: " << loop_id << std::endl;
         AgentProvider::get_timesteps().insert(std::make_pair(loop_id, 1));
         auto* agent = create_agent(agent_type, stats,portfolio_size, portfolio_size, 6);
         AgentProvider::get_agents().insert(std::make_pair(loop_id, agent));
-        std::cout << "[AgentProvider::rlAgentSearch] Agent created." << std::endl;
+        std::cout << "[AgentProvider::search] Agent created." << std::endl;
         return 0; // Selects first DLS method for exploration
     }
     else
     {
-        std::cout << "[AgentProvider::rlAgentSearch] Grabbing agent ..." << std::endl;
+        std::cout << "[AgentProvider::search] Grabbing agent ..." << std::endl;
         auto* agent = AgentProvider::get_agents().find(loop_id)->second;
-        std::cout << "[AgentProvider::rlAgentSearch] Grabbing timestep info ..." << std::endl;
+        std::cout << "[AgentProvider::search] Grabbing timestep info ..." << std::endl;
         int new_method = agent->step(0, AgentProvider::get_timesteps().at(loop_id), stats);
-        std::cout << "[AgentProvider::rlAgentSearch] Timestep " << AgentProvider::get_timesteps().at(loop_id) << " completed. New method is " << new_method << std::endl;
+        std::cout << "[AgentProvider::search] Timestep " << AgentProvider::get_timesteps().at(loop_id) << " completed. New method is " << new_method << std::endl;
         AgentProvider::get_timesteps().at(loop_id)++;
         return new_method;
     }

@@ -8,8 +8,12 @@
 #include <string>
 #include <iostream>
 
+#include "utils/utils.h"
 #include "kmp_agent_provider.h"
-#include "agents/kmp_rl_agent.h"
+#include "initializers/kmp_init_type.h"
+#include "initializers/kmp_zero_init.h"
+#include "policies/kmp_policy_type.h"
+#include "agents/kmp_agent.h"
 #include "agents/kmp_q_learner_old.h"
 #include "agents/kmp_sarsa_learner_old.h"
 #include "agents/kmp_q_learner.h"
@@ -42,9 +46,9 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
     }
     else
     {
-        std::cout << "[AgentProvider::search] Grabbing agent ..." << std::endl;
+        //std::cout << "[AgentProvider::search] Grabbing agent ..." << std::endl;
         auto* agent = AgentProvider::get_agents().find(loop_id)->second;
-        std::cout << "[AgentProvider::search] Grabbing timestep info ..." << std::endl;
+        //std::cout << "[AgentProvider::search] Grabbing timestep info ..." << std::endl;
         int new_method = agent->step(0, AgentProvider::get_timesteps().at(loop_id), stats);
         std::cout << "[AgentProvider::search] Timestep " << AgentProvider::get_timesteps().at(loop_id) << " completed. New method is " << new_method << std::endl;
         AgentProvider::get_timesteps().at(loop_id)++;
@@ -52,9 +56,9 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
     }
 }
 
-RLAgent* AgentProvider::create_agent(int agent_type, LoopData* stats, int states, int actions, int offset = 0)
+Agent* AgentProvider::create_agent(int agent_type, LoopData* stats, int states, int actions, int offset = 0)
 {
-    RLAgent* agent = nullptr;
+    Agent* agent = nullptr;
     int new_type = agent_type - offset;
 
     std::cout << "[AgentProvider::create_agent] New agent option: " << agent_type << " (offset: " << new_type << ")" << std::endl;
@@ -95,6 +99,12 @@ RLAgent* AgentProvider::create_agent(int agent_type, LoopData* stats, int states
             std::cout << "[AgentProvider::create_agent] Unknown agent type specified: " << agent_type << std::endl;
     }
 
+    BaseInit* init = create_initializer();
+    agent->set_initializer(init);
+
+    BasePolicy* pol = create_policy();
+    agent->set_policy(pol);
+
     return agent;
 }
 
@@ -103,17 +113,40 @@ std::unordered_map<std::string, int>& AgentProvider::get_timesteps()
         return Get().timesteps;
 }
 
-std::unordered_map<std::string, RLAgent*>& AgentProvider::get_agents()
+std::unordered_map<std::string, Agent*>& AgentProvider::get_agents()
 {
     return Get().agents;
 }
 
-void AgentProvider::add_csv_data()
+BaseInit* AgentProvider::create_initializer()
 {
+    std::string init_input = read_env_string("KMP_RL_INIT");
+    InitType init_enum = InitTable.at(init_input);
+    BaseInit* init;
+
+    switch (init_enum) {
+        case InitType::ZERO:
+            init = new ZeroInit();
+            break;
+        default:
+            break;
+ }
+
+ return init;
 
 }
 
-void AgentProvider::write_csv_data()
+BasePolicy* AgentProvider::create_policy()
 {
+    std::string policy_input = read_env_string("KMP_RL_POLICY");
+    PolicyType policy_enum = PolicyTable.at(policy_input);
+    BasePolicy* pol;
 
+    switch (policy_enum) {
+        case PolicyType::EXPLORATION_FIRST
+            pol = new ZeroInit();
+            break;
+        default:
+            break;
+    }
 }

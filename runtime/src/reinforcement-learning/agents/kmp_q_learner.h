@@ -5,10 +5,10 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
-#include "kmp_rl_agent.h"
+#include "kmp_agent.h"
 
 
-class QLearner : public RLAgent
+class QLearner : public Agent
 {
 public:
     explicit QLearner(int num_states, int num_actions);

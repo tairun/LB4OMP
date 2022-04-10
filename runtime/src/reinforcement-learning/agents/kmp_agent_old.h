@@ -10,14 +10,15 @@
 #include <string>
 #include <utility>
 #include "kmp_rl_info.h"
-#include "kmp_rl_agent.h"
+#include "kmp_agent.h"
 
 
-class RLAgentOld : public RLAgent {
+class AgentOld : public Agent {
 public:
-    explicit RLAgentOld(int num_states, int num_actions, std::string agentName) :
-             RLAgent(num_states, num_actions, std::move(agentName)) {
-
+    explicit AgentOld(int num_states, int num_actions, std::string agentName) :
+            Agent(num_states, num_actions, std::move(agentName))
+    {
+    // empty constructor
     }
 
     RLInfo* agent_data{}; // Saving the state of the agent between timesteps

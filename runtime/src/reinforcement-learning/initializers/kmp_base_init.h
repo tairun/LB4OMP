@@ -2,7 +2,7 @@
 
 class BaseInit {
 public:
-  static void init(int *data, int size);
-  static void init(double *data, int size);
-  static void init(double **data, int num_actions, int num_states);
+  virtual void init(int *data, int size) = 0;
+  virtual void init(double *data, int size) = 0;
+  virtual void init(double **data, int num_actions, int num_states) = 0;
 };

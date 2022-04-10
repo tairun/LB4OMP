@@ -7,13 +7,13 @@
 
 #include <random>
 
-#include "kmp_rl_agent.h"
+#include "kmp_agent.h"
 #include "kmp_q_learner.h"
 
 
 // public
 QLearner::QLearner(int num_states, int num_actions) :
-          RLAgent(num_states, num_actions, "Q Learner")
+        Agent(num_states, num_actions, "Q Learner")
 {
     // Initialize first dimension of table
     q_table = new double *[state_space];

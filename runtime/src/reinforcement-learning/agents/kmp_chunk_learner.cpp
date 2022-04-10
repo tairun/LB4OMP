@@ -8,7 +8,7 @@
 #include <cmath>
 #include <random>
 
-#include "kmp_rl_agent.h"
+#include "kmp_agent.h"
 #include "kmp_chunk_learner.h"
 //#include "../initializers/kmp_base_init.h"
 #include "../initializers/kmp_zero_init.h"
@@ -16,7 +16,7 @@
 
 // public
 ChunkLearner::ChunkLearner(int num_states, int num_actions, LoopData* stats) :
-              RLAgent(num_states, num_actions, "Chunk Learner")
+        Agent(num_states, num_actions, "Chunk Learner")
 {
     /*
      * Make sure, length of chunk size array is odd.
@@ -53,9 +53,9 @@ ChunkLearner::ChunkLearner(int num_states, int num_actions, LoopData* stats) :
 }
 
 // private
-int ChunkLearner::policy(int episode, int timestep, RLAgent& agent)
+int ChunkLearner::policy(int episode, int timestep, Agent& agent)
 {
-    int action_index = RLAgent::policy(episode, timestep, agent.get_table());
+    int action_index = Agent::policy(episode, timestep, agent.get_table());
     int chunk_size = chunk_sizes[action_index];
 
     return chunk_size;

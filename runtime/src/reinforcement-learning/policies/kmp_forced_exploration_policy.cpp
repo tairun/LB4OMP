@@ -1,6 +1,6 @@
 #include "kmp_forced_exploration_policy.h"
 
-int ForcedExplorationPolicy::policy(int episode, int timestep, RLAgent& agent)
+int ExploreFirstPolicy::policy(int episode, int timestep, Agent& agent)
 {
     int i, action, action_max;
 

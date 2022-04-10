@@ -1,6 +1,6 @@
-#include "kmp_rl_agent.h"
+#include "kmp_agent.h"
 
-class SARSALearner : public RLAgent
+class SARSALearner : public Agent
 {
 public:
     explicit SARSALearner(int num_states, int num_actions);

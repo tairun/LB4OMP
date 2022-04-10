@@ -1,6 +1,6 @@
-#include "kmp_rl_agent.h"
+#include "kmp_agent.h"
 
-class ExpectedSARSALearner : public RLAgent {
+class ExpectedSARSALearner : public Agent {
 public:
     explicit ExpectedSARSALearner(int numStates, int numActions);
 

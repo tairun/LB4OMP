@@ -10,8 +10,8 @@
 #include "kmp_base_policy.h"
 
 
-class ForcedExplorationPolicy : public BasePolicy
+class ExploreFirstPolicy : public BasePolicy
 {
 public:
-    int policy(int episode, int timestep, RLAgent& agent) override;
+    int policy(int episode, int timestep, Agent& agent) override;
 };

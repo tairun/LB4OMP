@@ -7,11 +7,11 @@
 
 #pragma once
 
-#include "../agents/kmp_rl_agent.h"
+#include "reinforcement-learning/agents/kmp_agent.h"
 
 
 class BasePolicy
 {
 protected:
-    virtual int policy(int episode, int timestep, RLAgent& agent) = 0;
+    virtual int policy(int episode, int timestep, Agent& agent) = 0;
 };

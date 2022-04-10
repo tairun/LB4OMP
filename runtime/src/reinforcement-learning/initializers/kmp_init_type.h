@@ -1,6 +1,12 @@
-enum kmp_init_type
+enum InitType
 {
     ZERO = 0,
-    OPTIMISTIC = 1,
-    RANDOM = 2
+    RANDOM = 1,
+    OPTIMISTIC = 2,
+};
+
+static std::unordered_map<std::string, InitType> InitTable = {
+        {"zero", InitType::ZERO},
+        {"random", InitType::RANDOM},
+        {"optimistic", InitType::OPTIMISTIC}
 };

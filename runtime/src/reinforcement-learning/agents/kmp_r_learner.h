@@ -9,10 +9,10 @@
 
 #include <string>
 
-#include "kmp_rl_agent.h"
+#include "kmp_agent.h"
 
 
-class RLearner : public RLAgent {
+class RLearner : public Agent {
 public:
     explicit RLearner(int num_states, int num_actions);
 

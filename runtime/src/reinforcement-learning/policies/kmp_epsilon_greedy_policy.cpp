@@ -1,22 +1,22 @@
 #include "kmp_epsilon_greedy_policy.h"
-#include "../agents/kmp_rl_agent.h"
+#include "../agents/kmp_agent.h"
 
-int EpsilonGreedyPolicy::policy(int episode, int timestep, RLAgent& agent)
+int EpsilonGreedyPolicy::policy(int episode, int timestep, Agent& agent)
 {
-    std::default_random_engine re(time(nullptr));
+    std::default_random_engine re(420.69);
     std::uniform_real_distribution<double> uniform(0, 1);
 
     // Switches between exploration and exploitation with the probability of epsilon (or 1-epsilon)
     if (uniform(re) < agent.get_epsilon())
-        // Explore (random action)
+    // Explore (random action)
     {
         int next_action = agent.sample_action(); // Chooses action (which is equal to the next state)
         return next_action;
     }
     else
-        // Exploit (previous knowledge)
+    // Exploit (previous knowledge)
     {
-        int maxQ = -9999;
+        double maxQ = -9999.99f;
         std::vector<int> action_candidates;
 
         // Evaluate Q-Table for action with highest Q-Value

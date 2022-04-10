@@ -8,14 +8,14 @@
 #include <string>
 
 #include "kmp_rl_info.h"
-#include "kmp_rl_agent.h"
-#include "kmp_rl_agent_old.h"
+#include "kmp_agent.h"
+#include "kmp_agent_old.h"
 #include "kmp_q_learner_old.h"
 
 
 // public
 QLearnerOld::QLearnerOld(int states, int actions) :
-             RLAgentOld(states, actions, "Q Learner (old version)")
+        AgentOld(states, actions, "Q Learner (old version)")
 {
     agent_data = new RLInfo(states, actions);
 }

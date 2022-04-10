@@ -7,13 +7,13 @@
 
 #include <random>
 
-#include "kmp_rl_agent.h"
+#include "kmp_agent.h"
 #include "kmp_sarsa_learner.h"
 
 
 // public
 SARSALearner::SARSALearner(int num_states, int num_actions) :
-              RLAgent(num_states, num_actions, "SARSA Learner")
+        Agent(num_states, num_actions, "SARSA Learner")
 {
     // Initialize first dimension of table
     q_table = new double *[state_space];

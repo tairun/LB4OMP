@@ -8,14 +8,14 @@
 #include <string>
 
 #include "kmp_rl_info.h"
-#include "kmp_rl_agent.h"
-#include "kmp_rl_agent_old.h"
+#include "kmp_agent.h"
+#include "kmp_agent_old.h"
 #include "kmp_sarsa_learner_old.h"
 
 
 // public
 SARSALearnerOld::SARSALearnerOld(int states, int actions) :
-                 RLAgentOld(states, actions, "SARSA Learner (old version)")
+        AgentOld(states, actions, "SARSA Learner (old version)")
 {
     agent_data = new RLInfo(states, actions);
 }

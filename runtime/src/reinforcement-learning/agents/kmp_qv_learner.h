@@ -1,7 +1,7 @@
-#include "kmp_rl_agent.h"
+#include "kmp_agent.h"
 
 
-class QVLearner : public RLAgent {
+class QVLearner : public Agent {
 public:
     explicit QVLearner(int num_states, int num_actions);
 

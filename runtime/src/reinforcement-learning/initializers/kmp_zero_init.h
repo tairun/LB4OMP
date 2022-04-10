@@ -9,12 +9,8 @@
  * */
 class ZeroInit : public BaseInit
 {
-private:
-    ZeroInit() = default;
-    ~ZeroInit() = default;
-
 public:
-    static void init(int* data, int size);
-    static void init(double* data, int size);
-    static void init(double** data, int num_actions, int num_states);
+    void init(int* data, int size) override;
+    void init(double* data, int size) override;
+    void init(double** data, int num_actions, int num_states) override;
 };

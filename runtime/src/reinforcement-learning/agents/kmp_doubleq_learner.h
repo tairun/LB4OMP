@@ -1,6 +1,6 @@
-#include "kmp_rl_agent.h"
+#include "kmp_agent.h"
 
-class DoubleQLearner : public RLAgent
+class DoubleQLearner : public Agent
 {
 public:
     explicit DoubleQLearner(int num_states, int num_actions);

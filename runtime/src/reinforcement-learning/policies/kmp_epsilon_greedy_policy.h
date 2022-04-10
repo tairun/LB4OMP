@@ -8,11 +8,11 @@
 #pragma once
 
 #include "kmp_base_policy.h"
-#include "../agents/kmp_rl_agent.h"
+#include "../agents/kmp_agent.h"
 
 
 class EpsilonGreedyPolicy : public BasePolicy
 {
 protected:
-    int policy(int episode, int timestep, RLAgent& agent) override;
+    int policy(int episode, int timestep, Agent& agent) override;
 };

@@ -1,12 +1,12 @@
 #include <random>
 
-#include "kmp_rl_agent.h"
+#include "kmp_agent.h"
 #include "kmp_doubleq_learner.h"
 
 
 // public
 DoubleQLearner::DoubleQLearner(int num_states, int num_actions) :
-                RLAgent(num_states, num_actions, "DoubleQ Learner")
+        Agent(num_states, num_actions, "DoubleQ Learner")
 {
     // Initialize first dimension of table
     q_table_a   = new double *[state_space];

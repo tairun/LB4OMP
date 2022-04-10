@@ -1,10 +1,10 @@
 #include <string>
 
-#include "kmp_rl_agent_old.h"
+#include "kmp_agent_old.h"
 #include "kmp_rl_info.h"
 
 
-class QLearnerOld : public RLAgentOld {
+class QLearnerOld : public AgentOld {
 public:
     explicit QLearnerOld(int states, int actions);
 

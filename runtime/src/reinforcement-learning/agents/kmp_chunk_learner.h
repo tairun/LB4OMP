@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "kmp_rl_agent.h"
+#include "kmp_agent.h"
 #include "../initializers/kmp_base_init.h"
 
 
@@ -16,7 +16,7 @@
  * directly. It uses a fixed size of possible options, oriented on the size of the DLS portfolio
  * from LB4OMP. For learning algorithm Q-Learning was selected.
  * */
-class ChunkLearner : public RLAgent {
+class ChunkLearner : public Agent {
 public:
     explicit ChunkLearner(int num_states, int num_actions, LoopData* stats);
 
@@ -29,7 +29,7 @@ private:
     /* The policy chooses an action according to the learned experience of the agent. */
     /* Implements the Epsilon-Greedy action selection. */
     /* We need to adapt the policy function for the Chunk Learner to return the chunk size instead of the action index. */
-    int policy(int episode, int timestep, RLAgent& agent);
+    int policy(int episode, int timestep, Agent& agent);
 
     /* Updates the internal values of the agent. */
     void update(int next_state, int next_action, double reward_value) override;

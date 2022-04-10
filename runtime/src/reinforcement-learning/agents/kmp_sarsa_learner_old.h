@@ -1,10 +1,10 @@
 #pragma once
 
 #include <string>
-#include "kmp_rl_agent_old.h"
+#include "kmp_agent_old.h"
 
 
-class SARSALearnerOld : public RLAgentOld {
+class SARSALearnerOld : public AgentOld {
 public:
     explicit SARSALearnerOld(int states, int actions);
 

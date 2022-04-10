@@ -35,6 +35,14 @@ private:
     std::unordered_map<std::string, Agent*> agents; // Save agent references across timesteps
     static std::unordered_map<std::string, int>& get_timesteps();
     static std::unordered_map<std::string, Agent*>& get_agents();
+
+    /*
+     * Creates and instance of the Initializers class and returns a pointer to it.
+     * */
     static BaseInit* create_initializer();
+
+    /*
+     * Creates and instance of the policy class and returns a pointer to it.
+     * */
     static BasePolicy* create_policy();
 };

@@ -115,10 +115,11 @@ public:
 private:
     double seed{420.69};     // Controls the seed for the number generators
     double** table{nullptr}; // Pointer to table to lookup the best next action
+
+protected:
     BaseInit* pInit{nullptr};
     BasePolicy* pPolicy{nullptr};
 
-protected:
     int state_space;       // Amount of states in the environment
     int action_space;      // Amount of action available to the agent
     int current_state{0};  // We always start with static scheduling method as initial state (it's the first method from the portfolio)

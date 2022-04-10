@@ -10,7 +10,6 @@
 
 #include "kmp_agent.h"
 #include "kmp_chunk_learner.h"
-//#include "../initializers/kmp_base_init.h"
 #include "../initializers/kmp_zero_init.h"
 
 
@@ -28,11 +27,11 @@ ChunkLearner::ChunkLearner(int num_states, int num_actions, LoopData* stats) :
     state_space  = array_size; // Q-Table will be bigger, we could make it arbitrarily big --> performance issues
     action_space = array_size; // Q-Table will be bigger, we could make it arbitrarily big --> performance issues
 
-    ZeroInit::init(chunk_sizes, state_space);
+    pInit->init(chunk_sizes, state_space);
     //chunk_sizes = new int[array_size];
 
     // Initialize first dimension of table
-    ZeroInit::init(q_table, state_space, action_space);
+    pInit->init(q_table, state_space, action_space);
     //q_table = new double *[state_space];
 
     current_state = get_chunks(chunk_sizes, array_size, stats->n, stats->p);

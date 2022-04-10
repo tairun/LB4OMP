@@ -1,5 +1,12 @@
+// -------------------------- Reinforcement Learning Extension ---------------------------------//
+//  June 2022
+//  Master Thesis
+//  Luc Kury, <luc.kury@unibas.ch>
+//  University of Basel, Switzerland
+//  --------------------------------------------------------------------------------------------//
+
 #include "kmp_epsilon_greedy_policy.h"
-#include "../agents/kmp_agent.h"
+
 
 int EpsilonGreedyPolicy::policy(int episode, int timestep, Agent& agent)
 {

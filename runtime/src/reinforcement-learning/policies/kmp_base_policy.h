@@ -1,4 +1,5 @@
-// -------------------------- Reinforcement Learning Extension ---------------------------------//
+// -------------------------- Reinforcement Learning Extension
+// ---------------------------------//
 //  June 2022
 //  Master Thesis
 //  Luc Kury, <luc.kury@unibas.ch>
@@ -7,11 +8,9 @@
 
 #pragma once
 
-#include "reinforcement-learning/agents/kmp_agent.h"
+class Agent;
 
-
-class BasePolicy
-{
+class BasePolicy {
 protected:
-    virtual int policy(int episode, int timestep, Agent& agent) = 0;
+  virtual int policy(int episode, int timestep, Agent &agent) = 0;
 };

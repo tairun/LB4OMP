@@ -97,6 +97,7 @@ else()
     reinforcement-learning/agents/kmp_r_learner.cpp
     reinforcement-learning/agents/kmp_deepq_learner.cpp
     reinforcement-learning/agents/kmp_chunk_learner.cpp
+    reinforcement-learning/kmp_agent_provider.cpp
 
     # END Reinforcement Learning Extensions
     kmp_dispatch.cpp

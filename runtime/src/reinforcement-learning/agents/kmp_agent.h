@@ -17,7 +17,7 @@
 #include "../kmp_loopdata.h"
 #include "../utils/utils.h"
 #include "../initializers/kmp_base_init.h"
-#include "reinforcement-learning/policies/kmp_base_policy.h"
+#include "../policies/kmp_base_policy.h"
 
 
 class Agent {

@@ -2,8 +2,6 @@
 
 #include "utils.h"
 
-#pragma once
-
 
 std::string read_env_string(const char* var_name)
 {

@@ -85,12 +85,13 @@ else()
     kmp_wait_release.cpp
     kmp_affinity.cpp
     # START Reinforcement Learning Extensions
+    reinforcement-learning/utils/utils.cpp
     ## Initializers
     reinforcement-learning/initializers/kmp_zero_init.cpp
     reinforcement-learning/initializers/kmp_random_init.cpp
     reinforcement-learning/initializers/kmp_optimistic_init.cpp
     ## Policies
-          reinforcement-learning/policies/kmp_explore_first_policy.cpp
+    reinforcement-learning/policies/kmp_explore_first_policy.cpp
     reinforcement-learning/policies/kmp_epsilon_greedy_policy.cpp
     reinforcement-learning/policies/kmp_softmax_policy.cpp
     ## Agents
@@ -105,7 +106,6 @@ else()
     reinforcement-learning/agents/kmp_deepq_learner.cpp
     reinforcement-learning/agents/kmp_chunk_learner.cpp
     ## Main File
-    reinforcement-learning/utils/utils.cpp
     reinforcement-learning/kmp_agent_provider.cpp
     # END Reinforcement Learning Extensions
     kmp_dispatch.cpp

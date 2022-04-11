@@ -89,5 +89,25 @@
         "cinttypes": "cpp"
     },
     "cmake.configureOnOpen": true,
-    "esbonio.sphinx.confDir": ""
+    "esbonio.sphinx.confDir": "",
+    "grammarly.overrides": [
+        {
+            "files": [
+                "**/README.md"
+            ],
+            "config": {
+                "audience": "expert",
+                "dialect": "american",
+                "domain": "technical",
+                "emotions": [
+                    "confident",
+                    "optimistic"
+                ],
+                "goals": [
+                    "inform",
+                    "describe"
+                ]
+            }
+        }
+    ]
 }

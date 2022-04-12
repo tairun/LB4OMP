@@ -107,10 +107,10 @@ Agent* AgentProvider::create_agent(int agent_type, LoopData* stats, int states, 
             std::cout << "[AgentProvider::create_agent] Unknown agent type specified: " << agent_type << std::endl;
     }
 
-    BaseInit* init = create_initializer();
+    BaseInit* init = create_initializer(agent);
     agent->set_initializer(init);
 
-    BasePolicy* pol = create_policy();
+    BasePolicy* pol = create_policy(agent);
     agent->set_policy(pol);
 
     return agent;
@@ -126,9 +126,9 @@ std::unordered_map<std::string, Agent*>& AgentProvider::get_agents()
     return Get().agents;
 }
 
-BaseInit* AgentProvider::create_initializer(Agent& agent)
+BaseInit* AgentProvider::create_initializer(Agent* agent)
 {
-    InitType init_enum = InitTable.at(agent.get_init_input());
+    InitType init_enum = InitTable.at(agent->get_init_input());
     BaseInit* init;
 
     switch (init_enum) {
@@ -150,9 +150,9 @@ BaseInit* AgentProvider::create_initializer(Agent& agent)
 
 }
 
-BasePolicy* AgentProvider::create_policy(Agent& agent)
+BasePolicy* AgentProvider::create_policy(Agent* agent)
 {
-    PolicyType policy_enum = PolicyTable.at(agent.get_policy_input());
+    PolicyType policy_enum = PolicyTable.at(agent->get_policy_input());
     BasePolicy* pol;
 
     switch (policy_enum) {

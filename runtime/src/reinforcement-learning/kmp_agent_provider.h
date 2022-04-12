@@ -39,10 +39,10 @@ private:
     /*
      * Creates and instance of the Initializers class and returns a pointer to it.
      * */
-    static BaseInit* create_initializer(Agent& agent);
+    static BaseInit* create_initializer(Agent* agent);
 
     /*
      * Creates and instance of the policy class and returns a pointer to it.
      * */
-    static BasePolicy* create_policy(Agent& agent);
+    static BasePolicy* create_policy(Agent* agent);
 };

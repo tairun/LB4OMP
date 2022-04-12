@@ -14,6 +14,7 @@
 #include <random>
 #include <string>
 
+#include "defaults.h"
 #include "../kmp_loopdata.h"
 #include "../utils/utils.h"
 #include "../initializers/kmp_base_init.h"
@@ -51,11 +52,11 @@ public:
     {
         std::cout << "[Agent::step] Starting learning ..." << std::endl;
         int next_action, next_state;
-        double reward_value = reward(stats);           // Convert the reward signal into the actual reward value
+        double reward_value = reward(stats);                              // Convert the reward signal into the actual reward value
         next_action = policy(episode, timestep, table);           // Predict the next action according to the policy and Q-Values
-        next_state = next_action;                      // In our scenario the next action and desired state is the same
+        next_state = next_action;                                         // In our scenario the next action and desired state is the same
         std::cout << "[Agent::update] Updating agent data ..." << std::endl;
-        update(next_state, next_action, reward_value); // Update the Q-Values based on the learning algorithm
+        update(next_state, next_action, reward_value);                    // Update the Q-Values based on the learning algorithm
 
         current_state = next_state;                    // Update the state in the class
         current_action = next_action;                  // Update the action in the class
@@ -133,21 +134,25 @@ protected:
     int current_state{0};  // We always start with static scheduling method as initial state (it's the first method from the portfolio)
     int current_action{0}; // Set action also to selecting the static scheduling method
 
-    double alpha{0.85f};        // Learning rate
-    double alpha_min{0.10f};    // Learning rate
-    double gamma{0.95f};        // Discount factor
-    double epsilon{1.00f};      // Exploration rate
-    double epsilon_min{0.10f};  // Exploration rate
-    double lamdba{0.00f};       // QV-Learning specific
-    double tau{0.00f};          // QV-Learning specific
-    double low{-99.00f}, high{-999.00f};
-    double alpha_decay_factor{0.90f};
-    double epsilon_decay_factor{0.90f};
+    double alpha{agent::ALPHA};             // Learning rate
+    double alpha_min{agent::ALPHA_MIN};     // Learning rate
+    double alpha_decay_factor{agent::ALPHA_DECAY_FACTOR};
+
+    double gamma{agent::GAMMA};             // Discount factor
+
+    double epsilon{agent::EPSILON};         // Exploration rate
+    double epsilon_min{agent::EPSILON_MIN}; // Exploration rate
+    double epsilon_decay_factor{agent::EPSILON_DECAY_FACTOR};
+
+    double lamdba{0.00f};                   // QV-Learning specific
+    double tau{0.00f};                      // QV-Learning specific
+
+    double low{-99.00f}, high{-999.00f};    // Initial value for reward allocation
 
     std::string name;
-    std::string init_input{"zero"};
-    std::string reward_input{"looptime"};       // Default: looptime.       Options are: looptime, loadimbalance, robustness
-    std::string policy_input{"explore_first"};  // Default: explore_first.  Options are: explore_first, epsilon_greedy, softmax
+    std::string init_input{agent::INIT_INPUT};      // Default: zero.          Options are: zero, random, optimistic
+    std::string reward_input{agent::REWARD_INPUT};  // Default: looptime.      Options are: looptime, loadimbalance, robustness
+    std::string policy_input{agent::POLICY_INPUT};  // Default: explore_first. Options are: explore_first, epsilon_greedy, softmax
 
     /*----------------------------------------------------------------------------*/
     /*                            MEMBER FUNCTIONS                                */

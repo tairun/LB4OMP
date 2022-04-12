@@ -104,14 +104,20 @@ Agent* AgentProvider::create_agent(int agent_type, LoopData* stats, int states, 
             agent = new ChunkLearner(states, actions, stats);
             break;
         default:
-            std::cout << "[AgentProvider::create_agent] Unknown agent type specified: " << agent_type << std::endl;
+            std::cout << "[AgentProvider::create_agent] Unknown agent type specified: " << agent_type << " . Using default (Q-Learner)." << std::endl;
+            agent = new QLearnerOld(states, actions);
+            break;
     }
 
     BaseInit* init = create_initializer(agent);
+    std::cout << "[AgentProvider::create_agent] Created initializer successfully." << std::endl;
     agent->set_initializer(init);
+    std::cout << "[AgentProvider::create_agent] Set initializer successfully." << std::endl;
 
     BasePolicy* pol = create_policy(agent);
+    std::cout << "[AgentProvider::create_agent] Created policy successfully." << std::endl;
     agent->set_policy(pol);
+    std::cout << "[AgentProvider::create_agent] Set policy successfully." << std::endl;
 
     return agent;
 }

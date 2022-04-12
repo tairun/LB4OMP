@@ -11,7 +11,7 @@ std::string read_env_string(const char* var_name)
     }
     else
     {
-        std::cout << "[AgentProvider::read_env_string] Couldn't read '" << var_name << "' from env." << std::endl;
+        std::cout << "[read_env_string] Couldn't read '" << var_name << "' from env." << std::endl;
         return nullptr;
     }
 }
@@ -24,7 +24,7 @@ void read_env_string(const char* var_name, std::string& target)
     }
     else
     {
-        std::cout << "[Agent::read_env_string] Couldn't read '" << var_name << "' from env. Using default." << std::endl;
+        std::cout << "[read_env_string] Couldn't read '" << var_name << "' from env. Using default." << std::endl;
     }
 }
 
@@ -36,6 +36,6 @@ void read_env_double(const char* var_name, double& target)
     }
     else
     {
-        std::cout << "[Agent::read_env_double] Couldn't read '" << var_name << "' from env. Using default." << std::endl;
+        std::cout << "[read_env_double] Couldn't read '" << var_name << "' from env. Using default." << std::endl;
     }
 }

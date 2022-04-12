@@ -126,10 +126,9 @@ std::unordered_map<std::string, Agent*>& AgentProvider::get_agents()
     return Get().agents;
 }
 
-BaseInit* AgentProvider::create_initializer()
+BaseInit* AgentProvider::create_initializer(Agent& agent)
 {
-    std::string init_input = read_env_string("KMP_RL_INIT");
-    InitType init_enum = InitTable.at(init_input);
+    InitType init_enum = InitTable.at(agent.get_init_input());
     BaseInit* init;
 
     switch (init_enum) {
@@ -145,16 +144,15 @@ BaseInit* AgentProvider::create_initializer()
         default:
             init = new ZeroInit();
             break;
- }
+    }
 
  return init;
 
 }
 
-BasePolicy* AgentProvider::create_policy()
+BasePolicy* AgentProvider::create_policy(Agent& agent)
 {
-    std::string policy_input = read_env_string("KMP_RL_POLICY");
-    PolicyType policy_enum = PolicyTable.at(policy_input);
+    PolicyType policy_enum = PolicyTable.at(agent.get_policy_input());
     BasePolicy* pol;
 
     switch (policy_enum) {
@@ -163,10 +161,13 @@ BasePolicy* AgentProvider::create_policy()
             break;
         case PolicyType::EPSILON_GREEDY:
             pol = new EpsilonGreedyPolicy();
+            break;
         case PolicyType::SOFTMAX:
             pol = new SoftmaxPolicy();
+            break;
         default:
-            pol = new ExploreFirstPolicy;
+            pol = new ExploreFirstPolicy();
+            break;
     }
 
     return pol;

@@ -28,7 +28,7 @@ public:
     {
         read_env_double("KMP_RL_ALPHA", alpha);     // Read learning rate from env
         read_env_double("KMP_RL_GAMMA", gamma);     // Read discount factor from env
-        read_env_double("KMP_RL_EPSILON", epsilon);   // Read exploration rate from env
+        read_env_double("KMP_RL_EPSILON", epsilon); // Read exploration rate from env
 
         //read_env_double("KMP_RL_LAMBDA", lambda);
         //read_env_double("KMP_RL_TAU", tau);
@@ -89,6 +89,14 @@ public:
 
     int get_action_space() const {
         return action_space;
+    }
+
+    std::string get_init_input() const {
+        return init_input;
+    }
+
+    std::string get_policy_input() const {
+        return policy_input;
     }
 
     double** get_table() const {

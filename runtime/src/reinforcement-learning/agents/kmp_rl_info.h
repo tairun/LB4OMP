@@ -37,6 +37,8 @@ public:
                                       gamma(0.6),
                                       reward_input("looptime")
     {
+        std::cout << "[RLInfo::RLInfo] Hello there from constructor ..." << std::endl;
+
         count = new int[states];
         qvalue = new double *[states];
 
@@ -53,6 +55,8 @@ public:
         read_env_double("KMP_RL_ALPHA", alpha);
         read_env_double("KMP_RL_GAMMA", gamma);
         read_env_string("KMP_RL_REWARD", reward_input);
+
+        std::cout << "[RLInfo::RLInfo] Constructor done. Bye!" << std::endl;
     }
 
 private:

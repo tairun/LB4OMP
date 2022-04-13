@@ -18,11 +18,13 @@ public:
     explicit AgentOld(int num_states, int num_actions, std::string agentName) :
              Agent(num_states, num_actions, std::move(agentName))
     {
+        std::cout << "[AgentOld::AgentOld] Hello there from constructor ..." << std::endl;
+
         agent_data->alpha = alpha;
         agent_data->gamma = gamma;
         agent_data->reward_input = reward_input;
 
-        std::cout << "[AgentOld::AgentOld] Done setting up old agent data structures." << std::endl;
+        std::cout << "[AgentOld::AgentOld] Constructor done. Bye!" << std::endl;
     }
 
     RLInfo* agent_data{}; // Saving the state of the agent between timesteps

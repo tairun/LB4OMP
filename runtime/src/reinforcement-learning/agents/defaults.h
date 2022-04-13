@@ -5,6 +5,8 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
+#pragma once
+
 namespace defaults {
     const double SEED                   = 420.69f;
 

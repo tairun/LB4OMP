@@ -9,6 +9,7 @@
 
 #include <iostream>
 
+#include "defaults.h"
 #include "../utils/utils.h"
 
 
@@ -16,26 +17,19 @@
 class RLInfo
 {
 public:
-    int state;
-    int trialstate;
+    int state{0};
+    int trialstate{0};
     int *count;
-    double low, high;
+    double low{-99.0f}, high{-999.0f};
     double **qvalue;
-    double bestqvalue;
+    double bestqvalue{0.0f};
 
-    double alpha;
-    double gamma;
+    double alpha{defaults::ALPHA};
+    double gamma{defaults::GAMMA};
 
-    std::string reward_input;
+    std::string reward_input{defaults::REWARD_INPUT};
 
-    RLInfo(int states, int actions) : state(0),
-                                      trialstate(0),
-                                      low(-99.0),
-                                      high(-999.0),
-                                      bestqvalue(0.0),
-                                      alpha(0.6),
-                                      gamma(0.6),
-                                      reward_input("looptime")
+    RLInfo(int states, int actions)
     {
         std::cout << "[RLInfo::RLInfo] Hello there from constructor ..." << std::endl;
 
@@ -52,13 +46,9 @@ public:
                 qvalue[s][a] = 0.0;
             }
 
-        read_env_double("KMP_RL_ALPHA", alpha);
-        read_env_double("KMP_RL_GAMMA", gamma);
-        read_env_string("KMP_RL_REWARD", reward_input);
-
         std::cout << "[RLInfo::RLInfo] Constructor done. Bye!" << std::endl;
     }
 
 private:
-
+    // empty
 };

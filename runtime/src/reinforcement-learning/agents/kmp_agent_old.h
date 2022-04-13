@@ -20,6 +20,7 @@ public:
     {
         std::cout << "[AgentOld::AgentOld] Hello there from constructor ..." << std::endl;
         std::cout << "[AgentOld::AgentOld] Value of 'alpha' from base class: " << Agent::alpha << std::endl;
+        std::cout << "[AgentOld::AgentOld] Address of 'agent_data' variable: " << agent_data << std::endl;
 
         agent_data->alpha = Agent::alpha;
         agent_data->gamma = Agent::gamma;

@@ -28,7 +28,6 @@ public:
 
         agent_data->alpha = Agent::alpha;
         agent_data->gamma = Agent::gamma;
-        agent_data->reward_input = Agent::reward_input;
 
         std::cout << "[AgentOld::AgentOld] Constructor done. Bye!" << std::endl;
     }

@@ -122,11 +122,11 @@ public:
     }
 
 private:
-    double seed{420.69};     // Controls the seed for the number generators
+    double   seed{420.69};     // Controls the seed for the number generators
     double** table{nullptr}; // Pointer to table to lookup the best next action
 
 protected:
-    BaseInit* pInit{nullptr};
+    BaseInit*   pInit{nullptr};
     BasePolicy* pPolicy{nullptr};
 
     int state_space;       // Amount of states in the environment
@@ -134,15 +134,15 @@ protected:
     int current_state{0};  // We always start with static scheduling method as initial state (it's the first method from the portfolio)
     int current_action{0}; // Set action also to selecting the static scheduling method
 
-    double alpha{agent::ALPHA};             // Learning rate
-    double alpha_min{agent::ALPHA_MIN};     // Learning rate
-    double alpha_decay_factor{agent::ALPHA_DECAY_FACTOR};
+    double alpha{defaults::ALPHA};             // Learning rate
+    double alpha_min{defaults::ALPHA_MIN};     // Learning rate
+    double alpha_decay_factor{defaults::ALPHA_DECAY_FACTOR};
 
-    double gamma{agent::GAMMA};             // Discount factor
+    double gamma{defaults::GAMMA};             // Discount factor
 
-    double epsilon{agent::EPSILON};         // Exploration rate
-    double epsilon_min{agent::EPSILON_MIN}; // Exploration rate
-    double epsilon_decay_factor{agent::EPSILON_DECAY_FACTOR};
+    double epsilon{defaults::EPSILON};         // Exploration rate
+    double epsilon_min{defaults::EPSILON_MIN}; // Exploration rate
+    double epsilon_decay_factor{defaults::EPSILON_DECAY_FACTOR};
 
     double lamdba{0.00f};                   // QV-Learning specific
     double tau{0.00f};                      // QV-Learning specific
@@ -150,9 +150,9 @@ protected:
     double low{-99.00f}, high{-999.00f};    // Initial value for reward allocation
 
     std::string name;
-    std::string init_input{agent::INIT_INPUT};      // Default: zero.          Options are: zero, random, optimistic
-    std::string reward_input{agent::REWARD_INPUT};  // Default: looptime.      Options are: looptime, loadimbalance, robustness
-    std::string policy_input{agent::POLICY_INPUT};  // Default: explore_first. Options are: explore_first, epsilon_greedy, softmax
+    std::string init_input{defaults::INIT_INPUT};      // Default: zero.          Options are: zero, random, optimistic
+    std::string reward_input{defaults::REWARD_INPUT};  // Default: looptime.      Options are: looptime, loadimbalance, robustness
+    std::string policy_input{defaults::POLICY_INPUT};  // Default: explore_first. Options are: explore_first, epsilon_greedy, softmax
 
     /*----------------------------------------------------------------------------*/
     /*                            MEMBER FUNCTIONS                                */

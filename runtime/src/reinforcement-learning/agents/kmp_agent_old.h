@@ -19,10 +19,11 @@ public:
              Agent(num_states, num_actions, std::move(agentName))
     {
         std::cout << "[AgentOld::AgentOld] Hello there from constructor ..." << std::endl;
+        std::cout << "[AgentOld::AgentOld] Value of 'alpha' from base class: " << Agent::alpha << std::endl;
 
-        agent_data->alpha = alpha;
-        agent_data->gamma = gamma;
-        agent_data->reward_input = reward_input;
+        agent_data->alpha = Agent::alpha;
+        agent_data->gamma = Agent::gamma;
+        agent_data->reward_input = Agent::reward_input;
 
         std::cout << "[AgentOld::AgentOld] Constructor done. Bye!" << std::endl;
     }

@@ -5,7 +5,7 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
-namespace agent {
+namespace defaults {
     const double SEED                   = 420.69f;
 
     const double ALPHA                  = 0.85f;

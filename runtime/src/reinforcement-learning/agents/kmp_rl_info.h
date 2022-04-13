@@ -22,12 +22,9 @@ public:
     int *count;
     double low{-99.0f}, high{-999.0f};
     double **qvalue;
-    double bestqvalue{0.0f};
 
     double alpha{defaults::ALPHA};
     double gamma{defaults::GAMMA};
-
-    std::string reward_input{defaults::REWARD_INPUT};
 
     RLInfo(int states, int actions)
     {

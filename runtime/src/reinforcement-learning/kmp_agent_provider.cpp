@@ -105,19 +105,27 @@ Agent* AgentProvider::create_agent(int agent_type, LoopData* stats, int states, 
             break;
         default:
             std::cout << "[AgentProvider::create_agent] Unknown agent type specified: " << agent_type << " . Using default (Q-Learner)." << std::endl;
-            agent = new QLearnerOld(states, actions);
+            agent = new QLearner(states, actions);
             break;
     }
 
-    BaseInit* init = create_initializer(agent);
-    std::cout << "[AgentProvider::create_agent] Created initializer successfully." << std::endl;
-    agent->set_initializer(init);
-    std::cout << "[AgentProvider::create_agent] Set initializer successfully." << std::endl;
+    if (new_type == 0 || new_type == 1)
+    // Only set initializer and policy when we have a new agent
+    {
+        std::cout << "[AgentProvider::create_agent] Skipping initializer and policy creation for old agents." << std::endl;
+    }
+    else
+    {
+        BaseInit* init = create_initializer(agent);
+        std::cout << "[AgentProvider::create_agent] Created initializer successfully." << std::endl;
+        agent->set_initializer(init);
+        std::cout << "[AgentProvider::create_agent] Set initializer successfully." << std::endl;
 
-    BasePolicy* pol = create_policy(agent);
-    std::cout << "[AgentProvider::create_agent] Created policy successfully." << std::endl;
-    agent->set_policy(pol);
-    std::cout << "[AgentProvider::create_agent] Set policy successfully." << std::endl;
+        BasePolicy* pol = create_policy(agent);
+        std::cout << "[AgentProvider::create_agent] Created policy successfully." << std::endl;
+        agent->set_policy(pol);
+        std::cout << "[AgentProvider::create_agent] Set policy successfully." << std::endl;
+    }
 
     return agent;
 }
@@ -162,7 +170,7 @@ BasePolicy* AgentProvider::create_policy(Agent* agent)
     BasePolicy* pol;
 
     switch (policy_enum) {
-        case PolicyType::EXPLORATION_FIRST:
+        case PolicyType::EXPLORE_FIRST:
             pol = new ExploreFirstPolicy();
             break;
         case PolicyType::EPSILON_GREEDY:

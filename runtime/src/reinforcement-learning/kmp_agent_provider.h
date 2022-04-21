@@ -9,6 +9,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <fstream>
 
 #include "agents/kmp_agent.h"
 
@@ -30,9 +31,13 @@ public:
     static int search(const std::string &loop_id, int agent_type, LoopData* stats, int portfolio_size);
 
 private:
-    AgentProvider() = default;    // Make this class a singleton effectively
+    AgentProvider();
+    ~AgentProvider();
+
     std::unordered_map<std::string, int> timesteps;   // Save timestep progress
     std::unordered_map<std::string, Agent*> agents; // Save agent references across timesteps
+    static std::fstream ofs;
+
     static std::unordered_map<std::string, int>& get_timesteps();
     static std::unordered_map<std::string, Agent*>& get_agents();
 
@@ -45,4 +50,9 @@ private:
      * Creates and instance of the policy class and returns a pointer to it.
      * */
     static BasePolicy* create_policy(Agent* agent);
+
+    /*
+     * Prints the stats of the agent to evaluate performance.
+     * */
+    static void print_agent_stats(const std::string& loop_id, int timestep, Agent* agent);
 };

@@ -60,6 +60,7 @@ public:
 
         current_state = next_state;                    // Update the state in the class
         current_action = next_action;                  // Update the action in the class
+        current_reward = reward_value;                 // Update the reward in the class (for statistics only)
 
         // Decay
         alpha_decay(episode);
@@ -80,6 +81,10 @@ public:
     }
 
     // Getters
+    double get_alpha() const {
+        return alpha;
+    }
+
     double get_epsilon() const {
         return epsilon;
     }
@@ -108,6 +113,11 @@ public:
         return current_state;
     }
 
+    int get_current_reward() const {
+        return current_reward;
+    }
+
+    // Setters
     void set_table(double** table_ref)
     {
         table = table_ref;
@@ -133,6 +143,7 @@ protected:
     int action_space;      // Amount of action available to the agent
     int current_state{0};  // We always start with static scheduling method as initial state (it's the first method from the portfolio)
     int current_action{0}; // Set action also to selecting the static scheduling method
+    int current_reward{0}; // For statistics only
 
     double alpha{defaults::ALPHA};             // Learning rate
     double alpha_min{defaults::ALPHA_MIN};     // Learning rate

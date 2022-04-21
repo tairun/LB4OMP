@@ -39,6 +39,18 @@ AgentProvider& AgentProvider::Get() {
     return instance;
 }
 
+AgentProvider::AgentProvider()
+{
+    std::string fileData = read_env_string("KMP_RL_AGENT_STATS");
+    ofs.open(fileData, std::ofstream::out | std::ofstream::app);
+    ofs << "'loop_id','alpha','epsilon','reward'" << std::endl;
+}
+
+AgentProvider::~AgentProvider()
+{
+    ofs.close();
+}
+
 // public
 int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* stats, int portfolio_size)
 {
@@ -50,6 +62,8 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
         auto* agent = create_agent(agent_type, stats,portfolio_size, portfolio_size, 6);
         AgentProvider::get_agents().insert(std::make_pair(loop_id, agent));
         std::cout << "[AgentProvider::search] Agent created." << std::endl;
+        print_agent_stats(loop_id, 0, agent);
+
         return 0; // Selects first DLS method for exploration
     }
     else
@@ -58,8 +72,11 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
         auto* agent = AgentProvider::get_agents().find(loop_id)->second;
         //std::cout << "[AgentProvider::search] Grabbing timestep info ..." << std::endl;
         int new_method = agent->step(0, AgentProvider::get_timesteps().at(loop_id), stats);
-        std::cout << "[AgentProvider::search] Timestep " << AgentProvider::get_timesteps().at(loop_id) << " completed. New method is " << new_method << std::endl;
+        int timestep = AgentProvider::get_timesteps().at(loop_id);
+        std::cout << "[AgentProvider::search] Timestep " << timestep << " completed. New method is " << new_method << std::endl;
         AgentProvider::get_timesteps().at(loop_id)++;
+        print_agent_stats(loop_id, timestep, agent);
+
         return new_method;
     }
 }
@@ -185,4 +202,8 @@ BasePolicy* AgentProvider::create_policy(Agent* agent)
     }
 
     return pol;
+}
+
+void AgentProvider::print_agent_stats(const std::string& loop_id, int timestep, Agent* agent) {
+    ofs << loop_id << "," << timestep << "," << agent->get_alpha() << "," << agent->get_epsilon() << "," << agent->get_current_reward() << std::endl;
 }

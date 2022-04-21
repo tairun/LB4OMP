@@ -1,3 +1,5 @@
+#define DEBUG 0
+
 /*
  * kmp_dispatch.cpp: dynamic scheduling - iteration initialization and dispatch.
  */
@@ -1144,11 +1146,15 @@ void print_loop_timer(enum sched_type schedule, int tid_for_timer,
         std::cout << "Please export KMP_TIME_LOOPS in your environment with the path for the storing the loop times\n";
         exit(-1);
     }
+
     //TODO@kurluc00: For the love of god use commas to separate stuff that will be parsed by a script (┛ಠ_ಠ)┛彡┻━┻
     //fileMutex.lock();
     ofs.open(fileData, std::ofstream::out | std::ofstream::app);
+
+#ifdef DEBUG
     ofs << "LoopOccurrence:" << currentLoopMap.at(globalLoopline) << ",Location:" << globalLoopline << ",#iterations:"
         << globalNIterations << ",threadID:" << tid_for_timer << ",threadTime:" << time_span.count() << std::endl;
+#endif
 
     if (count == (nThreads - 1)) {
         //mytime = std::chrono::high_resolution_clock::now();

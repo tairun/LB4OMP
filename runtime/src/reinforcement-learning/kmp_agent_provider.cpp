@@ -157,6 +157,11 @@ std::unordered_map<std::string, Agent*>& AgentProvider::get_agents()
     return Get().agents;
 }
 
+std::fstream& AgentProvider::get_filestream()
+{
+    return Get().ofs;
+}
+
 BaseInit* AgentProvider::create_initializer(Agent* agent)
 {
     InitType init_enum = InitTable.at(agent->get_init_input());
@@ -205,5 +210,5 @@ BasePolicy* AgentProvider::create_policy(Agent* agent)
 }
 
 void AgentProvider::print_agent_stats(const std::string& loop_id, int timestep, Agent* agent) {
-    ofs << loop_id << "," << timestep << "," << agent->get_alpha() << "," << agent->get_epsilon() << "," << agent->get_current_reward() << std::endl;
+    AgentProvider::get_filestream() << loop_id << "," << timestep << "," << agent->get_alpha() << "," << agent->get_epsilon() << "," << agent->get_current_reward() << std::endl;
 }

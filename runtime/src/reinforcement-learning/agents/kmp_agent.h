@@ -54,6 +54,7 @@ public:
         int next_action, next_state;
         double reward_value = reward(stats);                              // Convert the reward signal into the actual reward value
         next_action = policy(episode, timestep, table);           // Predict the next action according to the policy and Q-Values
+        next_action = pPolicy->policy(episode, timestep, this&);
         next_state = next_action;                                         // In our scenario the next action and desired state is the same
         std::cout << "[Agent::update] Updating agent data ..." << std::endl;
         update(next_state, next_action, reward_value);                    // Update the Q-Values based on the learning algorithm

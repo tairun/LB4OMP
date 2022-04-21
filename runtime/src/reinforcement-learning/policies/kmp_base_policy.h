@@ -11,6 +11,6 @@
 class Agent;
 
 class BasePolicy {
-protected:
-  virtual int policy(int episode, int timestep, Agent &agent) = 0;
+public:
+  virtual int policy(int episode, int timestep, Agent* agent) = 0;
 };

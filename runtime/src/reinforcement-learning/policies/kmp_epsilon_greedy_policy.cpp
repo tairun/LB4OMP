@@ -8,16 +8,16 @@
 #include "kmp_epsilon_greedy_policy.h"
 
 
-int EpsilonGreedyPolicy::policy(int episode, int timestep, Agent& agent)
+int EpsilonGreedyPolicy::policy(int episode, int timestep, Agent* agent)
 {
     std::default_random_engine re(420.69);
     std::uniform_real_distribution<double> uniform(0, 1);
 
     // Switches between exploration and exploitation with the probability of epsilon (or 1-epsilon)
-    if (uniform(re) < agent.get_epsilon())
+    if (uniform(re) < agent->get_epsilon())
     // Explore (random action)
     {
-        int next_action = agent.sample_action(); // Chooses action (which is equal to the next state)
+        int next_action = agent->sample_action(); // Chooses action (which is equal to the next state)
         return next_action;
     }
     else
@@ -27,9 +27,9 @@ int EpsilonGreedyPolicy::policy(int episode, int timestep, Agent& agent)
         std::vector<int> action_candidates;
 
         // Evaluate Q-Table for action with highest Q-Value
-        for (int i = 0; i < agent.get_action_space(); i++)
+        for (int i = 0; i < agent->get_action_space(); i++)
         {
-            if (agent.get_table()[agent.get_current_state()][i] >= maxQ)
+            if (agent->get_table()[agent->get_current_state()][i] >= maxQ)
             {
                 action_candidates.push_back(i);
             }

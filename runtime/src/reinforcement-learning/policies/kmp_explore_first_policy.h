@@ -23,5 +23,5 @@
 class ExploreFirstPolicy : public BasePolicy
 {
 public:
-    int policy(int episode, int timestep, Agent& agent) override;
+    int policy(int episode, int timestep, Agent* agent) override;
 };

@@ -28,5 +28,5 @@
 class EpsilonGreedyPolicy : public BasePolicy
 {
 protected:
-    int policy(int episode, int timestep, Agent& agent) override;
+    int policy(int episode, int timestep, Agent* agent) override;
 };

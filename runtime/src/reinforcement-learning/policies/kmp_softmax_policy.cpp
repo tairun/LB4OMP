@@ -7,7 +7,7 @@
 
 #include "kmp_softmax_policy.h"
 
-int SoftmaxPolicy::policy(int episode, int timestep, Agent& agent)
+int SoftmaxPolicy::policy(int episode, int timestep, Agent* agent)
 {
     std::cout << "[Reinforcement Learning] Softmax policy not implemented!" << std::endl;
 

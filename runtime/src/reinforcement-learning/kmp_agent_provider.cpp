@@ -43,7 +43,7 @@ AgentProvider::AgentProvider()
 {
     std::string fileData = read_env_string("KMP_RL_AGENT_STATS");
     ofs.open(fileData, std::ofstream::out | std::ofstream::app);
-    ofs << "'loop_id','alpha','epsilon','reward'" << std::endl;
+    ofs << "'loop_id','timestep','alpha','epsilon','reward'" << std::endl;
 }
 
 AgentProvider::~AgentProvider()

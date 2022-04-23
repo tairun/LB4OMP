@@ -164,10 +164,9 @@ std::fstream& AgentProvider::get_filestream()
 
 BaseInit* AgentProvider::create_initializer(Agent* agent)
 {
-    InitType init_enum = InitTable.at(agent->get_init_input());
     BaseInit* init;
 
-    switch (init_enum) {
+    switch (agent->get_init_input()) {
         case InitType::ZERO:
             init = new ZeroInit();
             break;

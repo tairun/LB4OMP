@@ -5,8 +5,6 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
-#pragma once
-
 #include <algorithm>
 #include <ctime>
 #include <cmath>
@@ -17,8 +15,13 @@
 #include "defaults.h"
 #include "../kmp_loopdata.h"
 #include "../utils/utils.h"
+#include "../rewards/kmp_reward_type.h"
+#include "../initializers/kmp_init_type.h"
 #include "../initializers/kmp_base_init.h"
+#include "../policies/kmp_policy_type.h"
 #include "../policies/kmp_base_policy.h"
+
+#pragma once
 
 
 class Agent {
@@ -28,21 +31,20 @@ public:
                                                                      name(std::move(agent_name))
     {
         read_env_double("KMP_RL_ALPHA", alpha);     // Read learning rate from env
+        alpha_init = alpha;
         read_env_double("KMP_RL_GAMMA", gamma);     // Read discount factor from env
         read_env_double("KMP_RL_EPSILON", epsilon); // Read exploration rate from env
+        epsilon_init = epsilon;
 
-        //read_env_double("KMP_RL_LAMBDA", lambda);
-        //read_env_double("KMP_RL_TAU", tau);
-
-        read_env_string("KMP_RL_INIT", init_input);
-        read_env_string("KMP_RL_REWARD", reward_input);
-        read_env_string("KMP_RL_POLICY", policy_input);
+        read_env_enum("KMP_RL_REWARD", reward_type);
+        read_env_enum("KMP_RL_INIT", init_type);
+        read_env_enum("KMP_RL_POLICY", policy_type);
 
         read_env_double("KMP_RL_ALPHA_DECAY", alpha_decay_factor);
         read_env_double("KMP_RL_EPS_DECAY", epsilon_decay_factor);
 
         std::cout << "[Agent::Agent] Configuring agent as: " << name << std::endl;
-        std::cout << "[Agent::Agent] Additional params: Initializer-->" << init_input << ", Reward-->" << reward_input << ", Policy-->" << policy_input << std::endl;
+        std::cout << "[Agent::Agent] Additional params: Initializer-->" << init_type << ", Reward-->" << reward_type << ", Policy-->" << policy_type << std::endl;
     }
 
     /*
@@ -53,7 +55,7 @@ public:
         std::cout << "[Agent::step] Starting learning ..." << std::endl;
         int next_action, next_state;
         double reward_value = reward(stats);                              // Convert the reward signal into the actual reward value
-        //next_action = policy(episode, timestep, table);           // Predict the next action according to the policy and Q-Values
+        //next_action = policy(episode, timestep, table);                 // Predict the next action according to the policy and Q-Values
         next_action = pPolicy->policy(episode, timestep, this);     // Predict the next action according to the policy and Q-Values
         next_state = next_action;                                         // In our scenario the next action and desired state is the same
         std::cout << "[Agent::update] Updating agent data ..." << std::endl;
@@ -64,8 +66,28 @@ public:
         current_reward = reward_value;                 // Update the reward in the class (for statistics only)
 
         // Decay
-        alpha_decay(episode);
-        epsilon_decay(episode);
+        if (policy_type == PolicyType::EXPLORE_FIRST)
+        {
+            if (timestep >= (state_space * action_space))
+            // Delay the decay if we are using EXPLORE_FIRST action selection policy
+            {
+                // We offset the timesteps by the amount of exploration done, to correctly calculate the decay
+                if (alpha_decay_factor > 0)
+                    // Only decay if the decay factor is greater than zero
+                    decay(timestep-(state_space * action_space), alpha, alpha_init, alpha_min, alpha_decay_factor);
+                if (epsilon_decay_factor > 0)
+                    // Only decay if the decay factor is greater than zero
+                    decay(timestep-(state_space * action_space), epsilon, epsilon_init, epsilon_min, epsilon_decay_factor);
+            }
+
+        } else {
+            if (alpha_decay_factor > 0)
+                // Only decay if the decay factor is greater than zero
+                decay(timestep, alpha, alpha_init, alpha_min, alpha_decay_factor);
+            if (epsilon_decay_factor > 0)
+                // Only decay if the decay factor is greater than zero
+                decay(timestep, epsilon, epsilon_init, epsilon_min, epsilon_decay_factor);
+        }
 
         return next_action;
     }
@@ -98,12 +120,12 @@ public:
         return action_space;
     }
 
-    std::string get_init_input() const {
-        return init_input;
+    InitType get_init_input() const {
+        return init_type;
     }
 
-    std::string get_policy_input() const {
-        return policy_input;
+    PolicyType get_policy_input() const {
+        return policy_type;
     }
 
     double** get_table() const {
@@ -114,8 +136,16 @@ public:
         return current_state;
     }
 
-    int get_current_reward() const {
+    double get_current_reward() const {
         return current_reward;
+    }
+
+    double get_low() const {
+        return low;
+    }
+
+    double get_high() const {
+        return high;
     }
 
     // Setters
@@ -144,27 +174,26 @@ protected:
     int action_space;      // Amount of action available to the agent
     int current_state{0};  // We always start with static scheduling method as initial state (it's the first method from the portfolio)
     int current_action{0}; // Set action also to selecting the static scheduling method
-    int current_reward{0}; // For statistics only
 
+    double current_reward{0};                  // For statistics only
     double alpha{defaults::ALPHA};             // Learning rate
+    double alpha_init{defaults::ALPHA};        // Learning rate
     double alpha_min{defaults::ALPHA_MIN};     // Learning rate
     double alpha_decay_factor{defaults::ALPHA_DECAY_FACTOR};
 
     double gamma{defaults::GAMMA};             // Discount factor
 
     double epsilon{defaults::EPSILON};         // Exploration rate
+    double epsilon_init{defaults::EPSILON};    // Exploration rate
     double epsilon_min{defaults::EPSILON_MIN}; // Exploration rate
     double epsilon_decay_factor{defaults::EPSILON_DECAY_FACTOR};
 
-    double lamdba{0.00f};                   // QV-Learning specific
-    double tau{0.00f};                      // QV-Learning specific
-
-    double low{-99.00f}, high{-999.00f};    // Initial value for reward allocation
+    double low{-99.00f}, high{-999.00f};       // Initial value for reward allocation. This needs to be defined in the context of your RL problem. In our case this represents the millis for the loop iteration
 
     std::string name;
-    std::string init_input{defaults::INIT_INPUT};      // Default: zero.          Options are: zero, random, optimistic
-    std::string reward_input{defaults::REWARD_INPUT};  // Default: looptime.      Options are: looptime, loadimbalance, robustness
-    std::string policy_input{defaults::POLICY_INPUT};  // Default: explore_first. Options are: explore_first, epsilon_greedy, softmax
+    RewardType reward_type{defaults::REWARD_TYPE};  // Default: looptime.      Options are: looptime, loadimbalance, robustness
+    InitType init_type{defaults::INIT_TYPE};        // Default: zero.          Options are: zero, random, optimistic
+    PolicyType policy_type{defaults::POLICY_TYPE};  // Default: explore_first. Options are: explore_first, epsilon_greedy, softmax
 
     /*----------------------------------------------------------------------------*/
     /*                            MEMBER FUNCTIONS                                */
@@ -230,21 +259,25 @@ protected:
 
         //TODO@kurluc00: Explore negative vs. positive Rewards discussion for agents.
         double reward_signal = get_reward_signal(stats);
+        std::cout << "[Agent::reward] High: " << high << ", Low: " << low << "Reward: " << reward_signal << std::endl;
 
         // Good case
         if ((reward_signal) < low)
         {
+            std::cout << "[Agent::reward] Good!" << std::endl;
             low = reward_signal;
             return 2.0;
         }
         // Neutral case
         if ((reward_signal > low) && (reward_signal < high))
         {
+            std::cout << "[Agent::reward] Neutral." << std::endl;
             return 0.0;
         }
         // Bad case
         if (reward_signal > high)
         {
+            std::cout << "[Agent::reward] Bad!" << std::endl;
             high = reward_signal;
             return -2.0;
         }
@@ -290,53 +323,35 @@ protected:
     /*----------------------------------------------------------------------------*/
 
     /*
-     * Checks the 'reward_input' member variable and returns the corresponding reward signal.
+     * Checks the 'reward_type' member variable and returns the corresponding reward signal.
      * */
     double get_reward_signal(LoopData* stats)
     {
         double reward_signal = 0;
 
-        if (reward_input == "looptime")
+        if (reward_type == RewardType::LOOPTIME)
         {
             reward_signal = stats->cTime;
         }
-        else if (reward_input == "loadimbalance")
+        else if (reward_type == RewardType::LOADIMBALANCE)
         {
             reward_signal = stats->cLB;
         }
-        else if (reward_input == "robustness")
+        else if (reward_type == RewardType::ROBUSTNESS)
         {
-            std::cout << "[Agent::get_reward_signal] Not yet implemented: " << reward_input << std::endl;
+            std::cout << "[Agent::get_reward_signal] Not yet implemented: " << reward_type << std::endl;
             reward_signal = stats->cTime;
         }
         else
         {
-            std::cout << "[Agent::get_reward_signal] Invalid reward signal specified in env: " << reward_input << std::endl;
+            std::cout << "[Agent::get_reward_signal] Invalid reward signal specified in env: " << reward_type << std::endl;
         }
 
         return reward_signal;
     }
 
-    /*
-     * Returns the sum of values (double) in an array.
-     * */
-    static double sum(const double* array, int length)
+    static void decay(const int timestep, double& target, const double target_init, const double target_min, const double factor)
     {
-        double sum = 0.0f;
-
-        for (int i = 0; i < length; i++)
-            sum += array[i];
-
-        return sum;
-    }
-
-    void alpha_decay(int episode)
-    {
-        alpha = fmax(alpha * (episode * alpha_decay_factor), alpha_min);
-    }
-
-    void epsilon_decay(int episode)
-    {
-        epsilon = fmax(epsilon * (episode * epsilon_decay_factor), epsilon_min);
+        target = fmax(target_min, target_init * exp(-factor * timestep));
     }
 };

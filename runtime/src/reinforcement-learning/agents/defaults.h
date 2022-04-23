@@ -5,7 +5,12 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
+#include "../rewards/kmp_reward_type.h"
+#include "../initializers/kmp_init_type.h"
+#include "../policies/kmp_policy_type.h"
+
 #pragma once
+
 
 namespace defaults {
     const double SEED                   = 420.69f;
@@ -18,8 +23,7 @@ namespace defaults {
     const double EPSILON_MIN            = 0.10f;
     const double EPSILON_DECAY_FACTOR   = 0.90f;
 
-    const std::string INIT_INPUT        = "zero";
-    const std::string REWARD_INPUT      = "looptime";
-    const std::string POLICY_INPUT      = "explore_first";
-
+    const RewardType REWARD_TYPE        = RewardType::LOOPTIME;
+    const InitType INIT_TYPE            = InitType::ZERO;
+    const PolicyType POLICY_TYPE        = PolicyType::EXPLORE_FIRST;
 }

@@ -43,7 +43,7 @@ AgentProvider::AgentProvider()
 {
     std::string fileData = read_env_string("KMP_RL_AGENT_STATS");
     ofs.open(fileData, std::ofstream::out | std::ofstream::app);
-    ofs << "'loop_id','timestep','alpha','epsilon','reward'" << std::endl;
+    ofs << "loop_id,timestep,alpha,epsilon,reward,low,high" << std::endl;
 }
 
 AgentProvider::~AgentProvider()
@@ -188,10 +188,9 @@ BaseInit* AgentProvider::create_initializer(Agent* agent)
 
 BasePolicy* AgentProvider::create_policy(Agent* agent)
 {
-    PolicyType policy_enum = PolicyTable.at(agent->get_policy_input());
     BasePolicy* pol;
 
-    switch (policy_enum) {
+    switch (agent->get_policy_input()) {
         case PolicyType::EXPLORE_FIRST:
             pol = new ExploreFirstPolicy();
             break;
@@ -210,5 +209,5 @@ BasePolicy* AgentProvider::create_policy(Agent* agent)
 }
 
 void AgentProvider::print_agent_stats(const std::string& loop_id, int timestep, Agent* agent) {
-    AgentProvider::get_filestream() << loop_id << "," << timestep << "," << agent->get_alpha() << "," << agent->get_epsilon() << "," << agent->get_current_reward() << std::endl;
+    AgentProvider::get_filestream() << loop_id << "," << timestep << "," << agent->get_alpha() << "," << agent->get_epsilon() << "," << agent->get_current_reward() << agent->get_low() << agent->get_high() << std::endl;
 }

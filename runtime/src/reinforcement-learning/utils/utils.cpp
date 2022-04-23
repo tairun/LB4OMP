@@ -8,6 +8,9 @@
 #include <iostream>
 
 #include "utils.h"
+#include "../rewards/kmp_reward_type.h"
+#include "../policies/kmp_policy_type.h"
+#include "../initializers/kmp_init_type.h"
 
 
 std::string read_env_string(const char* var_name)
@@ -45,4 +48,53 @@ void read_env_double(const char* var_name, double& target)
     {
         std::cout << "[read_env_double] Couldn't read '" << var_name << "' from env. Using default." << std::endl;
     }
+}
+
+void read_env_enum(const char* var_name, RewardType& target)
+{
+    if (std::getenv(var_name) != nullptr)
+    {
+        std::string str = std::string(std::getenv(var_name));
+        target = RewardTable.at(str);
+    }
+    else
+    {
+        std::cout << "[read_env_double] Couldn't read '" << var_name << "' from env. Using default." << std::endl;
+    }
+}
+
+void read_env_enum(const char* var_name, InitType& target)
+{
+    if (std::getenv(var_name) != nullptr)
+    {
+        std::string str = std::string(std::getenv(var_name));
+        target = InitTable.at(str);
+    }
+    else
+    {
+        std::cout << "[read_env_double] Couldn't read '" << var_name << "' from env. Using default." << std::endl;
+    }
+}
+
+void read_env_enum(const char* var_name, PolicyType& target)
+{
+    if (std::getenv(var_name) != nullptr)
+    {
+        std::string str = std::string(std::getenv(var_name));
+        target = PolicyTable.at(str);
+    }
+    else
+    {
+        std::cout << "[read_env_double] Couldn't read '" << var_name << "' from env. Using default." << std::endl;
+    }
+}
+
+double sum(const double* array, int length)
+{
+    double sum = 0.0f;
+
+    for (int i = 0; i < length; i++)
+        sum += array[i];
+
+    return sum;
 }

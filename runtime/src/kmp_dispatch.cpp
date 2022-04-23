@@ -1,4 +1,4 @@
-#define DEBUG 0
+#define DEBUG 0     // Added by Reinforcement Learning Extension to minimize stdout clutter
 
 /*
  * kmp_dispatch.cpp: dynamic scheduling - iteration initialization and dispatch.
@@ -1151,7 +1151,7 @@ void print_loop_timer(enum sched_type schedule, int tid_for_timer,
     //fileMutex.lock();
     ofs.open(fileData, std::ofstream::out | std::ofstream::app);
 
-#ifdef DEBUG
+#if DEBUG > 0
     ofs << "LoopOccurrence:" << currentLoopMap.at(globalLoopline) << ",Location:" << globalLoopline << ",#iterations:"
         << globalNIterations << ",threadID:" << tid_for_timer << ",threadTime:" << time_span.count() << std::endl;
 #endif

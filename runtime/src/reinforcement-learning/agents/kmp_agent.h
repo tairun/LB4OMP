@@ -188,7 +188,7 @@ protected:
     double epsilon_min{defaults::EPSILON_MIN}; // Exploration rate
     double epsilon_decay_factor{defaults::EPSILON_DECAY_FACTOR};
 
-    double low{-99.00f}, high{-999.00f};       // Initial value for reward allocation. This needs to be defined in the context of your RL problem. In our case this represents the millis for the loop iteration
+    double low{999.00f}, high{-999.00f};       // Initial value for reward allocation. This needs to be defined in the context of your RL problem. In our case this represents the millis for the loop iteration
 
     std::string name;
     RewardType reward_type{defaults::REWARD_TYPE};  // Default: looptime.      Options are: looptime, loadimbalance, robustness

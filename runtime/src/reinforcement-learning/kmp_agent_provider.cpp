@@ -208,5 +208,5 @@ BasePolicy* AgentProvider::create_policy(Agent* agent)
 }
 
 void AgentProvider::print_agent_stats(const std::string& loop_id, int timestep, Agent* agent) {
-    AgentProvider::get_filestream() << loop_id << "," << timestep << "," << agent->get_alpha() << "," << agent->get_epsilon() << "," << agent->get_current_reward() << agent->get_low() << agent->get_high() << std::endl;
+    AgentProvider::get_filestream() << loop_id << "," << timestep << "," << agent->get_alpha() << "," << agent->get_epsilon() << "," << agent->get_current_reward() << "," << agent->get_low() << "," << agent->get_high() << std::endl;
 }

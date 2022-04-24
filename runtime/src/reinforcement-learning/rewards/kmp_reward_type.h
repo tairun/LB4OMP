@@ -22,3 +22,9 @@ static std::unordered_map<std::string, RewardType> RewardTable = {
         {"loadimbalance", RewardType::LOADIMBALANCE},
         {"robustness", RewardType::ROBUSTNESS}
 };
+
+static std::unordered_map<int, std::string> RewardLookup = {
+        {RewardType::LOOPTIME, "looptime"},
+        {RewardType::LOADIMBALANCE, "loadimbalance"},
+        {RewardType::ROBUSTNESS, "robustness",}
+};

@@ -7,6 +7,7 @@
 
 #include <string>
 #include <iostream>
+#include <iomanip>
 
 #include "utils/utils.h"
 #include "kmp_agent_provider.h"
@@ -213,18 +214,19 @@ void AgentProvider::print_agent_params(const std::string& loop_id, Agent* agent)
     std::fstream ofs;
     std::string fileData = read_env_string("KMP_RL_AGENT_STATS");
     ofs.open(fileData + ".ini", std::fstream::in | std::fstream::out | std::fstream::app);
+    ofs << std::fixed << std::setprecision(2);
     ofs << "[PARAMS-"<< loop_id << "]" << std::endl;
     ofs << "Name = "            << agent->get_name() << std::endl;
-    ofs << "RewardType = "      << agent->get_reward_type() << std::endl;
-    ofs << "InitType = "        << agent->get_init_type() << std::endl;
-    ofs << "PolicyType = "      << agent->get_policy_type() << std::endl;
+    ofs << "RewardType = "      << RewardLookup.at(agent->get_reward_type()) << std::endl;
+    ofs << "InitType = "        << InitLookup.at(agent->get_init_type()) << std::endl;
+    ofs << "PolicyType = "      << PolicyLookup.at(agent->get_policy_type()) << std::endl;
     ofs << "Alpha = "           << agent->get_alpha_init() << std::endl;
     ofs << "AlphaMin = "        << agent->get_alpha_min() << std::endl;
     ofs << "AlphaFactor = "     << agent->get_alpha_decay() << std::endl;
     ofs << "Gamma = "           << agent->get_gamma() << std::endl;
     ofs << "Epsilon = "         << agent->get_epsilon_init() << std::endl;
     ofs << "EpsilonMin = "      << agent->get_epsilon_min() << std::endl;
-    ofs << "EpsilonFactor"      << agent->get_epsilon_decay() << std::endl;
+    ofs << "EpsilonFactor = "   << agent->get_epsilon_decay() << std::endl;
     ofs << std::endl;
     ofs.close();
 }

@@ -22,3 +22,9 @@ static std::unordered_map<std::string, PolicyType> PolicyTable = {
         {"epsilon_greedy", PolicyType::EPSILON_GREEDY},
         {"softmax", PolicyType::SOFTMAX}
 };
+
+static std::unordered_map<int, std::string> PolicyLookup = {
+        {PolicyType::EXPLORE_FIRST, "explore_first"},
+        {PolicyType::EPSILON_GREEDY, "epsilon_greedy"},
+        {PolicyType::SOFTMAX, "softmax"}
+};

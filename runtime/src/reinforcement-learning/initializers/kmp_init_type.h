@@ -22,3 +22,9 @@ static std::unordered_map<std::string, InitType> InitTable = {
         {"random", InitType::RANDOM},
         {"optimistic", InitType::OPTIMISTIC}
 };
+
+static std::unordered_map<int, std::string> InitLookup = {
+        {InitType::ZERO, "zero"},
+        {InitType::RANDOM, "random"},
+        {InitType::OPTIMISTIC, "optimistic"}
+};

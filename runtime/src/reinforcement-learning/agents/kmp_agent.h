@@ -104,8 +104,53 @@ public:
     }
 
     // Getters
+
+    std::string get_name() {
+        return name;
+    }
+
+    RewardType get_reward_type() {
+        return reward_type;
+    }
+
+    InitType get_init_type() {
+        return init_type;
+    }
+
+    PolicyType get_policy_type() {
+        return policy_type;
+    }
+
     double get_alpha() const {
         return alpha;
+    }
+
+    double get_alpha_init() const {
+        return alpha_init;
+    }
+
+    double get_alpha_min() const {
+        return alpha_min;
+    }
+
+    double get_alpha_decay() const {
+        return alpha_decay_factor;
+    }
+
+    double get_gamma() const {
+        return gamma;
+    }
+
+    double get_epsilon_init() const {
+        return epsilon_init;
+    }
+
+    double get_epsilon_min() const {
+        return epsilon_min;
+    }
+
+    double get_epsilon_decay() const {
+        return epsilon_decay_factor;
     }
 
     double get_epsilon() const {
@@ -170,30 +215,30 @@ protected:
     BaseInit*   pInit{nullptr};
     BasePolicy* pPolicy{nullptr};
 
-    int state_space;       // Amount of states in the environment
-    int action_space;      // Amount of action available to the agent
+    int state_space;       // Amount of states in the environment. Exported to agent.ini
+    int action_space;      // Amount of action available to the agent. Exported to agent.ini
     int current_state{0};  // We always start with static scheduling method as initial state (it's the first method from the portfolio)
     int current_action{0}; // Set action also to selecting the static scheduling method
 
     double current_reward{0};                  // For statistics only
-    double alpha{defaults::ALPHA};             // Learning rate
-    double alpha_init{defaults::ALPHA};        // Learning rate
-    double alpha_min{defaults::ALPHA_MIN};     // Learning rate
-    double alpha_decay_factor{defaults::ALPHA_DECAY_FACTOR};
+    double alpha{defaults::ALPHA};             // Learning rate (changes over execution)
+    double alpha_init{defaults::ALPHA};        // Learning rate. Exported to agent.ini
+    double alpha_min{defaults::ALPHA_MIN};     // Learning rate. Exported to agent.ini
+    double alpha_decay_factor{defaults::ALPHA_DECAY_FACTOR};  // Exported to agent.ini
 
     double gamma{defaults::GAMMA};             // Discount factor
 
-    double epsilon{defaults::EPSILON};         // Exploration rate
-    double epsilon_init{defaults::EPSILON};    // Exploration rate
-    double epsilon_min{defaults::EPSILON_MIN}; // Exploration rate
-    double epsilon_decay_factor{defaults::EPSILON_DECAY_FACTOR};
+    double epsilon{defaults::EPSILON};         // Exploration rate (changes over execution)
+    double epsilon_init{defaults::EPSILON};    // Exploration rate. Exported to agent.ini
+    double epsilon_min{defaults::EPSILON_MIN}; // Exploration rate. Exported to agent.ini
+    double epsilon_decay_factor{defaults::EPSILON_DECAY_FACTOR}; // Exported to agent.ini
 
     double low{999.00f}, high{0.00f};          // Initial value for reward allocation. This needs to be defined in the context of your RL problem. In our case this represents the millis for the loop iteration
 
-    std::string name;
-    RewardType reward_type{defaults::REWARD_TYPE};  // Default: looptime.      Options are: looptime, loadimbalance, robustness
-    InitType init_type{defaults::INIT_TYPE};        // Default: zero.          Options are: zero, random, optimistic
-    PolicyType policy_type{defaults::POLICY_TYPE};  // Default: explore_first. Options are: explore_first, epsilon_greedy, softmax
+    std::string name;                               // Exported to agent.ini
+    RewardType reward_type{defaults::REWARD_TYPE};  // Default: looptime.      Options are: looptime, loadimbalance, robustness. Exported to agent.ini
+    InitType init_type{defaults::INIT_TYPE};        // Default: zero.          Options are: zero, random, optimistic. Exported to agent.ini
+    PolicyType policy_type{defaults::POLICY_TYPE};  // Default: explore_first. Options are: explore_first, epsilon_greedy, softmax. Exported to agent.ini
 
     /*----------------------------------------------------------------------------*/
     /*                            MEMBER FUNCTIONS                                */

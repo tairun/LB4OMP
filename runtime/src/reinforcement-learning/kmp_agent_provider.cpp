@@ -62,6 +62,7 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
         auto* agent = create_agent(agent_type, stats,portfolio_size, portfolio_size, 6);
         AgentProvider::get_agents().insert(std::make_pair(loop_id, agent));
         std::cout << "[AgentProvider::search] Agent created." << std::endl;
+        print_agent_params(loop_id, agent);
         print_agent_stats(loop_id, 0, agent);
 
         return 0; // Selects first DLS method for exploration
@@ -205,6 +206,27 @@ BasePolicy* AgentProvider::create_policy(Agent* agent)
     }
 
     return pol;
+}
+
+void AgentProvider::print_agent_params(const std::string& loop_id, Agent* agent)
+{
+    std::fstream ofs;
+    std::string fileData = read_env_string("KMP_RL_AGENT_STATS");
+    ofs.open(fileData + ".ini", std::fstream::in | std::fstream::out | std::fstream::app);
+    ofs << "[PARAMS-"<< loop_id << "]" << std::endl;
+    ofs << "Name = "            << agent->get_name() << std::endl;
+    ofs << "RewardType = "      << agent->get_reward_type() << std::endl;
+    ofs << "InitType = "        << agent->get_init_type() << std::endl;
+    ofs << "PolicyType = "      << agent->get_policy_type() << std::endl;
+    ofs << "Alpha = "           << agent->get_alpha_init() << std::endl;
+    ofs << "AlphaMin = "        << agent->get_alpha_min() << std::endl;
+    ofs << "AlphaFactor = "     << agent->get_alpha_decay() << std::endl;
+    ofs << "Gamma = "           << agent->get_gamma() << std::endl;
+    ofs << "Epsilon = "         << agent->get_epsilon_init() << std::endl;
+    ofs << "EpsilonMin = "      << agent->get_epsilon_min() << std::endl;
+    ofs << "EpsilonFactor"      << agent->get_epsilon_decay() << std::endl;
+    ofs << std::endl;
+    ofs.close();
 }
 
 void AgentProvider::print_agent_stats(const std::string& loop_id, int timestep, Agent* agent) {

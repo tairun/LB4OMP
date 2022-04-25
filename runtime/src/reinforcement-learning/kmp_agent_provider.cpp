@@ -213,6 +213,7 @@ void AgentProvider::print_agent_params(const std::string& loop_id, Agent* agent)
 {
     std::fstream ofs;
     std::string fileData = read_env_string("KMP_RL_AGENT_STATS");
+    
     ofs.open(fileData + ".ini", std::fstream::in | std::fstream::out | std::fstream::app);
     ofs << std::fixed << std::setprecision(2);
     ofs << "[PARAMS-"<< loop_id << "]" << std::endl;

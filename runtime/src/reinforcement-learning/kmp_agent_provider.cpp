@@ -233,7 +233,7 @@ int AgentProvider::calculate_chunks(int *array, int size, int n, int p)
 
     for (int i = 1; i <= size; i++)
     {
-        int num = n/(2^i * p);
+        int num = n/(pow(2,i) * p);
         std::cout << num << ", ";
         array[i-1] = num;
     }

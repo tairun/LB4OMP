@@ -977,8 +977,10 @@ void auto_DLS_Search(int gtid, int N, int P, int option) {
      * */
     {
         std::cout << "[Reinforcement Learning] Calling Agent Provider for direct chunk learning... (with  option " << option << ")" << std::endl;
+
         autoLoopData.at(autoLoopName).n = N;
         autoLoopData.at(autoLoopName).n = P;
+
         int no_chunks = floor(log(N/P) / log(2)) - 1; // We subtract "-1" because we do not want a chunk size of 1 (bad performance)
         int chunks = AgentProvider::search(autoLoopName, option, &autoLoopData.at(autoLoopName),
                                                no_chunks);

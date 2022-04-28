@@ -64,6 +64,8 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
         // Init the data structure and calculate the chunk-sizes to try
         {
             std::cout << "[AgentProvider::search] Creating ChunkLearner for loop: " << loop_id << std::endl;
+            std::cout << "[AgentProvider::search] Iterations: " << stats->n << ", Threads: " << stats->p << std::endl;
+
             chunk_sizes = new int[dimension];
             calculate_chunks(chunk_sizes, dimension, stats->n, stats->p);
             agent_type = read_env_int("KMP_RL_CHUNK_TYPE"); // Overwrites the agent type from 'ChunkLearner' to the new subtype to be used.
@@ -94,7 +96,7 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
             // Change some stuff only for the ChunkLearner!
             // Translate the action index to the actual chunk-size and return that instead
         {
-            std::cout << "[AgentProvider::search] Translating action index to chunk size" << std::endl;
+            std::cout << "[AgentProvider::search] Translating action index to chunk size: " << new_method << " --> " << chunk_sizes[new_method] << std::endl;
             new_method = chunk_sizes[new_method];
         }
 

@@ -38,7 +38,7 @@ private:
     std::unordered_map<std::string, Agent*> agents; // Save agent references across timesteps
     std::fstream ofs;                               // Single filestream for all the agents to write to
 
-    static int* chunk_array;  // Stores the values of the chunk-sizes for the agent to try
+    static int* chunk_sizes;  // Stores the values of the chunk-sizes for the agent to try
     static std::fstream& get_filestream();
     static std::unordered_map<std::string, int>& get_timesteps();
     static std::unordered_map<std::string, Agent*>& get_agents();

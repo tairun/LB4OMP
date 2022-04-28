@@ -34,6 +34,8 @@
 #include "agents/kmp_deepq_learner.h"
 
 
+int* AgentProvider::chunk_sizes;  // Stores the values of the chunk-sizes for the agent to try
+
 AgentProvider& AgentProvider::Get() {
     static AgentProvider instance;
     return instance;
@@ -62,8 +64,8 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
         // Init the data structure and calculate the chunk-sizes to try
         {
             std::cout << "[AgentProvider::search] Creating ChunkLearner for loop: " << loop_id << std::endl;
-            chunk_array = new int[dimension];
-            calculate_chunks(chunk_array, dimension, stats->n, stats->p);
+            chunk_sizes = new int[dimension];
+            calculate_chunks(chunk_sizes, dimension, stats->n, stats->p);
             agent_type = read_env_int("KMP_RL_CHUNK_TYPE"); // Overwrites the agent type from 'ChunkLearner' to the new subtype to be used.
         }
 
@@ -93,7 +95,7 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
             // Translate the action index to the actual chunk-size and return that instead
         {
             std::cout << "[AgentProvider::search] Translating action index to chunk size" << std::endl;
-            new_method = chunk_array[new_method];
+            new_method = chunk_sizes[new_method];
         }
 
         return new_method;

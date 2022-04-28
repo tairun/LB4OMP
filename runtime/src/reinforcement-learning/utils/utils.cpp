@@ -8,9 +8,6 @@
 #include <iostream>
 
 #include "utils.h"
-#include "../rewards/kmp_reward_type.h"
-#include "../policies/kmp_policy_type.h"
-#include "../initializers/kmp_init_type.h"
 
 
 std::string read_env_string(const char* var_name)
@@ -35,6 +32,19 @@ void read_env_string(const char* var_name, std::string& target)
     else
     {
         std::cout << "[read_env_string] Couldn't read '" << var_name << "' from env. Using default." << std::endl;
+    }
+}
+
+int read_env_int(const char* var_name)
+{
+    if (std::getenv(var_name) != nullptr)
+    {
+       return std::stoi(std::getenv(var_name));
+    }
+    else
+    {
+        std::cout << "[read_env_int] Couldn't read '" << var_name << "' from env. Exiting." << std::endl;
+        exit(-1);
     }
 }
 

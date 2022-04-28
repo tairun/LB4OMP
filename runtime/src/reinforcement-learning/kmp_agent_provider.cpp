@@ -32,7 +32,6 @@
 #include "agents/kmp_qv_learner.h"
 #include "agents/kmp_r_learner.h"
 #include "agents/kmp_deepq_learner.h"
-#include "agents/kmp_chunk_learner.h"
 
 
 AgentProvider& AgentProvider::Get() {
@@ -53,14 +52,24 @@ AgentProvider::~AgentProvider()
 }
 
 // public
-int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* stats, int portfolio_size)
+int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* stats, int dimension)
 {
     std::cout << "[AgentProvider::search] Loop: " << loop_id << std::endl;
     if (!AgentProvider::get_timesteps().count(loop_id))
     {
+        if(agent_type == 15)
+        // Change some stuff only for the ChunkLearner!
+        // Init the data structure and calculate the chunk-sizes to try
+        {
+            std::cout << "[AgentProvider::search] Creating ChunkLearner for loop: " << loop_id << std::endl;
+            chunk_sizes = new int[dimension];
+            calculate_chunks(chunk_sizes, dimension, stats->n, stats->p);
+            agent_type = read_env_int("KMP_RL_CHUNK_TYPE"); // Overwrites the agent type from 'ChunkLearner' to the new subtype to be used.
+        }
+
         std::cout << "[AgentProvider::search] Creating agent for loop: " << loop_id << std::endl;
         AgentProvider::get_timesteps().insert(std::make_pair(loop_id, 1));
-        auto* agent = create_agent(agent_type, stats,portfolio_size, portfolio_size, 6);
+        auto* agent = create_agent(agent_type, stats, dimension, dimension, 6); // The offset denotes the auto-methods already present in LB4OMP, so we can start our switch statement at 0
         AgentProvider::get_agents().insert(std::make_pair(loop_id, agent));
         std::cout << "[AgentProvider::search] Agent created." << std::endl;
         print_agent_params(loop_id, agent);
@@ -78,6 +87,14 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
         std::cout << "[AgentProvider::search] Timestep " << timestep << " completed. New method is " << new_method << std::endl;
         AgentProvider::get_timesteps().at(loop_id)++;
         print_agent_stats(loop_id, timestep, agent);
+
+        if(agent_type == 15)
+            // Change some stuff only for the ChunkLearner!
+            // Translate the action index to the actual chunk-size and return that instead
+        {
+            std::cout << "[AgentProvider::search] Translating action index to chunk size" << std::endl;
+            new_method = chunk_sizes[new_method];
+        }
 
         return new_method;
     }
@@ -118,9 +135,6 @@ Agent* AgentProvider::create_agent(int agent_type, LoopData* stats, int states, 
             break;
         case (8):
             agent = new DeepQLearner(states, actions);
-            break;
-        case (9):
-            agent = new ChunkLearner(states, actions, stats);
             break;
         default:
             std::cout << "[AgentProvider::create_agent] Unknown agent type specified: " << agent_type << " . Using default (Q-Learner)." << std::endl;
@@ -209,11 +223,18 @@ BasePolicy* AgentProvider::create_policy(Agent* agent)
     return pol;
 }
 
+int AgentProvider::calculate_chunks(int *array, int size, int n, int p)
+{
+    for (int i = 1; i <= size; i++)
+    {
+        array[i-1] = n/(2^i * p);
+    }
+}
+
 void AgentProvider::print_agent_params(const std::string& loop_id, Agent* agent)
 {
     std::fstream ofs;
     std::string fileData = read_env_string("KMP_RL_AGENT_STATS");
-    
     ofs.open(fileData + ".ini", std::fstream::in | std::fstream::out | std::fstream::app);
     ofs << std::fixed << std::setprecision(2);
     ofs << "[PARAMS-"<< loop_id << "]" << std::endl;
@@ -229,6 +250,7 @@ void AgentProvider::print_agent_params(const std::string& loop_id, Agent* agent)
     ofs << "EpsilonMin = "      << agent->get_epsilon_min() << std::endl;
     ofs << "EpsilonFactor = "   << agent->get_epsilon_decay() << std::endl;
     ofs << std::endl;
+
     ofs.close();
 }
 

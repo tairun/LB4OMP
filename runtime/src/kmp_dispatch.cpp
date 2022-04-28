@@ -965,7 +965,6 @@ void auto_DLS_Search(int gtid, int N, int P, int option) {
      * (15): ChunkLearner
      * */
     {
-        //std::string loop_id = autoLoopName;
         std::cout << "[Reinforcement Learning] Calling Agent Provider ... (with option " << option << ")" << std::endl;
         int new_method = AgentProvider::search(autoLoopName, option, &autoLoopData.at(autoLoopName),
                                                (int) autoDLSPortfolio.size());
@@ -977,15 +976,15 @@ void auto_DLS_Search(int gtid, int N, int P, int option) {
      * (15): Direct chunk selection with reinforcement learning
      * */
     {
+        std::cout << "[Reinforcement Learning] Calling Agent Provider for direct chunk learning... (with  option " << option << ")" << std::endl;
         autoLoopData.at(autoLoopName).n = N;
-        autoLoopData.at(autoLoopName).p = P;
-        //std::string loop_id = autoLoopName;
-
-        int chunk_size = AgentProvider::search(autoLoopName, option, &autoLoopData.at(autoLoopName),
-                                               (int) autoDLSPortfolio.size());
+        autoLoopData.at(autoLoopName).n = P;
+        int no_chunks = floor(log(N/P) / log(2)) - 1; // We subtract "-1" because we do not want a chunk size of 1 (bad performance)
+        int chunks = AgentProvider::search(autoLoopName, option, &autoLoopData.at(autoLoopName),
+                                               no_chunks);
 
         autoLoopData.at(autoLoopName).cDLS = 1; // set self-scheduling, we are only interested in the chunk_size
-        autoLoopData.at(autoLoopName).cChunk = chunk_size;
+        autoLoopData.at(autoLoopName).cChunk = chunks;
     }
     /* --------------------- >>>> Add more Reinforcement Learning methods here <<<< ---------------*/
     /* -------------------------- END Reinforcement Learning Extensions ---------------------------*/

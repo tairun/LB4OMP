@@ -28,7 +28,7 @@ public:
     /*
      * Main method for Reinforcement Learning AUTO method in LB4OMP.
      * */
-    static int search(const std::string &loop_id, int agent_type, LoopData* stats, int portfolio_size);
+    static int search(const std::string &loop_id, int agent_type, LoopData* stats, int dimension);
 
 private:
     AgentProvider();
@@ -38,9 +38,17 @@ private:
     std::unordered_map<std::string, Agent*> agents; // Save agent references across timesteps
     std::fstream ofs;                               // Single filestream for all the agents to write to
 
+    static int* chunk_sizes;  // Stores the values of the chunk-sizes for the agent to try
     static std::fstream& get_filestream();
     static std::unordered_map<std::string, int>& get_timesteps();
     static std::unordered_map<std::string, Agent*>& get_agents();
+
+    /*
+     * Calculates the chunk sizes to try according to the formula:
+     * chunk = iterations / (2^i * threads), where i also denotes the position
+     * of the result in the array.
+     * */
+    static int calculate_chunks(int *array, int size, int n, int p);
 
     /*
      * Creates and instance of the Initializers class and returns a pointer to it.

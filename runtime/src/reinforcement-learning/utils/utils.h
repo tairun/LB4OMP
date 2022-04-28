@@ -17,6 +17,8 @@ std::string read_env_string(const char* var_name);
  * */
 void read_env_string(const char* var_name, std::string& target);
 
+int read_env_int(const char* var_name);
+
 /*
  * Reads the environment variable with the name 'var_name' and parses it as a double.
  * */

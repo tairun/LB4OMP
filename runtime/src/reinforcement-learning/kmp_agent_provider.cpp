@@ -227,10 +227,16 @@ BasePolicy* AgentProvider::create_policy(Agent* agent)
 
 int AgentProvider::calculate_chunks(int *array, int size, int n, int p)
 {
+    std::cout << "[AgentProvider::calculate_chunks] Calculating " << size << " chunks." << std::endl << "[";
+
     for (int i = 1; i <= size; i++)
     {
-        array[i-1] = n/(2^i * p);
+        int num = n/(2^i * p);
+        std::cout << num << ", ";
+        array[i-1] = num;
     }
+
+    std::cout << "]" << std::endl;
 }
 
 void AgentProvider::print_agent_params(const std::string& loop_id, Agent* agent)

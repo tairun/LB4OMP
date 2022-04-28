@@ -311,20 +311,20 @@ protected:
         {
             std::cout << "[Agent::reward] Good!" << std::endl;
             low = reward_signal;
-            return 2.0;
+            return 0.0;
         }
         // Neutral case
         if ((reward_signal > low) && (reward_signal < high))
         {
             std::cout << "[Agent::reward] Neutral." << std::endl;
-            return 0.0;
+            return -2.0;
         }
         // Bad case
         if (reward_signal > high)
         {
             std::cout << "[Agent::reward] Bad!" << std::endl;
             high = reward_signal;
-            return -2.0;
+            return -4.0;
         }
     }
 

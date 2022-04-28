@@ -982,7 +982,7 @@ void auto_DLS_Search(int gtid, int N, int P, int option) {
         autoLoopData.at(autoLoopName).n = N;
         autoLoopData.at(autoLoopName).p = P;
 
-        int no_chunks = floor(log(N/P) / log(2)) - 1; // We subtract "-1" because we do not want a chunk size of 1 (bad performance)
+        int no_chunks = (int)floor(log((double)N/(double)P) / log(2)) - 1; // We subtract "-1" because we do not want a chunk size of 1 (bad performance)
         int chunks = AgentProvider::search(autoLoopName, option, &autoLoopData.at(autoLoopName),
                                                no_chunks);
 

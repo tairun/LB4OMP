@@ -268,8 +268,9 @@ int AgentProvider::calculate_chunks(int *array, int size, int n, int p)
 #endif
         array[i-1] = num;
     }
-
+#if (RL_DEBUG > 1)
     std::cout << "]" << std::endl;
+#endif
 }
 
 void AgentProvider::print_agent_params(const std::string& loop_id, Agent* agent)

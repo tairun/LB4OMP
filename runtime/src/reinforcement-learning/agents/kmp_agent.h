@@ -124,6 +124,11 @@ public:
         name = std::move(new_name);
     }
 
+    std::string get_rewards_string()
+    {
+        return reward_string;
+    }
+
     RewardType get_reward_type() {
         return reward_type;
     }

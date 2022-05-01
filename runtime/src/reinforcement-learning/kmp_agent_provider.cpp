@@ -280,6 +280,7 @@ void AgentProvider::print_agent_params(const std::string& loop_id, Agent* agent)
     ofs << std::fixed << std::setprecision(2);
     ofs << "[PARAMS-"<< loop_id << "]" << std::endl;
     ofs << "Name = "            << agent->get_name() << std::endl;
+    ofs << "Rewards = "         << agent->get_rewards_string() << std::endl;
     ofs << "RewardType = "      << RewardLookup.at(agent->get_reward_type()) << std::endl;
     ofs << "InitType = "        << InitLookup.at(agent->get_init_type()) << std::endl;
     ofs << "PolicyType = "      << PolicyLookup.at(agent->get_policy_type()) << std::endl;

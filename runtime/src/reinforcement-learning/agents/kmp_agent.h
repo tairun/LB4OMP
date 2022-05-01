@@ -26,7 +26,7 @@
 
 #pragma once
 
-#define RL_DEBUG 1     // Added by Reinforcement Learning Extension to minimize stdout clutter
+#define RL_DEBUG 0     // Added by Reinforcement Learning Extension to minimize stdout clutter
 
 class Agent {
 public:

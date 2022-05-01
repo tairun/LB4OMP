@@ -33,7 +33,7 @@
 #include "agents/kmp_r_learner.h"
 #include "agents/kmp_deepq_learner.h"
 
-#define RL_DEBUG 1     // Added by Reinforcement Learning Extension to minimize stdout clutter
+#define RL_DEBUG 0     // Added by Reinforcement Learning Extension to minimize stdout clutter
 
 
 int* AgentProvider::chunk_sizes;  // Stores the values of the chunk-sizes for the agent to try
@@ -63,7 +63,9 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
 #endif
     if (!AgentProvider::get_timesteps().count(loop_id))
     // Enters if the agent does not exist for a loop_id, i.e. timestep 0
-    {
+        {
+        bool change_name = false;
+
         if(agent_type == 15)
         // Change some stuff only for the ChunkLearner!
         // Init the data structure and calculate the chunk-sizes to try
@@ -75,14 +77,15 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
             chunk_sizes = new int[dimension];
             calculate_chunks(chunk_sizes, dimension, stats->n, stats->p);
             agent_type = read_env_int("KMP_RL_CHUNK_TYPE"); // Overwrites the agent type from 'ChunkLearner' to the new subtype to be used.
+            change_name = true;
         }
 #if (RL_DEBUG > 1)
         std::cout << "[AgentProvider::search] Creating agent for loop: " << loop_id << std::endl;
 #endif
-        AgentProvider::get_timesteps().insert(std::make_pair(loop_id, 1));
+        AgentProvider::get_timesteps().insert(std::make_pair(loop_id, 1)); // We insert 1 as value for the timestep, because the first time this gets checked is in the else block in timestep 1.
         auto* agent = create_agent(agent_type, stats, dimension, dimension, 6); // The offset denotes the auto-methods already present in LB4OMP, so we can start our switch statement at 0
 
-        if(agent_type == 15)
+        if(change_name)
         {
             std::cout << "Got here to change name ..." << std::endl;
             agent->set_name("Chunk-Learner (using " + agent->get_name() + ")");

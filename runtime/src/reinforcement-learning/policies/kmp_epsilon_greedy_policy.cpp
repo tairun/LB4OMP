@@ -17,12 +17,18 @@ int EpsilonGreedyPolicy::policy(int episode, int timestep, Agent* agent)
     if (uniform(re) < agent->get_epsilon())
     // Explore (random action)
     {
+#if (RL_DEBUG > 1)
+        std::cout << "[EpsilonGreedyPolicy::policy] Exploring!" << std::endl;
+#endif
         int next_action = agent->sample_action(); // Chooses action (which is equal to the next state)
         return next_action;
     }
     else
     // Exploit (previous knowledge)
     {
+#if (RL_DEBUG > 1)
+        std::cout << "[EpsilonGreedyPolicy::policy] Exploiting!" << std::endl;
+#endif
         double maxQ = -9999.99f;
         std::vector<int> action_candidates;
 

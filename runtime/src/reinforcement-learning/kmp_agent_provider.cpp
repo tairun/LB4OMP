@@ -58,7 +58,7 @@ AgentProvider::~AgentProvider()
 // public
 int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* stats, int dimension)
 {
-#if (RL_DEBUG > 1)
+#if (RL_DEBUG > 0)
     std::cout << "[AgentProvider::search] Loop: " << loop_id << std::endl;
 #endif
     if (!AgentProvider::get_timesteps().count(loop_id))

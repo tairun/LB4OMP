@@ -47,11 +47,10 @@ public:
 
         read_env_string("KMP_RL_REWARD_NUM", reward_string);
 
-        split_reward_nums(reward_string, reward_num);
+        split_reward_nums();
 
         read_env_double("KMP_RL_ALPHA_DECAY", alpha_decay_factor);
         read_env_double("KMP_RL_EPS_DECAY", epsilon_decay_factor);
-        std::cout << "Got here" << std::endl;
 
 #if (RL_DEBUG > 0)
         std::cout << "[Agent::Agent] Configuring agent as: " << name << std::endl;
@@ -441,22 +440,22 @@ protected:
         target = fmax(target_min, target_init * exp(-factor * timestep));
     }
 
-    static void split_reward_nums(const std::string& rewards, double* out_reward_num)
+    void split_reward_nums()
     {
-        out_reward_num = new double[3];
-        std::string rewards_copy = rewards;
+        reward_num = new double[3];
+        std::string rewards_copy = reward_string;
         size_t pos = 0;
         int index = 0;
         std::string token;
 
         while ((pos = rewards_copy.find(',')) != std::string::npos) {
             token = rewards_copy.substr(0, pos);
-            out_reward_num[index] = std::stod(token);
+            reward_num[index] = std::stod(token);
             rewards_copy.erase(0, pos+1);
             index++;
         }
 
-        out_reward_num[index] = std::stod(rewards_copy);
+        reward_num[index] = std::stod(rewards_copy);
 
     }
 };

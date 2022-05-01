@@ -15,7 +15,7 @@
 
 // public
 SARSALearnerOld::SARSALearnerOld(int states, int actions) :
-        AgentOld(states, actions, "SARSA Learner (old version)")
+        AgentOld(states, actions, "SARSA-Learner (old version)")
 {
     agent_data = new RLInfo(states, actions);
 }

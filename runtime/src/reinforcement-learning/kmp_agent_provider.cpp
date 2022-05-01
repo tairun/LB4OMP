@@ -5,6 +5,8 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
+#define RL_DEBUG 0
+
 #include <string>
 #include <iostream>
 #include <iomanip>
@@ -56,39 +58,55 @@ AgentProvider::~AgentProvider()
 // public
 int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* stats, int dimension)
 {
+#if (RL_DEBUG > 1)
     std::cout << "[AgentProvider::search] Loop: " << loop_id << std::endl;
+#endif
     if (!AgentProvider::get_timesteps().count(loop_id))
+    // Enters if the agent does not exist for a loop_id, i.e. timestep 0
     {
         if(agent_type == 15)
         // Change some stuff only for the ChunkLearner!
         // Init the data structure and calculate the chunk-sizes to try
         {
+#if (RL_DEBUG > 1)
             std::cout << "[AgentProvider::search] Creating ChunkLearner for loop: " << loop_id << std::endl;
             std::cout << "[AgentProvider::search] Iterations: " << stats->n << ", Threads: " << stats->p << std::endl;
-
+#endif
             chunk_sizes = new int[dimension];
             calculate_chunks(chunk_sizes, dimension, stats->n, stats->p);
             agent_type = read_env_int("KMP_RL_CHUNK_TYPE"); // Overwrites the agent type from 'ChunkLearner' to the new subtype to be used.
         }
-
+#if (RL_DEBUG > 1)
         std::cout << "[AgentProvider::search] Creating agent for loop: " << loop_id << std::endl;
+#endif
         AgentProvider::get_timesteps().insert(std::make_pair(loop_id, 1));
         auto* agent = create_agent(agent_type, stats, dimension, dimension, 6); // The offset denotes the auto-methods already present in LB4OMP, so we can start our switch statement at 0
+
+        if(agent_type == 15)
+        {
+            agent->set_name("Chunk-Learner (using " + agent->get_name() + ")");
+        }
+
         AgentProvider::get_agents().insert(std::make_pair(loop_id, agent));
+#if (RL_DEBUG > 1)
         std::cout << "[AgentProvider::search] Agent created." << std::endl;
+#endif
         print_agent_params(loop_id, agent);
         print_agent_stats(loop_id, 0, agent);
 
         return 0; // Selects first DLS method for exploration
     }
     else
+    // Enters when agent exists for a loop_id, i.e. timestep > 0
     {
         //std::cout << "[AgentProvider::search] Grabbing agent ..." << std::endl;
         auto* agent = AgentProvider::get_agents().find(loop_id)->second;
         //std::cout << "[AgentProvider::search] Grabbing timestep info ..." << std::endl;
         int new_method = agent->step(0, AgentProvider::get_timesteps().at(loop_id), stats);
         int timestep = AgentProvider::get_timesteps().at(loop_id);
+#if (RL_DEBUG > 0)
         std::cout << "[AgentProvider::search] Timestep " << timestep << " completed. New method is " << new_method << std::endl;
+#endif
         AgentProvider::get_timesteps().at(loop_id)++;
         print_agent_stats(loop_id, timestep, agent);
 
@@ -96,7 +114,9 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
             // Change some stuff only for the ChunkLearner!
             // Translate the action index to the actual chunk-size and return that instead
         {
+#if (RL_DEBUG > 1)
             std::cout << "[AgentProvider::search] Translating action index to chunk size: " << new_method << " --> " << chunk_sizes[new_method] << std::endl;
+#endif
             new_method = chunk_sizes[new_method];
         }
 
@@ -109,8 +129,9 @@ Agent* AgentProvider::create_agent(int agent_type, LoopData* stats, int states, 
     Agent* agent = nullptr;
     int new_type = agent_type - offset;
 
+#if (RL_DEBUG > 1)
     std::cout << "[AgentProvider::create_agent] New agent option: " << agent_type << " (offset: " << new_type << ")" << std::endl;
-
+#endif
     switch (new_type)
     {
         case (0):
@@ -154,14 +175,21 @@ Agent* AgentProvider::create_agent(int agent_type, LoopData* stats, int states, 
     else
     {
         BaseInit* init = create_initializer(agent);
+#if (RL_DEBUG > 1)
         std::cout << "[AgentProvider::create_agent] Created initializer successfully." << std::endl;
+#endif
         agent->set_initializer(init);
+#if (RL_DEBUG > 1)
         std::cout << "[AgentProvider::create_agent] Set initializer successfully." << std::endl;
-
+#endif
         BasePolicy* pol = create_policy(agent);
+#if (RL_DEBUG > 1)
         std::cout << "[AgentProvider::create_agent] Created policy successfully." << std::endl;
+#endif
         agent->set_policy(pol);
+#if (RL_DEBUG > 1)
         std::cout << "[AgentProvider::create_agent] Set policy successfully." << std::endl;
+#endif
     }
 
     return agent;
@@ -229,12 +257,15 @@ BasePolicy* AgentProvider::create_policy(Agent* agent)
 
 int AgentProvider::calculate_chunks(int *array, int size, int n, int p)
 {
+#if (RL_DEBUG > 1)
     std::cout << "[AgentProvider::calculate_chunks] Calculating " << size << " chunks." << std::endl << "[";
-
+#endif
     for (int i = 1; i <= size; i++)
     {
         int num = n/(pow(2,i) * p);
+#if (RL_DEBUG > 1)
         std::cout << num << ", ";
+#endif
         array[i-1] = num;
     }
 

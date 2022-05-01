@@ -11,6 +11,7 @@
 #include <iostream>
 #include <random>
 #include <string>
+#include <utility>
 
 #include "defaults.h"
 #include "../kmp_loopdata.h"
@@ -31,20 +32,27 @@ public:
                                                                      name(std::move(agent_name))
     {
         read_env_double("KMP_RL_ALPHA", alpha);     // Read learning rate from env
-        alpha_init = alpha;
         read_env_double("KMP_RL_GAMMA", gamma);     // Read discount factor from env
         read_env_double("KMP_RL_EPSILON", epsilon); // Read exploration rate from env
+
+        alpha_init = alpha;
         epsilon_init = epsilon;
 
         read_env_enum("KMP_RL_REWARD", reward_type);
         read_env_enum("KMP_RL_INIT", init_type);
         read_env_enum("KMP_RL_POLICY", policy_type);
 
+        read_env_string("KMP_RL_REWARD_NUM", reward_string);
+
+        split_reward_nums(reward_string, reward_num);
+
         read_env_double("KMP_RL_ALPHA_DECAY", alpha_decay_factor);
         read_env_double("KMP_RL_EPS_DECAY", epsilon_decay_factor);
 
+#if (RL_DEBUG > 0)
         std::cout << "[Agent::Agent] Configuring agent as: " << name << std::endl;
         std::cout << "[Agent::Agent] Additional params: Initializer-->" << init_type << ", Reward-->" << reward_type << ", Policy-->" << policy_type << std::endl;
+#endif
     }
 
     /*
@@ -52,13 +60,16 @@ public:
      * */
     virtual int step(int episode, int timestep, LoopData* stats)
     {
+#if (RL_DEBUG > 1)
         std::cout << "[Agent::step] Starting learning ..." << std::endl;
+#endif
         int next_action, next_state;
         double reward_value = reward(stats);                              // Convert the reward signal into the actual reward value
-        //next_action = policy(episode, timestep, table);                 // Predict the next action according to the policy and Q-Values
         next_action = pPolicy->policy(episode, timestep, this);     // Predict the next action according to the policy and Q-Values
         next_state = next_action;                                         // In our scenario the next action and desired state is the same
+#if (RL_DEBUG > 1)
         std::cout << "[Agent::update] Updating agent data ..." << std::endl;
+#endif
         update(next_state, next_action, reward_value);                    // Update the Q-Values based on the learning algorithm
 
         current_state = next_state;                    // Update the state in the class
@@ -107,6 +118,10 @@ public:
 
     std::string get_name() {
         return name;
+    }
+
+    void set_name(std::string new_name) {
+        name = std::move(new_name);
     }
 
     RewardType get_reward_type() {
@@ -215,12 +230,15 @@ protected:
     BaseInit*   pInit{nullptr};
     BasePolicy* pPolicy{nullptr};
 
+    double* reward_num{nullptr};
+
     int state_space;       // Amount of states in the environment. Exported to agent.ini
     int action_space;      // Amount of action available to the agent. Exported to agent.ini
     int current_state{0};  // We always start with static scheduling method as initial state (it's the first method from the portfolio)
     int current_action{0}; // Set action also to selecting the static scheduling method
 
     double current_reward{0};                  // For statistics only
+
     double alpha{defaults::ALPHA};             // Learning rate (changes over execution)
     double alpha_init{defaults::ALPHA};        // Learning rate. Exported to agent.ini
     double alpha_min{defaults::ALPHA_MIN};     // Learning rate. Exported to agent.ini
@@ -235,7 +253,8 @@ protected:
 
     double low{999.00f}, high{0.00f};          // Initial value for reward allocation. This needs to be defined in the context of your RL problem. In our case this represents the millis for the loop iteration
 
-    std::string name;                               // Exported to agent.ini
+    std::string name;                               // Name of the agent (human-readable). Exported to agent.ini
+    std::string reward_string{defaults::REWARD_STRING};
     RewardType reward_type{defaults::REWARD_TYPE};  // Default: looptime.      Options are: looptime, loadimbalance, robustness. Exported to agent.ini
     InitType init_type{defaults::INIT_TYPE};        // Default: zero.          Options are: zero, random, optimistic. Exported to agent.ini
     PolicyType policy_type{defaults::POLICY_TYPE};  // Default: explore_first. Options are: explore_first, epsilon_greedy, softmax. Exported to agent.ini
@@ -248,8 +267,9 @@ protected:
     /* Implements the Epsilon-Greedy action selection. */
     virtual int policy(int episode, int timestep, double** ref_table)
     {
+#if (RL_DEBUG > 1)
         std::cout << "[Agent::policy] Applying policy ..." << std::endl;
-
+#endif
         std::default_random_engine re(seed);
         std::uniform_real_distribution<double> uniform(0, 1);
 
@@ -257,14 +277,18 @@ protected:
         if (uniform(re) < epsilon)
         // Explore (random action)
         {
+#if (RL_DEBUG > 1)
             std::cout << "[Agent::policy] Exploring" << std::endl;
+#endif
             int next_action = sample_action(); // Chooses action (which is equal to the next state)
             return next_action;
         }
         else
         // Exploit (previous knowledge)
         {
+#if (RL_DEBUG > 1)
             std::cout << "[Agent::policy] Exploiting" << std::endl;
+#endif
             double maxQ = -9999.99f;
             std::vector<int> action_candidates;
 
@@ -300,31 +324,39 @@ protected:
      * */
     double reward(LoopData* stats)
     {
+#if (RL_DEBUG > 1)
         std::cout << "[Agent::reward] Getting reward ..." << std::endl;
-
+#endif
         //TODO@kurluc00: Explore negative vs. positive Rewards discussion for agents.
         double reward_signal = get_reward_signal(stats);
+#if (RL_DEBUG > 0)
         std::cout << "[Agent::reward] High: " << high << ", Low: " << low << ", Reward: " << reward_signal << std::endl;
-
+#endif
         // Good case
         if ((reward_signal) < low)
         {
+#if (RL_DEBUG > 1)
             std::cout << "[Agent::reward] Good!" << std::endl;
+#endif
             low = reward_signal;
-            return 0.0;
+            return reward_num[0]; // by default: 0.0
         }
         // Neutral case
         if ((reward_signal > low) && (reward_signal < high))
         {
+#if (RL_DEBUG > 1)
             std::cout << "[Agent::reward] Neutral." << std::endl;
-            return -2.0;
+#endif
+            return reward_num[1]; // by default: -2.0
         }
         // Bad case
         if (reward_signal > high)
         {
+#if (RL_DEBUG > 1)
             std::cout << "[Agent::reward] Bad!" << std::endl;
+#endif
             high = reward_signal;
-            return -4.0;
+            return reward_num[2]; // by default: -4.0
         }
     }
 
@@ -398,5 +430,21 @@ protected:
     static void decay(const int timestep, double& target, const double target_init, const double target_min, const double factor)
     {
         target = fmax(target_min, target_init * exp(-factor * timestep));
+    }
+
+    static void split_reward_nums(const std::string& rewards, double* out_reward_num)
+    {
+        out_reward_num = new double[3];
+        std::string rewards_copy = rewards;
+        size_t pos = 0;
+        int index = 0;
+        std::string token;
+        while ((pos = rewards_copy.find(',')) != std::string::npos) {
+            token = rewards_copy.substr(0, pos);
+            std::cout << token << std::endl;
+            out_reward_num[index] = std::stod(token);
+            rewards_copy.erase(0, pos + 1);
+            index++;
+        }
     }
 };

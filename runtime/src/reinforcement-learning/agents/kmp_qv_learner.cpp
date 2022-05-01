@@ -13,7 +13,7 @@
 
 // public
 QVLearner::QVLearner(int num_states, int num_actions) :
-        Agent(num_states, num_actions, "QV Learner")
+        Agent(num_states, num_actions, "QV-Learner")
 {
     // Initialize first dimension of table
     v_table = new double[state_space];

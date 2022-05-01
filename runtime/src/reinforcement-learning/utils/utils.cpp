@@ -82,7 +82,7 @@ void read_env_enum(const char* var_name, InitType& target)
     }
     else
     {
-        std::cout << "[read_env_double] Couldn't read '" << var_name << "' from env. Using default." << std::endl;
+        std::cout << "[read_env_enum] Couldn't read '" << var_name << "' from env. Using default." << std::endl;
     }
 }
 
@@ -95,7 +95,7 @@ void read_env_enum(const char* var_name, PolicyType& target)
     }
     else
     {
-        std::cout << "[read_env_double] Couldn't read '" << var_name << "' from env. Using default." << std::endl;
+        std::cout << "[read_env_enum] Couldn't read '" << var_name << "' from env. Using default." << std::endl;
     }
 }
 

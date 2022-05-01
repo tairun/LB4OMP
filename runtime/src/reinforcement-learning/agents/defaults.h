@@ -26,4 +26,6 @@ namespace defaults {
     const RewardType REWARD_TYPE        = RewardType::LOOPTIME;
     const InitType INIT_TYPE            = InitType::ZERO;
     const PolicyType POLICY_TYPE        = PolicyType::EXPLORE_FIRST;
+
+    const std::string REWARD_STRING     = "0.0,-2.0,-4.0";
 }

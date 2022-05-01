@@ -6,7 +6,7 @@
 
 // public
 DoubleQLearner::DoubleQLearner(int num_states, int num_actions) :
-        Agent(num_states, num_actions, "DoubleQ Learner")
+        Agent(num_states, num_actions, "DoubleQ-Learner")
 {
     // Initialize first dimension of table
     q_table_a   = new double *[state_space];

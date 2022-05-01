@@ -15,7 +15,7 @@
 
 // public
 QLearnerOld::QLearnerOld(int states, int actions) :
-        AgentOld(states, actions, "Q Learner (old version)")
+        AgentOld(states, actions, "Q-Learner (old version)")
 {
     agent_data = new RLInfo(states, actions);
 }

@@ -13,7 +13,7 @@
 
 // public
 SARSALearner::SARSALearner(int num_states, int num_actions) :
-        Agent(num_states, num_actions, "SARSA Learner")
+        Agent(num_states, num_actions, "SARSA-Learner")
 {
     // Initialize first dimension of table
     q_table = new double *[state_space];

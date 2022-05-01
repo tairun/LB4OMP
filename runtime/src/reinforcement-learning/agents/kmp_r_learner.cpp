@@ -13,7 +13,7 @@
 
 // public
 RLearner::RLearner(int num_states, int num_actions) :
-        Agent(num_states, num_actions, "R Learner")
+        Agent(num_states, num_actions, "R-Learner")
 {
     // Initialize first dimension of table
     q_table = new double *[state_space];

@@ -447,11 +447,12 @@ protected:
 
         while ((pos = rewards_copy.find(',')) != std::string::npos) {
             token = rewards_copy.substr(0, pos);
-            std::cout << index << ": " << token << std::endl;
             out_reward_num[index] = std::stod(token);
             rewards_copy.erase(0, pos+1);
-            std::cout << "Remainder: " << rewards_copy << std::endl;
             index++;
         }
+
+        out_reward_num[index] = std::stod(rewards_copy);
+
     }
 };

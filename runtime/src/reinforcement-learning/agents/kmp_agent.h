@@ -5,6 +5,8 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
+
+
 #include <algorithm>
 #include <ctime>
 #include <cmath>
@@ -24,6 +26,7 @@
 
 #pragma once
 
+#define RL_DEBUG 1     // Added by Reinforcement Learning Extension to minimize stdout clutter
 
 class Agent {
 public:

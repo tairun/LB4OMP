@@ -33,6 +33,8 @@
 #include "agents/kmp_r_learner.h"
 #include "agents/kmp_deepq_learner.h"
 
+#define RL_DEBUG 1     // Added by Reinforcement Learning Extension to minimize stdout clutter
+
 
 int* AgentProvider::chunk_sizes;  // Stores the values of the chunk-sizes for the agent to try
 

@@ -5,8 +5,6 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
-#define RL_DEBUG 0
-
 #include <string>
 #include <iostream>
 #include <iomanip>
@@ -84,7 +82,9 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
 
         if(agent_type == 15)
         {
+            std::cout << "Got here to change name ..." << std::endl;
             agent->set_name("Chunk-Learner (using " + agent->get_name() + ")");
+            std::cout << "Changed the bloody name!" << std::endl;
         }
 
         AgentProvider::get_agents().insert(std::make_pair(loop_id, agent));

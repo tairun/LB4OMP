@@ -46,10 +46,9 @@ public:
 
         split_reward_nums(reward_string, reward_num);
 
-        std::cout << "Got here" << std::endl;
-
         read_env_double("KMP_RL_ALPHA_DECAY", alpha_decay_factor);
         read_env_double("KMP_RL_EPS_DECAY", epsilon_decay_factor);
+        std::cout << "Got here" << std::endl;
 
 #if (RL_DEBUG > 0)
         std::cout << "[Agent::Agent] Configuring agent as: " << name << std::endl;

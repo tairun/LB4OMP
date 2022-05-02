@@ -51,7 +51,7 @@ public:
 
         read_env_double("KMP_RL_ALPHA_DECAY", alpha_decay_factor);
         read_env_double("KMP_RL_EPS_DECAY", epsilon_decay_factor);
-        
+
 #if (RL_DEBUG > 0)
         std::cout << "[Agent::Agent] Configuring agent as: " << name << std::endl;
         std::cout << "[Agent::Agent] Additional params: Initializer-->" << InitLookup.at(init_type) << ", Reward-->" << RewardLookup.at(reward_type) << ", Policy-->" << PolicyLookup.at(policy_type) << std::endl;

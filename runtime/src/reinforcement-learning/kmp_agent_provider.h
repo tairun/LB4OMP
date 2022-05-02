@@ -60,7 +60,7 @@ private:
      * */
     static BasePolicy* create_policy(Agent* agent);
 
-    static void print_agent_params(const std::string& loop_id, Agent* agent);
+    static void print_agent_params(const std::string& loop_id, Agent* agent, int* chunk_sizes_array, int dim);
 
     /*
      * Prints the stats of the agent to evaluate performance.

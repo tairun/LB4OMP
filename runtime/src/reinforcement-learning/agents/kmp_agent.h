@@ -51,10 +51,10 @@ public:
 
         read_env_double("KMP_RL_ALPHA_DECAY", alpha_decay_factor);
         read_env_double("KMP_RL_EPS_DECAY", epsilon_decay_factor);
-
+        
 #if (RL_DEBUG > 0)
         std::cout << "[Agent::Agent] Configuring agent as: " << name << std::endl;
-        std::cout << "[Agent::Agent] Additional params: Initializer-->" << init_type << ", Reward-->" << reward_type << ", Policy-->" << policy_type << std::endl;
+        std::cout << "[Agent::Agent] Additional params: Initializer-->" << InitLookup.at(init_type) << ", Reward-->" << RewardLookup.at(reward_type) << ", Policy-->" << PolicyLookup.at(policy_type) << std::endl;
 #endif
     }
 
@@ -111,7 +111,7 @@ public:
     * */
     int sample_action() const
     {
-        std::default_random_engine re(seed); //TODO@kurluc00: Properly seed the random engine.
+        std::default_random_engine re(defaults::SEED); //TODO@kurluc00: Properly seed the random engine.
         std::uniform_int_distribution<int> uniform(0, action_space);
 
         return uniform(re);
@@ -204,6 +204,10 @@ public:
         return current_state;
     }
 
+    int get_current_action() const {
+        return current_action;
+    }
+
     double get_current_reward() const {
         return current_reward;
     }
@@ -231,7 +235,6 @@ public:
     }
 
 private:
-    double   seed{420.69};     // Controls the seed for the number generators
     double** table{nullptr}; // Pointer to table to lookup the best next action
 
 protected:
@@ -278,7 +281,7 @@ protected:
 #if (RL_DEBUG > 1)
         std::cout << "[Agent::policy] Applying policy ..." << std::endl;
 #endif
-        std::default_random_engine re(seed);
+        std::default_random_engine re(defaults::SEED);
         std::uniform_real_distribution<double> uniform(0, 1);
 
         // Switches between exploration and exploitation with the probability of epsilon (or 1-epsilon)

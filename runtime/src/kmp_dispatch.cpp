@@ -1477,7 +1477,6 @@ typedef typename traits_t<T>::signed_t ST;
                         {
                                 -1,
                                 -1,
-                                -1,
                                 1,  //autoSearch;
                                 -1,     // current DLS index or last tried
                                 -1,   //Best DLS

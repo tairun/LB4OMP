@@ -47,7 +47,7 @@ AgentProvider::AgentProvider()
 {
     std::string fileData = read_env_string("KMP_RL_AGENT_STATS");
     ofs.open(fileData, std::ofstream::out | std::ofstream::app);
-    ofs << "loop_id,timestep,alpha,epsilon,reward,low,high" << std::endl;
+    ofs << "loop_id,timestep,alpha,epsilon,reward,low,high,action" << std::endl;
 }
 
 AgentProvider::~AgentProvider()
@@ -64,7 +64,8 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
     if (!AgentProvider::get_timesteps().count(loop_id))
     // Enters if the agent does not exist for a loop_id, i.e. timestep 0
         {
-        bool change_name = false;
+        bool chunk_learner = false;
+        int init_method = 0;
 
         if(agent_type == 15)
         // Change some stuff only for the ChunkLearner!
@@ -77,7 +78,7 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
             chunk_sizes = new int[dimension];
             calculate_chunks(chunk_sizes, dimension, stats->n, stats->p);
             agent_type = read_env_int("KMP_RL_CHUNK_TYPE"); // Overwrites the agent type from 'ChunkLearner' to the new subtype to be used.
-            change_name = true;
+            chunk_learner = true;
         }
 #if (RL_DEBUG > 1)
         std::cout << "[AgentProvider::search] Creating agent for loop: " << loop_id << std::endl;
@@ -85,7 +86,7 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
         AgentProvider::get_timesteps().insert(std::make_pair(loop_id, 1)); // We insert 1 as value for the timestep, because the first time this gets checked is in the else block in timestep 1.
         auto* agent = create_agent(agent_type, stats, dimension, dimension, 6); // The offset denotes the auto-methods already present in LB4OMP, so we can start our switch statement at 0
 
-        if(change_name)
+        if(chunk_learner)
         {
             agent->set_name("Chunk-Learner (using " + agent->get_name() + ")");
         }
@@ -94,10 +95,19 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
 #if (RL_DEBUG > 1)
         std::cout << "[AgentProvider::search] Agent created." << std::endl;
 #endif
-        print_agent_params(loop_id, agent);
+        //print_agent_params(loop_id, agent);
         print_agent_stats(loop_id, 0, agent);
 
-        return 0; // Selects first DLS method for exploration
+        if (chunk_learner)
+        {
+            print_agent_params(loop_id, agent, chunk_sizes, dimension);
+            return chunk_sizes[init_method];
+        }
+        else
+        {
+            print_agent_params(loop_id, agent, nullptr, -1);
+            return init_method;
+        }
     }
     else
     // Enters when agent exists for a loop_id, i.e. timestep > 0
@@ -117,9 +127,9 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
             // Change some stuff only for the ChunkLearner!
             // Translate the action index to the actual chunk-size and return that instead
         {
-#if (RL_DEBUG > 1)
+//#if (RL_DEBUG > 1)
             std::cout << "[AgentProvider::search] Translating action index to chunk size: " << new_method << " --> " << chunk_sizes[new_method] << std::endl;
-#endif
+//#endif
             new_method = chunk_sizes[new_method];
         }
 
@@ -276,7 +286,7 @@ int AgentProvider::calculate_chunks(int *array, int size, int n, int p)
 #endif
 }
 
-void AgentProvider::print_agent_params(const std::string& loop_id, Agent* agent)
+void AgentProvider::print_agent_params(const std::string& loop_id, Agent* agent, int* chunk_sizes_array, int dim)
 {
     std::fstream ofs;
     std::string fileData = read_env_string("KMP_RL_AGENT_STATS");
@@ -297,9 +307,25 @@ void AgentProvider::print_agent_params(const std::string& loop_id, Agent* agent)
     ofs << "EpsilonFactor = "   << agent->get_epsilon_decay() << std::endl;
     ofs << std::endl;
 
+    if (dim > 0)
+    // If we use the Chunk-Learner, we also print the chunk-sizes to the ini file
+    {
+        ofs << "[CHUNKS-"<< loop_id << "]" << std::endl;
+        ofs << "Chunks = [";
+        for (int i = 0; i < dim; i++)
+        {
+            ofs << chunk_sizes_array[i];
+            if (i != dim -1)
+            {
+                ofs << ",";
+            }
+        }
+        ofs << "]" << std::endl << std::endl;
+    }
+
     ofs.close();
 }
 
 void AgentProvider::print_agent_stats(const std::string& loop_id, int timestep, Agent* agent) {
-    AgentProvider::get_filestream() << loop_id << "," << timestep << "," << agent->get_alpha() << "," << agent->get_epsilon() << "," << agent->get_current_reward() << "," << agent->get_low() << "," << agent->get_high() << std::endl;
+    AgentProvider::get_filestream() << loop_id << "," << timestep << "," << agent->get_alpha() << "," << agent->get_epsilon() << "," << agent->get_current_reward() << "," << agent->get_low() << "," << agent->get_high() << "," << agent->get_current_action() << std::endl;
 }

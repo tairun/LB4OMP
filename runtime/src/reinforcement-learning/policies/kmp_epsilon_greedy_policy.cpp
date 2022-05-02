@@ -5,12 +5,13 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
+#include "../agents/defaults.h"
 #include "kmp_epsilon_greedy_policy.h"
 
 
 int EpsilonGreedyPolicy::policy(int episode, int timestep, Agent* agent)
 {
-    std::default_random_engine re(420.69);
+    std::default_random_engine re(defaults::SEED);
     std::uniform_real_distribution<double> uniform(0, 1);
 
     // Switches between exploration and exploitation with the probability of epsilon (or 1-epsilon)

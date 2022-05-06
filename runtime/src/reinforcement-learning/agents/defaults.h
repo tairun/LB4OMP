@@ -23,6 +23,8 @@ namespace defaults {
     const double EPSILON_MIN            = 0.10f;
     const double EPSILON_DECAY_FACTOR   = 0.01f;
 
+    const int CHUNK_TYPE                = 8;
+
     const RewardType REWARD_TYPE        = RewardType::LOOPTIME;
     const InitType INIT_TYPE            = InitType::ZERO;
     const PolicyType POLICY_TYPE        = PolicyType::EXPLORE_FIRST;

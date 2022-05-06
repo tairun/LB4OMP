@@ -35,7 +35,7 @@ void read_env_string(const char* var_name, std::string& target)
     }
 }
 
-int read_env_int(const char* var_name)
+int read_env_int(const char* var_name, int rdefault)
 {
     if (std::getenv(var_name) != nullptr)
     {
@@ -43,8 +43,8 @@ int read_env_int(const char* var_name)
     }
     else
     {
-        std::cout << "[read_env_int] Couldn't read '" << var_name << "' from env. Exiting." << std::endl;
-        exit(-1);
+        std::cout << "[read_env_int] Couldn't read '" << var_name << "' from env. Using provided default value." << std::endl;
+        return rdefault;
     }
 }
 

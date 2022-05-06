@@ -77,7 +77,14 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
 #endif
             chunk_sizes = new int[dimension];
             calculate_chunks(chunk_sizes, dimension, stats->n, stats->p);
-            agent_type = read_env_int("KMP_RL_CHUNK_TYPE"); // Overwrites the agent type from 'ChunkLearner' to the new subtype to be used.
+            agent_type = read_env_int("KMP_RL_CHUNK_TYPE", defaults::CHUNK_TYPE); // Overwrites the agent type from 'ChunkLearner' to the new subtype to be used.
+
+            if (agent_type == 15)
+            {
+                std::cout << "[AgentProvider::search] Trying to create nested Chunk-Learner. Aborting mission. Bye!" << std::endl;
+                exit(-1);
+            }
+
             chunk_learner = true;
         }
 #if (RL_DEBUG > 1)

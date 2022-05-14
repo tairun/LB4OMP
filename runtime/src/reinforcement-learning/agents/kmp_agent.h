@@ -37,6 +37,9 @@ public:
         read_env_double("KMP_RL_ALPHA", alpha);     // Read learning rate from env
         read_env_double("KMP_RL_GAMMA", gamma);     // Read discount factor from env
         read_env_double("KMP_RL_EPSILON", epsilon); // Read exploration rate from env
+        read_env_double("KMP_RL_TAU", tau);         // Read tolerance factor from env
+        read_env_double("KMP_RL_ALPHA_DECAY", alpha_decay_factor);
+        read_env_double("KMP_RL_EPS_DECAY", epsilon_decay_factor);
 
         alpha_init = alpha;
         epsilon_init = epsilon;
@@ -48,9 +51,6 @@ public:
         read_env_string("KMP_RL_REWARD_NUM", reward_string);
 
         split_reward_nums();
-
-        read_env_double("KMP_RL_ALPHA_DECAY", alpha_decay_factor);
-        read_env_double("KMP_RL_EPS_DECAY", epsilon_decay_factor);
 
 #if (RL_DEBUG > 0)
         std::cout << "[Agent::Agent] Configuring agent as: " << name << std::endl;
@@ -261,6 +261,8 @@ protected:
     double epsilon_init{defaults::EPSILON};    // Exploration rate. Exported to agent.ini
     double epsilon_min{defaults::EPSILON_MIN}; // Exploration rate. Exported to agent.ini
     double epsilon_decay_factor{defaults::EPSILON_DECAY_FACTOR}; // Exported to agent.ini
+
+    double tau{defaults::TAU};                 // Tolerance factor (for Flexibility metric). Exported to agent.ini
 
     double low{999.00f}, high{0.00f};          // Initial value for reward allocation. This needs to be defined in the context of your RL problem. In our case this represents the millis for the loop iteration
 

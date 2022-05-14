@@ -22,6 +22,7 @@ namespace defaults {
     const double EPSILON                = 0.90f;
     const double EPSILON_MIN            = 0.10f;
     const double EPSILON_DECAY_FACTOR   = 0.01f;
+    const double TAU                    = 1.50f;
 
     const int CHUNK_TYPE                = 8;
 

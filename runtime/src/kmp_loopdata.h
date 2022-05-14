@@ -1,8 +1,8 @@
 #pragma once
 
 typedef struct {
-    int n;
-    int p;
+    int n;              // #iterations (for reinforcement learning agent)
+    int p;              // #threads (for reinforcement learning agent)
     int autoSearch;
     int cDLS;           // current DLS
     int bestDLS;        // Best DLS

@@ -1065,7 +1065,7 @@ void end_auto_loop_timer(int nproc, int tid) {
 
 
         autoTimerEnd = time[tid]; //Last thread to finish, i.e. Loop finishing time in ms
-        // calculate LB by percent imbalance ...max-mean/max * P/P-1 *100%
+        // calculate LB by percent imbalance ...max-mean/max * P/P-1 * 100%
         autoMeanThreadTime = localmean / localNProc; //mean thread execution time
 
         autoLBPercentIm = (autoTimerEnd - autoMeanThreadTime) / autoTimerEnd; //first term

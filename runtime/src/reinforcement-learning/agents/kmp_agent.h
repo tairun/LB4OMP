@@ -6,7 +6,6 @@
 //  --------------------------------------------------------------------------------------------//
 
 
-
 #include <algorithm>
 #include <ctime>
 #include <cmath>
@@ -23,6 +22,8 @@
 #include "../initializers/kmp_base_init.h"
 #include "../policies/kmp_policy_type.h"
 #include "../policies/kmp_base_policy.h"
+#include "../rewards/kmp_base_reward.h"
+#include "../rewards/kmp_looptime_reward.h"
 
 #pragma once
 
@@ -67,7 +68,7 @@ public:
         std::cout << "[Agent::step] Starting learning ..." << std::endl;
 #endif
         int next_action, next_state;
-        double reward_value = reward(stats);                              // Convert the reward signal into the actual reward value
+        double reward_value = pReward->reward(stats, this);                              // Convert the reward signal into the actual reward value
         next_action = pPolicy->policy(episode, timestep, this);     // Predict the next action according to the policy and Q-Values
         next_state = next_action;                                         // In our scenario the next action and desired state is the same
 #if (RL_DEBUG > 1)
@@ -136,6 +137,10 @@ public:
         return reward_type;
     }
 
+    double* get_reward_num() {
+        return reward_num;
+    }
+
     InitType get_init_type() {
         return init_type;
     }
@@ -162,6 +167,10 @@ public:
 
     double get_gamma() const {
         return gamma;
+    }
+
+    double get_tau() const {
+        return tau;
     }
 
     double get_epsilon_init() const {
@@ -196,6 +205,10 @@ public:
         return policy_type;
     }
 
+    RewardType get_reward_input() const {
+        return reward_type;
+    }
+
     double** get_table() const {
         return table;
     }
@@ -216,8 +229,16 @@ public:
         return low;
     }
 
+    void set_low(double value) {
+        low = value;
+    }
+
     double get_high() const {
         return high;
+    }
+
+    void set_high(double value) {
+        high = value;
     }
 
     // Setters
@@ -234,12 +255,17 @@ public:
         pPolicy = policy;
     }
 
+    void set_reward(BaseReward* reward) {
+        pReward = reward;
+    }
+
 private:
     double** table{nullptr}; // Pointer to table to lookup the best next action
 
 protected:
     BaseInit*   pInit{nullptr};
     BasePolicy* pPolicy{nullptr};
+    BaseReward* pReward{nullptr};
 
     double* reward_num{nullptr};
 
@@ -331,47 +357,6 @@ protected:
 
     /* Updates the internal values of the agent. */
     virtual void update(int next_state, int next_action, double reward_value) = 0;
-
-    /*
-     * Transforms the reward signal into the reward value.
-     * */
-    double reward(LoopData* stats)
-    {
-#if (RL_DEBUG > 1)
-        std::cout << "[Agent::reward] Getting reward ..." << std::endl;
-#endif
-        //TODO@kurluc00: Explore negative vs. positive Rewards discussion for agents.
-        double reward_signal = get_reward_signal(stats);
-#if (RL_DEBUG > 0)
-        std::cout << "[Agent::reward] High: " << high << ", Low: " << low << ", Reward: " << reward_signal << std::endl;
-#endif
-        // Good case
-        if ((reward_signal) < low)
-        {
-#if (RL_DEBUG > 1)
-            std::cout << "[Agent::reward] Good!" << std::endl;
-#endif
-            low = reward_signal;
-            return reward_num[0]; // by default: 0.0
-        }
-        // Neutral case
-        if ((reward_signal > low) && (reward_signal < high))
-        {
-#if (RL_DEBUG > 1)
-            std::cout << "[Agent::reward] Neutral." << std::endl;
-#endif
-            return reward_num[1]; // by default: -2.0
-        }
-        // Bad case
-        if (reward_signal > high)
-        {
-#if (RL_DEBUG > 1)
-            std::cout << "[Agent::reward] Bad!" << std::endl;
-#endif
-            high = reward_signal;
-            return reward_num[2]; // by default: -4.0
-        }
-    }
 
     /*
      * Searches for the best action (index) for a given state (using the Q-Values).

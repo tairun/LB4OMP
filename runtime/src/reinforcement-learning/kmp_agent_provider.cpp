@@ -22,6 +22,11 @@
 #include "policies/kmp_epsilon_greedy_policy.h"
 #include "policies/kmp_softmax_policy.h"
 
+#include "rewards/kmp_base_reward.h"
+#include "rewards/kmp_looptime_reward.h"
+#include "rewards/kmp_loadimbalance_reward.h"
+#include "rewards/kmp_robustness_reward.h"
+
 #include "agents/kmp_agent.h"
 #include "agents/kmp_q_learner_old.h"
 #include "agents/kmp_sarsa_learner_old.h"
@@ -210,6 +215,14 @@ Agent* AgentProvider::create_agent(int agent_type, LoopData* stats, int states, 
 #if (RL_DEBUG > 1)
         std::cout << "[AgentProvider::create_agent] Set policy successfully." << std::endl;
 #endif
+        BaseReward* rew = create_reward(agent);
+#if (RL_DEBUG > 1)
+        std::cout << "[AgentProvider::create_agent] Created reward successfully." << std::endl;
+#endif
+        agent->set_reward(rew);
+#if (RL_DEBUG > 1)
+        std::cout << "[AgentProvider::create_agent] Set reward successfully." << std::endl;
+#endif
     }
 
     return agent;
@@ -273,6 +286,28 @@ BasePolicy* AgentProvider::create_policy(Agent* agent)
     }
 
     return pol;
+}
+
+BaseReward* AgentProvider::create_reward(Agent* agent)
+{
+    BaseReward* rew;
+
+    switch (agent->get_reward_input()) {
+        case RewardType::LOOPTIME:
+            rew = new LooptimeReward();
+            break;
+        case RewardType::LOADIMBALANCE:
+            rew = new LoadimbalanceReward();
+            break;
+        case RewardType::ROBUSTNESS:
+            rew = new RobustnessReward();
+            break;
+        default:
+            rew = new LooptimeReward();
+            break;
+    }
+
+    return rew;
 }
 
 int AgentProvider::calculate_chunks(int *array, int size, int n, int p)

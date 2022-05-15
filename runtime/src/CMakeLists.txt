@@ -94,6 +94,10 @@ else()
     reinforcement-learning/policies/kmp_explore_first_policy.cpp
     reinforcement-learning/policies/kmp_epsilon_greedy_policy.cpp
     reinforcement-learning/policies/kmp_softmax_policy.cpp
+    ## Rewards
+    reinforcement-learning/rewards/kmp_looptime_reward.cpp
+    reinforcement-learning/rewards/kmp_loadimbalance_reward.cpp
+    reinforcement-learning/rewards/kmp_robustness_reward.cpp
     ## Agents
     reinforcement-learning/agents/kmp_q_learner_old.cpp
     reinforcement-learning/agents/kmp_sarsa_learner_old.cpp

@@ -5,11 +5,14 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
+#include "kmp_loopdata.h"
+#include "../agents/kmp_agent.h"
+
 #pragma once
 
 class Agent;
 
-class BasePolicy {
+class RobustnessReward : public BaseReward {
 public:
-  virtual int policy(int episode, int timestep, Agent* agent) = 0;
+  double reward(LoopData* stats, Agent* agent) override;
 };

@@ -15,6 +15,7 @@
 ExpectedSARSALearner::ExpectedSARSALearner(int numStates, int numActions) :
         Agent(numStates, numActions, "ExpectedSARSA-Learner")
 {
+    pInit->init()
     // Initialize first dimension of table
     q_table = new double *[state_space];
 

@@ -9,7 +9,7 @@
 
 class Agent;
 
-class BasePolicy {
+class BaseReward {
 public:
-  virtual int policy(int episode, int timestep, Agent* agent) = 0;
+  virtual double reward(LoopData* stats, Agent* agent) = 0;
 };

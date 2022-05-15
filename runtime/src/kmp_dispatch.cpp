@@ -1094,8 +1094,6 @@ void end_auto_loop_timer(int nproc, int tid) {
             autoLoopData.at(autoLoopName).autoSearch = 1;
         }
         autoLoopData.at(autoLoopName).cLB = autoLBPercentIm; // update LB
-        //TODO@Luc: Create update function for robustness
-
     }
 }
 

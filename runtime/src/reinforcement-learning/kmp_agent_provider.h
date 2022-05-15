@@ -60,6 +60,8 @@ private:
      * */
     static BasePolicy* create_policy(Agent* agent);
 
+    static BaseReward* create_reward(Agent* agent);
+
     static void print_agent_params(const std::string& loop_id, Agent* agent, int* chunk_sizes_array, int dim);
 
     /*

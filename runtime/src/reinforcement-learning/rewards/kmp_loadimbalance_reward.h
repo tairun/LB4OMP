@@ -6,13 +6,14 @@
 //  --------------------------------------------------------------------------------------------//
 
 #include "kmp_loopdata.h"
-#include "../agents/kmp_agent.h"
+#include "kmp_base_reward.h"
 
 #pragma once
 
 class Agent;
 
-class LoadimbalanceReward : public BaseReward {
+class LoadimbalanceReward : public BaseReward
+{
 public:
   double reward(LoopData* stats, Agent* agent) override;
 };

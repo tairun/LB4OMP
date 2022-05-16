@@ -7,8 +7,8 @@
 
 #include <iostream>
 
+#include "../agents/kmp_agent.h"
 #include "kmp_explore_first_policy.h"
-
 
 int ExploreFirstPolicy::policy(int episode, int timestep, Agent* agent)
 {

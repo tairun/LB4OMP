@@ -22,7 +22,6 @@
 #pragma once
 
 #include "kmp_base_policy.h"
-#include "../agents/kmp_agent.h"
 
 
 class EpsilonGreedyPolicy : public BasePolicy

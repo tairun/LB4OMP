@@ -5,9 +5,11 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
-#include "../agents/defaults.h"
-#include "kmp_epsilon_greedy_policy.h"
+#include <random>
 
+#include "../agents/defaults.h"
+#include "../agents/kmp_agent.h"
+#include "kmp_epsilon_greedy_policy.h"
 
 int EpsilonGreedyPolicy::policy(int episode, int timestep, Agent* agent)
 {

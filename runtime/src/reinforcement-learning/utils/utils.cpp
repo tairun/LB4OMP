@@ -9,7 +9,6 @@
 
 #include "utils.h"
 
-
 std::string read_env_string(const char* var_name)
 {
     if (std::getenv(var_name) != nullptr)
@@ -107,4 +106,23 @@ double sum(const double* array, int length)
         sum += array[i];
 
     return sum;
+}
+
+/*
+ * Searches for the best action (index) for a given state (using the Q-Values).
+ * */
+int argmax(double** ref_table, int next_state, int size)
+{
+    int best_index = 0;
+    double best_current = -9999;
+
+    for (int i = 0; i < size; i++)
+    {
+        if (ref_table[next_state][i] > best_current)
+        {
+            best_current = ref_table[next_state][i];
+            best_index = i;
+        }
+    }
+    return best_index;
 }

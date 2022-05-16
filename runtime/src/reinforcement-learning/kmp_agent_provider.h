@@ -13,7 +13,6 @@
 
 #include "agents/kmp_agent.h"
 
-
 class AgentProvider {
 public:
     AgentProvider(const AgentProvider&) = delete;   // Disable copy constructor

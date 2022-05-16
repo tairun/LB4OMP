@@ -1,3 +1,10 @@
+// -------------------------- Reinforcement Learning Extension ---------------------------------//
+//  June 2022
+//  Master Thesis
+//  Luc Kury, <luc.kury@unibas.ch>
+//  University of Basel, Switzerland
+//  --------------------------------------------------------------------------------------------//
+
 #include <string>
 
 #include "../rewards/kmp_reward_type.h"
@@ -5,7 +12,6 @@
 #include "../initializers/kmp_init_type.h"
 
 #pragma once
-
 
 /*
 * Reads the environment variable with the name 'var_name' and parses it as a string.
@@ -32,3 +38,8 @@ void read_env_enum(const char* var_name, PolicyType& target);
  * Returns the sum of values (double) in an array.
  * */
 double sum(const double* array, int length);
+
+/*
+ * Searches for the best action (index) for a given state (using the Q-Values).
+ * */
+int argmax(double** ref_table, int next_state, int size);

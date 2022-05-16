@@ -17,7 +17,6 @@
 #pragma once
 
 #include "kmp_base_policy.h"
-#include "../agents/kmp_agent.h"
 
 
 class ExploreFirstPolicy : public BasePolicy

@@ -5,6 +5,7 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
+#pragma once
 
 #include <algorithm>
 #include <ctime>
@@ -25,9 +26,8 @@
 #include "../rewards/kmp_base_reward.h"
 #include "../rewards/kmp_looptime_reward.h"
 
-#pragma once
-
 #define RL_DEBUG 0     // Added by Reinforcement Learning Extension to minimize stdout clutter
+
 
 class Agent {
 public:

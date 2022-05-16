@@ -7,6 +7,7 @@
 
 #include "kmp_loadimbalance_reward.h"
 #include "kmp_loopdata.h"
+#include "../agents/kmp_agent.h"
 
 double LoadimbalanceReward::reward(LoopData* stats, Agent* agent) {
 #if (RL_DEBUG > 1)

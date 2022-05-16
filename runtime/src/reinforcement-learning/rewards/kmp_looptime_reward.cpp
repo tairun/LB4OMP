@@ -7,6 +7,7 @@
 
 #include "kmp_loopdata.h"
 #include "kmp_looptime_reward.h"
+#include "../agents/kmp_agent.h"
 
 double LooptimeReward::reward(LoopData* stats, Agent* agent) {
 #if (RL_DEBUG > 1)

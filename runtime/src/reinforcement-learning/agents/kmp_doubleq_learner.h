@@ -8,9 +8,9 @@ public:
     ~DoubleQLearner() = default;
 
 private:
-    double** q_table_a;
-    double** q_table_b;
-    double** q_table_sum;
+    double** q_table_a{nullptr};
+    double** q_table_b{nullptr};
+    double** q_table_sum{nullptr};
 
     /* Updates the internal values of the agent. */
     void update(int next_state, int next_action, double reward_value) override;

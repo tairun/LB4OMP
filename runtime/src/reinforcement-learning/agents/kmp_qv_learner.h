@@ -8,8 +8,8 @@ public:
     ~QVLearner() = default;
 
 private:
-    double** q_table;
-    double* v_table;
+    double** q_table{nullptr};
+    double* v_table{nullptr};
 
     /* Updates the internal values of the agent. */
     void update(int next_state, int next_action, double reward_value) override;

@@ -9,25 +9,9 @@ DoubleQLearner::DoubleQLearner(int num_states, int num_actions) :
         Agent(num_states, num_actions, "DoubleQ-Learner")
 {
     // Initialize first dimension of table
-    q_table_a   = new double *[state_space];
-    q_table_b   = new double *[state_space];
-    q_table_sum = new double *[state_space];
-
-    // Initialize second dimension of table
-    for (int i = 0; i < state_space; i++) {
-        q_table_a[i]   = new double[action_space];
-        q_table_b[i]   = new double[action_space];
-        q_table_sum[i] = new double[action_space];
-    }
-
-    // Initialize values of table
-    for (int a = 0; a < state_space; a++)
-        for (int s = 0; s < action_space; s++) {
-            q_table_a[s][a]   = 0.0f;
-            q_table_b[s][a]   = 0.0f;
-            q_table_sum[s][a] = 0.0f;
-        }
-
+    pInit->init(q_table_a, state_space, action_space);
+    pInit->init(q_table_b, state_space, action_space);
+    pInit->init(q_table_sum, state_space, action_space);
     set_table(q_table_sum);
 }
 

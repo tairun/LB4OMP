@@ -10,6 +10,7 @@
 #include "../rewards/kmp_reward_type.h"
 #include "../policies/kmp_policy_type.h"
 #include "../initializers/kmp_init_type.h"
+#include "../decays/kmp_decay_type.h"
 
 #pragma once
 
@@ -33,6 +34,7 @@ void read_env_double(const char* var_name, double& target);
 void read_env_enum(const char* var_name, RewardType& target);
 void read_env_enum(const char* var_name, InitType& target);
 void read_env_enum(const char* var_name, PolicyType& target);
+void read_env_enum(const char* var_name, DecayType& target);
 
 /*
  * Returns the sum of values (double) in an array.

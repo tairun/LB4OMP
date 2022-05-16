@@ -24,7 +24,7 @@
 #include "../policies/kmp_policy_type.h"
 #include "../policies/kmp_base_policy.h"
 #include "../rewards/kmp_base_reward.h"
-#include "../rewards/kmp_looptime_reward.h"
+#include "../decays/kmp_decay_type.h"
 
 #define RL_DEBUG 0     // Added by Reinforcement Learning Extension to minimize stdout clutter
 
@@ -48,6 +48,7 @@ public:
         read_env_enum("KMP_RL_REWARD", reward_type);
         read_env_enum("KMP_RL_INIT", init_type);
         read_env_enum("KMP_RL_POLICY", policy_type);
+        read_env_enum("KMP_RL_DECAY", decay_type);
 
         read_env_string("KMP_RL_REWARD_NUM", reward_string);
 
@@ -84,23 +85,23 @@ public:
         if (policy_type == PolicyType::EXPLORE_FIRST)
         {
             if (timestep >= (state_space * action_space))
-            // Delay the decay if we are using EXPLORE_FIRST action selection policy
+            // Delay the decays if we are using EXPLORE_FIRST action selection policy
             {
-                // We offset the timesteps by the amount of exploration done, to correctly calculate the decay
+                // We offset the timesteps by the amount of exploration done, to correctly calculate the decays
                 if (alpha_decay_factor > 0)
-                    // Only decay if the decay factor is greater than zero
+                    // Only decays if the decays factor is greater than zero
                     decay(timestep-(state_space * action_space), alpha, alpha_init, alpha_min, alpha_decay_factor);
                 if (epsilon_decay_factor > 0)
-                    // Only decay if the decay factor is greater than zero
+                    // Only decays if the decays factor is greater than zero
                     decay(timestep-(state_space * action_space), epsilon, epsilon_init, epsilon_min, epsilon_decay_factor);
             }
 
         } else {
             if (alpha_decay_factor > 0)
-                // Only decay if the decay factor is greater than zero
+                // Only decays if the decays factor is greater than zero
                 decay(timestep, alpha, alpha_init, alpha_min, alpha_decay_factor);
             if (epsilon_decay_factor > 0)
-                // Only decay if the decay factor is greater than zero
+                // Only decays if the decays factor is greater than zero
                 decay(timestep, epsilon, epsilon_init, epsilon_min, epsilon_decay_factor);
         }
 
@@ -288,15 +289,16 @@ protected:
     double epsilon_min{defaults::EPSILON_MIN}; // Exploration rate. Exported to agent.ini
     double epsilon_decay_factor{defaults::EPSILON_DECAY_FACTOR}; // Exported to agent.ini
 
-    double tau{defaults::TAU};                 // Tolerance factor (for Flexibility metric). Exported to agent.ini
+    double tau{defaults::TAU};                      // Tolerance factor (for Flexibility metric). Exported to agent.ini
 
-    double low{999.00f}, high{0.00f};          // Initial value for reward allocation. This needs to be defined in the context of your RL problem. In our case this represents the millis for the loop iteration
+    double low{999.00f}, high{0.00f};               // Initial value for reward allocation. This needs to be defined in the context of your RL problem. In our case this represents the millis for the loop iteration
 
     std::string name;                               // Name of the agent (human-readable). Exported to agent.ini
     std::string reward_string{defaults::REWARD_STRING};
     RewardType reward_type{defaults::REWARD_TYPE};  // Default: looptime.      Options are: looptime, loadimbalance, robustness. Exported to agent.ini
     InitType init_type{defaults::INIT_TYPE};        // Default: zero.          Options are: zero, random, optimistic. Exported to agent.ini
     PolicyType policy_type{defaults::POLICY_TYPE};  // Default: explore_first. Options are: explore_first, epsilon_greedy, softmax. Exported to agent.ini
+    DecayType decay_type{defaults::DECAY_TYPE};     // Default: exponential.   Options are: exponential, step. Exported to agent.ini
 
     /*----------------------------------------------------------------------------*/
     /*                            MEMBER FUNCTIONS                                */

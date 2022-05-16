@@ -98,6 +98,19 @@ void read_env_enum(const char* var_name, PolicyType& target)
     }
 }
 
+void read_env_enum(const char* var_name, DecayType& target)
+{
+    if (std::getenv(var_name) != nullptr)
+    {
+        std::string str = std::string(std::getenv(var_name));
+        target = DecayTable.at(str);
+    }
+    else
+    {
+        std::cout << "[read_env_enum] Couldn't read '" << var_name << "' from env. Using default." << std::endl;
+    }
+}
+
 double sum(const double* array, int length)
 {
     double sum = 0.0f;

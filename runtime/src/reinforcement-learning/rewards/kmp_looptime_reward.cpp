@@ -8,8 +8,6 @@
 #include "kmp_looptime_reward.h"
 #include "kmp_loopdata.h"
 
-#pragma once
-
 double LooptimeReward::reward(LoopData* stats, Agent* agent) {
 #if (RL_DEBUG > 1)
     std::cout << "[LooptimeReward::reward] Getting reward ..." << std::endl;

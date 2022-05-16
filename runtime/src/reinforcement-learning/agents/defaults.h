@@ -8,6 +8,7 @@
 #include "../rewards/kmp_reward_type.h"
 #include "../initializers/kmp_init_type.h"
 #include "../policies/kmp_policy_type.h"
+#include "../decays/kmp_decay_type.h"
 
 #pragma once
 
@@ -29,6 +30,7 @@ namespace defaults {
     const RewardType REWARD_TYPE        = RewardType::LOOPTIME;
     const InitType INIT_TYPE            = InitType::ZERO;
     const PolicyType POLICY_TYPE        = PolicyType::EXPLORE_FIRST;
+    const DecayType DECAY_TYPE          = DecayType::EXPONENTIAL;
 
     const std::string REWARD_STRING     = "0.0,-2.0,-4.0";
 }

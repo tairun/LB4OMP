@@ -8,8 +8,6 @@
 #include "kmp_loadimbalance_reward.h"
 #include "kmp_loopdata.h"
 
-#pragma once
-
 double LoadimbalanceReward::reward(LoopData* stats, Agent* agent) {
 #if (RL_DEBUG > 1)
     std::cout << "[LoadimbalanceReward::reward] Getting reward ..." << std::endl;

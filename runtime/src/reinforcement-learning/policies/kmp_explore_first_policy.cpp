@@ -5,8 +5,6 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
-#include <iostream>
-
 #include "../agents/kmp_agent.h"
 #include "kmp_explore_first_policy.h"
 

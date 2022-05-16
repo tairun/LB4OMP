@@ -8,8 +8,6 @@
 #include "kmp_robustness_reward.h"
 #include "kmp_loopdata.h"
 
-#pragma once
-
 double RobustnessReward::reward(LoopData* stats, Agent* agent) {
     if (stats->cTime <= agent->get_tau() * agent->get_low())
     {

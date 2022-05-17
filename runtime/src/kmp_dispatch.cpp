@@ -237,7 +237,6 @@ void read_profiling_data(std::string loopLocation) {
         }
     }
     profilingDataReady++;
-
 }
 
 void init_loop_timer(const char *loopLine, long ub) {
@@ -287,7 +286,6 @@ int goldenChunkSize(int N, int P, int AUTO_FLAG) {
     }
 
     return chunkSize;
-
 }
 
 void autoSetChunkSize(int N, int P) {
@@ -305,7 +303,6 @@ void autoSetChunkSize(int N, int P) {
     {
         autoLoopData.at(autoLoopName).cChunk = 1;
     }
-
 }
 
 void autoExhaustiveSearch(int N, int P) {

@@ -66,6 +66,12 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
 #if (RL_DEBUG > 0)
     std::cout << "[AgentProvider::search] Loop: " << loop_id << std::endl;
 #endif
+
+    if (stats->cTime < 0.1)
+    {
+        return;
+    }
+
     if (!AgentProvider::get_timesteps().count(loop_id))
     // Enters if the agent does not exist for a loop_id, i.e. timestep 0
         {

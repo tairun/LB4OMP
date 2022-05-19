@@ -27,10 +27,13 @@ namespace defaults {
 
     const int CHUNK_TYPE                = 8;
 
+    const int ROLLING_AVG_SIZE          = 10;
+    const int INVERSE_REWARD_MULT       = 10;
+
     const RewardType REWARD_TYPE        = RewardType::LOOPTIME;
     const InitType INIT_TYPE            = InitType::ZERO;
     const PolicyType POLICY_TYPE        = PolicyType::EXPLORE_FIRST;
     const DecayType DECAY_TYPE          = DecayType::EXPONENTIAL;
 
-    const std::string REWARD_STRING     = "0.0,-2.0,-4.0";
+    const std::string REWARD_STRING     = "0.0,-2.0,-4.0"; // Place good reward on the left (beginning) of array and bad reward on the right (end)
 }

@@ -24,6 +24,9 @@
 
 #include "rewards/kmp_base_reward.h"
 #include "rewards/kmp_looptime_reward.h"
+#include "rewards/kmp_looptime_average_reward.h"
+#include "rewards/kmp_looptime_rolling_average_reward.h"$
+#include "rewards/kmp_looptime_inverse_reward.h"
 #include "rewards/kmp_loadimbalance_reward.h"
 #include "rewards/kmp_robustness_reward.h"
 
@@ -69,7 +72,10 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
 
     if (stats->cTime < 0.1)
     {
-        return;
+#if (RL_DEBUG > 0)
+        std::cout << "[AgentProvider::search] Looptime smaller than 0.1ms: " << Skippng << std::endl;
+#endif
+        return 1; // TODO@kurluc00: Just ignore ultra short loops and do not learn from them (also we just use dynamic == ss == 1 schedule)
     }
 
     if (!AgentProvider::get_timesteps().count(loop_id))
@@ -301,6 +307,15 @@ BaseReward* AgentProvider::create_reward(Agent* agent)
     switch (agent->get_reward_input()) {
         case RewardType::LOOPTIME:
             rew = new LooptimeReward();
+            break;
+        case RewardType::LOOPTIME_AVERAGE:
+            rew = new LooptimeAverageReward();
+            break;
+        case RewardType::LOOPTIME_ROLLING_AVERAGE:
+            rew = new LooptimeRollingAverageReward();
+            break;
+        case RewardType::LOOPTIME_INVERSE:
+            rew = new LooptimeInverseReward();
             break;
         case RewardType::LOADIMBALANCE:
             rew = new LoadimbalanceReward();

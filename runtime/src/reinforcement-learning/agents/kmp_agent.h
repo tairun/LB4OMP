@@ -306,6 +306,7 @@ protected:
 
     /* The policy chooses an action according to the learned experience of the agent. */
     /* Implements the Epsilon-Greedy action selection. */
+    /*
     virtual int policy(int episode, int timestep, double** ref_table)
     {
 #if (RL_DEBUG > 1)
@@ -356,6 +357,7 @@ protected:
             return next_action;
         }
     }
+    */
 
     /* Updates the internal values of the agent. */
     virtual void update(int next_state, int next_action, double reward_value) = 0;
@@ -398,34 +400,6 @@ protected:
     /*----------------------------------------------------------------------------*/
     /*                              UTIL FUNCTIONS                                */
     /*----------------------------------------------------------------------------*/
-
-    /*
-     * Checks the 'reward_type' member variable and returns the corresponding reward signal.
-     * */
-    double get_reward_signal(LoopData* stats)
-    {
-        double reward_signal = 0;
-
-        if (reward_type == RewardType::LOOPTIME)
-        {
-            reward_signal = stats->cTime;
-        }
-        else if (reward_type == RewardType::LOADIMBALANCE)
-        {
-            reward_signal = stats->cLB;
-        }
-        else if (reward_type == RewardType::ROBUSTNESS)
-        {
-            std::cout << "[Agent::get_reward_signal] Not yet implemented: " << reward_type << std::endl;
-            reward_signal = stats->cTime;
-        }
-        else
-        {
-            std::cout << "[Agent::get_reward_signal] Invalid reward signal specified in env: " << reward_type << std::endl;
-        }
-
-        return reward_signal;
-    }
 
     static void decay(const int timestep, double& target, const double target_init, const double target_min, const double factor)
     {

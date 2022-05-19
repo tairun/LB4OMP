@@ -98,6 +98,9 @@ else()
     reinforcement-learning/rewards/kmp_looptime_reward.cpp
     reinforcement-learning/rewards/kmp_loadimbalance_reward.cpp
     reinforcement-learning/rewards/kmp_robustness_reward.cpp
+    reinforcement-learning/rewards/kmp_looptime_average_reward.cpp
+    reinforcement-learning/rewards/kmp_looptime_rolling_average_reward.cpp
+    reinforcement-learning/rewards/kmp_looptime_inverse_reward.cpp
     ## Agents
     reinforcement-learning/agents/kmp_q_learner_old.cpp
     reinforcement-learning/agents/kmp_sarsa_learner_old.cpp

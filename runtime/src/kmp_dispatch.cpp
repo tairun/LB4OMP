@@ -967,8 +967,8 @@ void auto_DLS_Search(int gtid, int N, int P, int option) {
 #endif
         int new_method = AgentProvider::search(autoLoopName, option, &autoLoopData.at(autoLoopName),
                                                (int) autoDLSPortfolio.size());
-        autoSetChunkSize(N, P); // set chunk size
         autoLoopData.at(autoLoopName).cDLS = new_method;
+        autoSetChunkSize(N, P); // set chunk size
     }
     else if (option == 15)
     /*

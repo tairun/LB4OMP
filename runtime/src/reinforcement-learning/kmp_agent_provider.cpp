@@ -70,14 +70,6 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
     std::cout << "[AgentProvider::search] Loop: " << loop_id << std::endl;
 #endif
 
-    if (stats->cTime < 0.1)
-    {
-#if (RL_DEBUG > 0)
-        std::cout << "[AgentProvider::search] Looptime smaller than 0.1ms: " << Skippng << std::endl;
-#endif
-        return 1; // TODO@kurluc00: Just ignore ultra short loops and do not learn from them (also we just use dynamic == ss == 1 schedule)
-    }
-
     if (!AgentProvider::get_timesteps().count(loop_id))
     // Enters if the agent does not exist for a loop_id, i.e. timestep 0
         {

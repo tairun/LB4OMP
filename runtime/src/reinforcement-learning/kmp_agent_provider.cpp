@@ -25,7 +25,7 @@
 #include "rewards/kmp_base_reward.h"
 #include "rewards/kmp_looptime_reward.h"
 #include "rewards/kmp_looptime_average_reward.h"
-#include "rewards/kmp_looptime_rolling_average_reward.h"$
+#include "rewards/kmp_looptime_rolling_average_reward.h"
 #include "rewards/kmp_looptime_inverse_reward.h"
 #include "rewards/kmp_loadimbalance_reward.h"
 #include "rewards/kmp_robustness_reward.h"

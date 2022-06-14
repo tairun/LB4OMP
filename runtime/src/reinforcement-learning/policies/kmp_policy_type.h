@@ -18,13 +18,13 @@ enum PolicyType
 };
 
 static std::unordered_map<std::string, PolicyType> PolicyTable = {
-        {"explore_first", PolicyType::EXPLORE_FIRST},
-        {"epsilon_greedy", PolicyType::EPSILON_GREEDY},
+        {"explore-first", PolicyType::EXPLORE_FIRST},
+        {"epsilon-greedy", PolicyType::EPSILON_GREEDY},
         {"softmax", PolicyType::SOFTMAX}
 };
 
 static std::unordered_map<int, std::string> PolicyLookup = {
-        {PolicyType::EXPLORE_FIRST, "explore_first"},
-        {PolicyType::EPSILON_GREEDY, "epsilon_greedy"},
+        {PolicyType::EXPLORE_FIRST, "explore-first"},
+        {PolicyType::EPSILON_GREEDY, "epsilon-greedy"},
         {PolicyType::SOFTMAX, "softmax"}
 };

@@ -249,6 +249,10 @@ std::fstream& AgentProvider::get_filestream()
 
 BaseInit* AgentProvider::create_initializer(Agent* agent)
 {
+#if (PROVIDER_DEBUG > 1)
+    std::cout << "[AgentProvider::create_initializer] Creating initializer ..." << std::endl;
+#endif
+
     BaseInit* init;
 
     switch (agent->get_init_input()) {

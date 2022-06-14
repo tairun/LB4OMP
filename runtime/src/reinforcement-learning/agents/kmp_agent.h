@@ -56,7 +56,7 @@ public:
 
 #if (AGENT_DEBUG > 0)
         std::cout << "[Agent::Agent] Configuring agent as: " << name << std::endl;
-        std::cout << "[Agent::Agent] Additional params: Initializer-->" << InitLookup.at(init_type) << ", Reward-->" << RewardLookup.at(reward_type) << ", Policy-->" << PolicyLookup.at(policy_type) << std::endl;
+        std::cout << "[Agent::Agent] Additional parameters: Initializer-->" << InitLookup.at(init_type) << ", Reward-->" << RewardLookup.at(reward_type) << ", Policy-->" << PolicyLookup.at(policy_type) << std::endl;
 #endif
     }
 

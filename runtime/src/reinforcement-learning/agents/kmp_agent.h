@@ -26,8 +26,6 @@
 #include "../rewards/kmp_base_reward.h"
 #include "../decays/kmp_decay_type.h"
 
-#define RL_DEBUG 0     // Added by Reinforcement Learning Extension to minimize stdout clutter
-
 
 class Agent {
 public:

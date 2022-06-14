@@ -1,4 +1,4 @@
-#define RL_DEBUG 0     // Added by Reinforcement Learning Extension to minimize stdout clutter
+#define RL_DEBUG 2     // Added by Reinforcement Learning Extension to minimize stdout clutter
 
 /*
  * kmp_dispatch.cpp: dynamic scheduling - iteration initialization and dispatch.

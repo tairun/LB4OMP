@@ -5,6 +5,8 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
+//define RL_DEBUG 2 // Enables debug (all) output
+
 #include <string>
 #include <iostream>
 #include <iomanip>

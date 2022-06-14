@@ -170,8 +170,9 @@ Agent* AgentProvider::create_agent(int agent_type, LoopData* stats, int states, 
             agent = new SARSALearnerOld(states, actions);
             break;
         case (2):
+            std::cout << "[AgentProvider::create_agent] Before constructor ..." << std::endl;
             agent = new QLearner(states, actions);
-            std::cout << "[AgentProvider::create_agent] Left constructor" << std::endl;
+            std::cout << "[AgentProvider::create_agent] After constructor ..." << std::endl;
             break;
         case (3):
             agent = new DoubleQLearner(states, actions);

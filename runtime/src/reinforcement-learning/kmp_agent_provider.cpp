@@ -171,6 +171,7 @@ Agent* AgentProvider::create_agent(int agent_type, LoopData* stats, int states, 
             break;
         case (2):
             agent = new QLearner(states, actions);
+            std::cout << "[AgentProvider::create_agent] Left constructor" << std::endl;
             break;
         case (3):
             agent = new DoubleQLearner(states, actions);
@@ -196,6 +197,7 @@ Agent* AgentProvider::create_agent(int agent_type, LoopData* stats, int states, 
             break;
     }
 
+    std::cout << "[AgentProvider::create_agent] Left switch" << std::endl;
     if (new_type == 0 || new_type == 1)
     // Only set initializer and policy when we have a new agent
     {
@@ -203,6 +205,7 @@ Agent* AgentProvider::create_agent(int agent_type, LoopData* stats, int states, 
     }
     else
     {
+        std::cout << "[AgentProvider::create_agent] Before initializer" << std::endl;
         BaseInit* init = create_initializer(agent);
 #if (PROVIDER_DEBUG > 1)
         std::cout << "[AgentProvider::create_agent] Created initializer successfully." << std::endl;

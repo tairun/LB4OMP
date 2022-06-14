@@ -1,4 +1,4 @@
-#define RL_DEBUG 2     // Added by Reinforcement Learning Extension to minimize stdout clutter
+#define DISPATCH_DEBUG 2     // Added by Reinforcement Learning Extension to minimize stdout clutter
 
 /*
  * kmp_dispatch.cpp: dynamic scheduling - iteration initialization and dispatch.
@@ -962,7 +962,7 @@ void auto_DLS_Search(int gtid, int N, int P, int option) {
      * (15): ChunkLearner
      * */
     {
-#if (RL_DEBUG > 1)
+#if (DISPATCH_DEBUG > 1)
         std::cout << "[Reinforcement Learning] Calling Agent Provider ... (with option " << option << ")" << std::endl;
 #endif
         int new_method = AgentProvider::search(autoLoopName, option, &autoLoopData.at(autoLoopName),
@@ -975,7 +975,7 @@ void auto_DLS_Search(int gtid, int N, int P, int option) {
      * (15): Direct chunk selection with reinforcement learning
      * */
     {
-#if (RL_DEBUG > 1)
+#if (DISPATCH_DEBUG > 1)
         std::cout << "[Reinforcement Learning] Calling Agent Provider for direct chunk learning... (with  option " << option << ")" << std::endl;
 #endif
         autoLoopData.at(autoLoopName).n = N;
@@ -1150,7 +1150,7 @@ void print_loop_timer(enum sched_type schedule, int tid_for_timer,
     //fileMutex.lock();
     ofs.open(fileData, std::ofstream::out | std::ofstream::app);
 
-#if RL_DEBUG > 0
+#if DISPATCH_DEBUG > 0
     ofs << "LoopOccurrence:" << currentLoopMap.at(globalLoopline) << ",Location:" << globalLoopline << ",#iterations:"
         << globalNIterations << ",threadID:" << tid_for_timer << ",threadTime:" << time_span.count() << std::endl;
 #endif

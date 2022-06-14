@@ -5,6 +5,8 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
+#define AGENT_DEBUG 2   // Added by Reinforcement Learning Extension to minimize stdout clutter
+
 #pragma once
 
 #include <algorithm>
@@ -52,7 +54,7 @@ public:
 
         split_reward_nums();
 
-#if (RL_DEBUG > 0)
+#if (AGENT_DEBUG > 0)
         std::cout << "[Agent::Agent] Configuring agent as: " << name << std::endl;
         std::cout << "[Agent::Agent] Additional params: Initializer-->" << InitLookup.at(init_type) << ", Reward-->" << RewardLookup.at(reward_type) << ", Policy-->" << PolicyLookup.at(policy_type) << std::endl;
 #endif
@@ -63,14 +65,14 @@ public:
      * */
     virtual int step(int episode, int timestep, LoopData* stats)
     {
-#if (RL_DEBUG > 1)
+#if (AGENT_DEBUG > 1)
         std::cout << "[Agent::step] Starting learning ..." << std::endl;
 #endif
         int next_action, next_state;
         double reward_value = pReward->reward(stats, this);                              // Convert the reward signal into the actual reward value
         next_action = pPolicy->policy(episode, timestep, this);     // Predict the next action according to the policy and Q-Values
         next_state = next_action;                                         // In our scenario the next action and desired state is the same
-#if (RL_DEBUG > 1)
+#if (AGENT_DEBUG > 1)
         std::cout << "[Agent::update] Updating agent data ..." << std::endl;
 #endif
         update(next_state, next_action, reward_value);                    // Update the Q-Values based on the learning algorithm
@@ -307,7 +309,7 @@ protected:
     /*
     virtual int policy(int episode, int timestep, double** ref_table)
     {
-#if (RL_DEBUG > 1)
+#if (AGENT_DEBUG > 1)
         std::cout << "[Agent::policy] Applying policy ..." << std::endl;
 #endif
         std::default_random_engine re(defaults::SEED);
@@ -317,7 +319,7 @@ protected:
         if (uniform(re) < epsilon)
         // Explore (random action)
         {
-#if (RL_DEBUG > 1)
+#if (AGENT_DEBUG > 1)
             std::cout << "[Agent::policy] Exploring" << std::endl;
 #endif
             int next_action = sample_action(); // Chooses action (which is equal to the next state)
@@ -326,7 +328,7 @@ protected:
         else
         // Exploit (previous knowledge)
         {
-#if (RL_DEBUG > 1)
+#if (AGENT_DEBUG > 1)
             std::cout << "[Agent::policy] Exploiting" << std::endl;
 #endif
             double maxQ = -9999.99f;

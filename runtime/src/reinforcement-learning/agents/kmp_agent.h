@@ -349,17 +349,17 @@ protected:
     /*
      * Returns a pointer to the Q-Values (array) stored for a particular state.
      * */
-    double** Q(int state)
+    double* Q(int state)
     {
-        return table[state];
+        return *table[state];
     }
 
     /*
      * Returns the Q-Value stored for a particular state-action pair.
      * */
-    double* Q(int state, int action)
+    double Q(int state, int action)
     {
-        return table[state][action];
+        return *table[state][action];
     }
 
     /*----------------------------------------------------------------------------*/

@@ -39,7 +39,7 @@ int EpsilonGreedyPolicy::policy(int episode, int timestep, Agent* agent)
         // Evaluate Q-Table for action with highest Q-Value
         for (int i = 0; i < agent->get_action_space(); i++)
         {
-            if (agent->get_table()[agent->get_current_state()][i] >= maxQ)
+            if (*(agent->get_table()[agent->get_current_state()][i]) >= maxQ)
             {
                 action_candidates.push_back(i);
             }

@@ -17,11 +17,11 @@ RandomInit::RandomInit(double upper_bound, double lower_bound) : upper{upper_bou
 }
 
 double RandomInit::get_double() const {
-    std::cout << "[RandomInit::get_double] Before unif ..." << std::endl;
+    //std::cout << "[RandomInit::get_double] Before unif ..." << std::endl;
     static std::uniform_real_distribution<double> unif(lower, upper);
-    std::cout << "[RandomInit::get_double] Before engine ..." << std::endl;
+    //std::cout << "[RandomInit::get_double] Before engine ..." << std::endl;
     static std::default_random_engine re(defaults::SEED);
-    std::cout << "[RandomInit::get_double] Before return ..." << std::endl;
+    //std::cout << "[RandomInit::get_double] Before return ..." << std::endl;
     return unif(re);
 }
 

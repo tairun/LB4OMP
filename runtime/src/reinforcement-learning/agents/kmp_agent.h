@@ -19,9 +19,9 @@
 
 #include "defaults.h"
 #include "kmp_loopdata.h"
-#include "utils/utils.h"
+#include "reinforcement-learning/utils/utils.h"
 
-#include "decays/kmp_decay_type.h"
+#include "reinforcement-learning/decays/kmp_decay_type.h"
 
 #include "initializers/kmp_init_type.h"
 #include "initializers/kmp_base_init.h"

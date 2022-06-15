@@ -17,32 +17,32 @@
 #include <string>
 #include <utility>
 
-#include "defaults.h"
 #include "kmp_loopdata.h"
+#include "reinforcement-learning/agents/defaults.h"
 #include "reinforcement-learning/utils/utils.h"
 
 #include "reinforcement-learning/decays/kmp_decay_type.h"
 
-#include "initializers/kmp_init_type.h"
-#include "initializers/kmp_base_init.h"
-#include "initializers/kmp_zero_init.h"
-#include "initializers/kmp_random_init.h"
-#include "initializers/kmp_optimistic_init.h"
+#include "reinforcement-learning/initializers/kmp_init_type.h"
+#include "reinforcement-learning/initializers/kmp_base_init.h"
+#include "reinforcement-learning/initializers/kmp_zero_init.h"
+#include "reinforcement-learning/initializers/kmp_random_init.h"
+#include "reinforcement-learning/initializers/kmp_optimistic_init.h"
 
-#include "policies/kmp_policy_type.h"
-#include "policies/kmp_base_policy.h"
-#include "policies/kmp_explore_first_policy.h"
-#include "policies/kmp_epsilon_greedy_policy.h"
-#include "policies/kmp_softmax_policy.h"
+#include "reinforcement-learning/policies/kmp_policy_type.h"
+#include "reinforcement-learning/policies/kmp_base_policy.h"
+#include "reinforcement-learning/policies/kmp_explore_first_policy.h"
+#include "reinforcement-learning/policies/kmp_epsilon_greedy_policy.h"
+#include "reinforcement-learning/policies/kmp_softmax_policy.h"
 
-#include "rewards/kmp_reward_type.h"
-#include "rewards/kmp_base_reward.h"
-#include "rewards/kmp_looptime_reward.h"
-#include "rewards/kmp_looptime_average_reward.h"
-#include "rewards/kmp_looptime_rolling_average_reward.h"
-#include "rewards/kmp_looptime_inverse_reward.h"
-#include "rewards/kmp_loadimbalance_reward.h"
-#include "rewards/kmp_robustness_reward.h"
+#include "reinforcement-learning/rewards/kmp_reward_type.h"
+#include "reinforcement-learning/rewards/kmp_base_reward.h"
+#include "reinforcement-learning/rewards/kmp_looptime_reward.h"
+#include "reinforcement-learning/rewards/kmp_looptime_average_reward.h"
+#include "reinforcement-learning/rewards/kmp_looptime_rolling_average_reward.h"
+#include "reinforcement-learning/rewards/kmp_looptime_inverse_reward.h"
+#include "reinforcement-learning/rewards/kmp_loadimbalance_reward.h"
+#include "reinforcement-learning/rewards/kmp_robustness_reward.h"
 
 
 class Agent {

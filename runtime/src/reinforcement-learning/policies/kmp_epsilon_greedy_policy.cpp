@@ -7,9 +7,10 @@
 
 #include <random>
 
-#include "../agents/defaults.h"
-#include "../agents/kmp_agent.h"
 #include "kmp_epsilon_greedy_policy.h"
+#include "reinforcement-learning/agents/defaults.h"
+#include "reinforcement-learning/agents/kmp_agent.h"
+
 
 int EpsilonGreedyPolicy::policy(int episode, int timestep, Agent* agent)
 {

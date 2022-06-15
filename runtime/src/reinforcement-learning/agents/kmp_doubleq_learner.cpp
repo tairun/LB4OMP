@@ -24,7 +24,7 @@ DoubleQLearner::DoubleQLearner(int num_states, int num_actions) :
 // private
 void DoubleQLearner::update(int next_state, int next_action, int actions, double reward_value)
 {
-    std::default_random_engine re(time(0));
+    std::default_random_engine re(defaults::SEED);
     std::uniform_real_distribution<double> uniform(0, 1);
     double updateA = uniform(re);
 

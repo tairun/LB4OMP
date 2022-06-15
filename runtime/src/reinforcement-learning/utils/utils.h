@@ -47,3 +47,5 @@ double sum(const double* array, int length);
  * Searches for the best action (index) for a given state (using the Q-Values).
  * */
 int argmax(double** ref_table, int next_state, int size);
+
+void dumpArray2D(double** ref_table, int row, int col);

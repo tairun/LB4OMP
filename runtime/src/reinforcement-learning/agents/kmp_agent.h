@@ -306,13 +306,13 @@ protected:
     BasePolicy* pPolicy{nullptr};
     BaseReward* pReward{nullptr};
 
-    double* reward_num{nullptr};
+    double reward_num[3];
     double*** table{nullptr}; // Pointer to table to lookup the best next action
 
-    int state_space;         // Amount of states in the environment. Exported to agent.ini
-    int action_space;        // Amount of action available to the agent. Exported to agent.ini
-    int current_state{0};    // We always start with static scheduling method as initial state (it's the first method from the portfolio)
-    int current_action{0};   // Set action also to selecting the static scheduling method
+    int state_space;          // Amount of states in the environment. Exported to agent.ini
+    int action_space;         // Amount of action available to the agent. Exported to agent.ini
+    int current_state{0};     // We always start with static scheduling method as initial state (it's the first method from the portfolio)
+    int current_action{0};    // Set action also to selecting the static scheduling method
 
     double current_reward{0};                  // For statistics only
 
@@ -373,7 +373,7 @@ protected:
 
     void split_reward_nums()
     {
-        reward_num = new double[3];
+        //reward_num = new double[3];
         std::string rewards_copy = reward_string;
         size_t pos = 0;
         int index = 0;
@@ -399,7 +399,7 @@ protected:
                 init = new ZeroInit();
                 break;
             case InitType::RANDOM:
-                init = new RandomInit();
+                init = new RandomInit(reward_num[0], reward_num[2]);
                 break;
             case InitType::OPTIMISTIC:
                 init = new OptimisticInit();

@@ -246,7 +246,7 @@ public:
         return reward_type;
     }
 
-    double** get_table() const
+    double*** get_table() const
     {
         return table;
     }
@@ -349,7 +349,7 @@ protected:
     /*
      * Returns a pointer to the Q-Values (array) stored for a particular state.
      * */
-    double* Q(int state)
+    double** Q(int state)
     {
         return table[state];
     }
@@ -357,7 +357,7 @@ protected:
     /*
      * Returns the Q-Value stored for a particular state-action pair.
      * */
-    double Q(int state, int action)
+    double* Q(int state, int action)
     {
         return table[state][action];
     }

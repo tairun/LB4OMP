@@ -49,18 +49,6 @@ private:
      * */
     static int calculate_chunks(int *array, int size, int n, int p);
 
-    /*
-     * Creates and instance of the Initializers class and returns a pointer to it.
-     * */
-    static BaseInit* create_initializer(Agent* agent);
-
-    /*
-     * Creates and instance of the policy class and returns a pointer to it.
-     * */
-    static BasePolicy* create_policy(Agent* agent);
-
-    static BaseReward* create_reward(Agent* agent);
-
     static void print_agent_params(const std::string& loop_id, Agent* agent, int* chunk_sizes_array, int dim);
 
     /*

@@ -7,7 +7,6 @@
 
 #include "kmp_agent.h"
 
-
 class QLearner : public Agent
 {
 public:
@@ -19,5 +18,5 @@ private:
     double** q_table{nullptr};
 
     /* Updates the internal values of the agent. */
-    void update(int next_state, int next_action, double reward_value) override;
+    void update(int next_state, int next_action, int actions, double reward_value) override;
 };

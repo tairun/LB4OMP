@@ -1,6 +1,5 @@
 #include <random>
 
-#include "kmp_agent.h"
 #include "kmp_doubleq_learner.h"
 
 

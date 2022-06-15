@@ -18,15 +18,31 @@
 #include <utility>
 
 #include "defaults.h"
-#include "../kmp_loopdata.h"
-#include "../utils/utils.h"
-#include "../rewards/kmp_reward_type.h"
-#include "../initializers/kmp_init_type.h"
-#include "../initializers/kmp_base_init.h"
-#include "../policies/kmp_policy_type.h"
-#include "../policies/kmp_base_policy.h"
-#include "../rewards/kmp_base_reward.h"
-#include "../decays/kmp_decay_type.h"
+#include "kmp_loopdata.h"
+#include "utils/utils.h"
+
+#include "decays/kmp_decay_type.h"
+
+#include "initializers/kmp_init_type.h"
+#include "initializers/kmp_base_init.h"
+#include "initializers/kmp_zero_init.h"
+#include "initializers/kmp_random_init.h"
+#include "initializers/kmp_optimistic_init.h"
+
+#include "policies/kmp_policy_type.h"
+#include "policies/kmp_base_policy.h"
+#include "policies/kmp_explore_first_policy.h"
+#include "policies/kmp_epsilon_greedy_policy.h"
+#include "policies/kmp_softmax_policy.h"
+
+#include "rewards/kmp_reward_type.h"
+#include "rewards/kmp_base_reward.h"
+#include "rewards/kmp_looptime_reward.h"
+#include "rewards/kmp_looptime_average_reward.h"
+#include "rewards/kmp_looptime_rolling_average_reward.h"
+#include "rewards/kmp_looptime_inverse_reward.h"
+#include "rewards/kmp_loadimbalance_reward.h"
+#include "rewards/kmp_robustness_reward.h"
 
 
 class Agent {
@@ -53,6 +69,10 @@ public:
         read_env_string("KMP_RL_REWARD_NUM", reward_string);
 
         split_reward_nums();
+
+        create_initializer();
+        create_reward();
+        create_policy();
 
 #if (AGENT_DEBUG > 0)
         std::cout << "[Agent::Agent] Configuring agent as: " << name << std::endl;
@@ -95,8 +115,9 @@ public:
                     // Only decays if the decays factor is greater than zero
                     decay(timestep-(state_space * action_space), epsilon, epsilon_init, epsilon_min, epsilon_decay_factor);
             }
-
-        } else {
+        }
+        else
+        {
             if (alpha_decay_factor > 0)
                 // Only decays if the decays factor is greater than zero
                 decay(timestep, alpha, alpha_init, alpha_min, alpha_decay_factor);
@@ -121,12 +142,9 @@ public:
 
     // Getters
 
-    std::string get_name() {
+    std::string get_name()
+    {
         return name;
-    }
-
-    void set_name(std::string new_name) {
-        name = std::move(new_name);
     }
 
     std::string get_rewards_string()
@@ -138,15 +156,18 @@ public:
         return reward_type;
     }
 
-    double* get_reward_num() {
+    double* get_reward_num()
+    {
         return reward_num;
     }
 
-    InitType get_init_type() {
+    InitType get_init_type()
+    {
         return init_type;
     }
 
-    PolicyType get_policy_type() {
+    PolicyType get_policy_type()
+    {
         return policy_type;
     }
 
@@ -154,114 +175,130 @@ public:
         return alpha;
     }
 
-    double get_alpha_init() const {
+    double get_alpha_init() const
+    {
         return alpha_init;
     }
 
-    double get_alpha_min() const {
+    double get_alpha_min() const
+    {
         return alpha_min;
     }
 
-    double get_alpha_decay() const {
+    double get_alpha_decay() const
+    {
         return alpha_decay_factor;
     }
 
-    double get_gamma() const {
+    double get_gamma() const
+    {
         return gamma;
     }
 
-    double get_tau() const {
+    double get_tau() const
+    {
         return tau;
     }
 
-    double get_epsilon_init() const {
+    double get_epsilon_init() const
+    {
         return epsilon_init;
     }
 
-    double get_epsilon_min() const {
+    double get_epsilon_min() const
+    {
         return epsilon_min;
     }
 
-    double get_epsilon_decay() const {
+    double get_epsilon_decay() const
+    {
         return epsilon_decay_factor;
     }
 
-    double get_epsilon() const {
+    double get_epsilon() const
+    {
         return epsilon;
     }
 
-    int get_state_space() const {
+    int get_state_space() const
+    {
         return state_space;
     }
 
-    int get_action_space() const {
+    int get_action_space() const
+    {
         return action_space;
     }
 
-    InitType get_init_input() const {
+    InitType get_init_input() const
+    {
         return init_type;
     }
 
-    PolicyType get_policy_input() const {
+    PolicyType get_policy_input() const
+    {
         return policy_type;
     }
 
-    RewardType get_reward_input() const {
+    RewardType get_reward_input() const
+    {
         return reward_type;
     }
 
-    double** get_table() const {
+    double** get_table() const
+    {
         return table;
     }
 
-    int get_current_state() const {
+    int get_current_state() const
+    {
         return current_state;
     }
 
-    int get_current_action() const {
+    int get_current_action() const
+    {
         return current_action;
     }
 
-    double get_current_reward() const {
+    double get_current_reward() const
+    {
         return current_reward;
     }
 
-    double get_low() const {
+    double get_low() const
+    {
         return low;
     }
 
-    void set_low(double value) {
-        low = value;
-    }
-
-    double get_high() const {
+    double get_high() const
+    {
         return high;
     }
 
-    void set_high(double value) {
-        high = value;
-    }
-
     // Setters
+
     void set_table(double** table_ref)
     {
         table = table_ref;
     }
 
-    void set_initializer(BaseInit* init) {
-        pInit = init;
+    void set_high(double value)
+    {
+        high = value;
     }
 
-    void set_policy(BasePolicy* policy) {
-        pPolicy = policy;
+    void set_low(double value)
+    {
+        low = value;
     }
 
-    void set_reward(BaseReward* reward) {
-        pReward = reward;
+    void set_name(std::string new_name)
+    {
+        name = std::move(new_name);
     }
 
 private:
-    double** table{nullptr}; // Pointer to table to lookup the best next action
+
 
 protected:
     BaseInit*   pInit{nullptr};
@@ -269,11 +306,12 @@ protected:
     BaseReward* pReward{nullptr};
 
     double* reward_num{nullptr};
+    double** table{nullptr}; // Pointer to table to lookup the best next action
 
-    int state_space;       // Amount of states in the environment. Exported to agent.ini
-    int action_space;      // Amount of action available to the agent. Exported to agent.ini
-    int current_state{0};  // We always start with static scheduling method as initial state (it's the first method from the portfolio)
-    int current_action{0}; // Set action also to selecting the static scheduling method
+    int state_space;         // Amount of states in the environment. Exported to agent.ini
+    int action_space;        // Amount of action available to the agent. Exported to agent.ini
+    int current_state{0};    // We always start with static scheduling method as initial state (it's the first method from the portfolio)
+    int current_action{0};   // Set action also to selecting the static scheduling method
 
     double current_reward{0};                  // For statistics only
 
@@ -304,82 +342,8 @@ protected:
     /*                            MEMBER FUNCTIONS                                */
     /*----------------------------------------------------------------------------*/
 
-    /* The policy chooses an action according to the learned experience of the agent. */
-    /* Implements the Epsilon-Greedy action selection. */
-    /*
-    virtual int policy(int episode, int timestep, double** ref_table)
-    {
-#if (AGENT_DEBUG > 1)
-        std::cout << "[Agent::policy] Applying policy ..." << std::endl;
-#endif
-        std::default_random_engine re(defaults::SEED);
-        std::uniform_real_distribution<double> uniform(0, 1);
-
-        // Switches between exploration and exploitation with the probability of epsilon (or 1-epsilon)
-        if (uniform(re) < epsilon)
-        // Explore (random action)
-        {
-#if (AGENT_DEBUG > 1)
-            std::cout << "[Agent::policy] Exploring" << std::endl;
-#endif
-            int next_action = sample_action(); // Chooses action (which is equal to the next state)
-            return next_action;
-        }
-        else
-        // Exploit (previous knowledge)
-        {
-#if (AGENT_DEBUG > 1)
-            std::cout << "[Agent::policy] Exploiting" << std::endl;
-#endif
-            double maxQ = -9999.99f;
-            std::vector<int> action_candidates;
-
-            // Evaluate Q-Table for action with highest Q-Value
-            for (int i = 0; i < action_space; i++)
-            {
-                if (ref_table[current_state][i] > maxQ)
-                {
-                    action_candidates.clear();
-                    action_candidates.push_back(i);
-                    maxQ = ref_table[current_state][i];
-                }
-                else if (ref_table[current_state][i] == maxQ)
-                {
-                    action_candidates.push_back(i);
-                }
-            }
-
-            // Selects a random action if multiple actions have the same Q-Value
-            std::uniform_int_distribution<int> uniform2(0, (int)action_candidates.size());
-            int next_action_index = uniform2(re);
-            int next_action = action_candidates[next_action_index];
-
-            return next_action;
-        }
-    }
-    */
-
     /* Updates the internal values of the agent. */
-    virtual void update(int next_state, int next_action, double reward_value) = 0;
-
-    /*
-     * Searches for the best action (index) for a given state (using the Q-Values).
-     * */
-    int arg_max(double** ref_table, int next_state) const
-    {
-        int best_index = 0;
-        double best_current = -9999;
-
-        for (int i = 0; i < action_space; i++)
-        {
-            if (ref_table[next_state][i] > best_current)
-            {
-                best_current = ref_table[next_state][i];
-                best_index = i;
-            }
-        }
-        return best_index;
-    }
+    virtual void update(int next_state, int next_action, int actions, double reward_value) = 0;
 
     /*
      * Returns a pointer to the Q-Values (array) stored for a particular state.
@@ -423,5 +387,80 @@ protected:
 
         reward_num[index] = std::stod(rewards_copy);
 
+    }
+
+    void create_initializer()
+    {
+        BaseInit* init;
+
+        switch (init_type) {
+            case InitType::ZERO:
+                init = new ZeroInit();
+                break;
+            case InitType::RANDOM:
+                init = new RandomInit();
+                break;
+            case InitType::OPTIMISTIC:
+                init = new OptimisticInit();
+                break;
+            default:
+                init = new ZeroInit();
+                break;
+        }
+
+        pInit = init;
+    }
+
+    void create_policy()
+    {
+        BasePolicy* pol;
+
+        switch (policy_type) {
+            case PolicyType::EXPLORE_FIRST:
+                pol = new ExploreFirstPolicy();
+                break;
+            case PolicyType::EPSILON_GREEDY:
+                pol = new EpsilonGreedyPolicy();
+                break;
+            case PolicyType::SOFTMAX:
+                pol = new SoftmaxPolicy();
+                break;
+            default:
+                pol = new ExploreFirstPolicy();
+                break;
+        }
+
+        pPolicy = pol;
+    }
+
+    void create_reward()
+    {
+        BaseReward* rew;
+
+        switch (reward_type) {
+            case RewardType::LOOPTIME:
+                rew = new LooptimeReward();
+                break;
+            case RewardType::LOOPTIME_AVERAGE:
+                rew = new LooptimeAverageReward();
+                break;
+            case RewardType::LOOPTIME_ROLLING_AVERAGE:
+                rew = new LooptimeRollingAverageReward();
+                break;
+            case RewardType::LOOPTIME_INVERSE:
+                rew = new LooptimeInverseReward();
+                break;
+            case RewardType::LOADIMBALANCE:
+                rew = new LoadimbalanceReward();
+                break;
+            case RewardType::ROBUSTNESS:
+                rew = new RobustnessReward();
+                break;
+            default:
+                rew = new LooptimeReward();
+                break;
+        }
+
+        pReward = rew;
     }
 };

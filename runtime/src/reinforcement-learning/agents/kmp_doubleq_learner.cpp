@@ -18,7 +18,7 @@ DoubleQLearner::DoubleQLearner(int num_states, int num_actions) :
     pInit->init(q_table_a, state_space, action_space);
     pInit->init(q_table_b, state_space, action_space);
     pInit->init(q_table_sum, state_space, action_space);
-    set_table(q_table_sum);
+    set_table(&q_table_sum);
 }
 
 // private

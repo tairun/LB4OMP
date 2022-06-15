@@ -15,7 +15,7 @@ ExpectedSARSALearner::ExpectedSARSALearner(int numStates, int numActions) :
         Agent(numStates, numActions, "ExpectedSARSA-Learner")
 {
     pInit->init(q_table, state_space, action_space);
-    set_table(q_table);
+    set_table(&q_table);
 }
 
 // private

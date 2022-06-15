@@ -278,7 +278,7 @@ public:
 
     // Setters
 
-    void set_table(double** table_ref)
+    void set_table(double*** table_ref)
     {
         table = table_ref;
     }
@@ -307,7 +307,7 @@ protected:
     BaseReward* pReward{nullptr};
 
     double* reward_num{nullptr};
-    double** table{nullptr}; // Pointer to table to lookup the best next action
+    double*** table{nullptr}; // Pointer to table to lookup the best next action
 
     int state_space;         // Amount of states in the environment. Exported to agent.ini
     int action_space;        // Amount of action available to the agent. Exported to agent.ini

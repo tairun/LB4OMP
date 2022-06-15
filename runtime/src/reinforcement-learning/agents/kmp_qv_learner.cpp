@@ -18,7 +18,7 @@ QVLearner::QVLearner(int num_states, int num_actions) :
     // Initialize first dimension of table
     pInit->init(v_table, state_space);
     pInit->init(q_table, state_space, action_space);
-    set_table(q_table);
+    set_table(&q_table);
 }
 
 // private

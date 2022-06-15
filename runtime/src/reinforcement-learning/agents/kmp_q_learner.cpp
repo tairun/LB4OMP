@@ -15,11 +15,10 @@
 QLearner::QLearner(int num_states, int num_actions) :
           Agent(num_states, num_actions, "Q-Learner")
 {
-    // Initialize first dimension of table
     std::cout << "[QLearner::QLearner] Using init ..." << std::endl;
     pInit->init(q_table, state_space, action_space);
     std::cout << "[QLearner::QLearner] Done using init." << std::endl;
-    set_table(q_table);
+    set_table(&q_table);
     std::cout << "[QLearner::QLearner] Table   - Address: " << &table   << " Value: " << table   << std::endl;
     std::cout << "[QLearner::QLearner] Q-Table - Address: " << &q_table << " Value: " << q_table << std::endl;
 }

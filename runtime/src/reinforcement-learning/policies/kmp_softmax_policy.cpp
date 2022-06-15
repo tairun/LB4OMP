@@ -8,13 +8,12 @@
 
 #include <iostream>
 #include "kmp_softmax_policy.h"
-#include "../agents/kmp_agent.h"
+#include "reinforcement-learning/agents/kmp_agent.h"
 
 
 int SoftmaxPolicy::policy(int episode, int timestep, Agent* agent)
 {
-    std::cout << "[Reinforcement Learning] Softmax policy not implemented!" << std::endl;
-    std::vector<double> weights(agent->get_table()[agent->get_current_state()], agent->get_table()[agent->get_current_state()] + agent->get_action_space());
+    std::vector<double> weights(*agent->get_table()[agent->get_current_state()], *agent->get_table()[agent->get_current_state()] + agent->get_action_space());
     auto probabilities = Softmax(weights, agent->get_tau());
     auto action = StochasticSelection(probabilities);
 
@@ -43,7 +42,6 @@ std::vector<double> SoftmaxPolicy::Softmax(const std::vector<double>& weights, d
 
 int SoftmaxPolicy::StochasticSelection(const std::vector<double>& probabilities)
 {
-
     /*
      * The unit interval is divided into sub-intervals, one for each
      * entry in "probabilities".  Each sub-interval's size is proportional

@@ -10,31 +10,24 @@
 #include <string>
 #include <iostream>
 #include <iomanip>
-
 #include "utils/utils.h"
 #include "kmp_agent_provider.h"
-
 #include "initializers/kmp_init_type.h"
-#include "initializers/kmp_zero_init.h"
-#include "initializers/kmp_random_init.h"
-#include "initializers/kmp_optimistic_init.h"
-
+//#include "initializers/kmp_zero_init.h"
+//#include "initializers/kmp_random_init.h"
+//#include "initializers/kmp_optimistic_init.h"
 #include "policies/kmp_policy_type.h"
-#include "policies/kmp_explore_first_policy.h"
-#include "policies/kmp_epsilon_greedy_policy.h"
+//#include "policies/kmp_explore_first_policy.h"
+//#include "policies/kmp_epsilon_greedy_policy.h"
 #include "policies/kmp_softmax_policy.h"
-
-#include "rewards/kmp_base_reward.h"
+//#include "rewards/kmp_base_reward.h"
 #include "rewards/kmp_looptime_reward.h"
-#include "rewards/kmp_looptime_average_reward.h"
-#include "rewards/kmp_looptime_rolling_average_reward.h"
-#include "rewards/kmp_looptime_inverse_reward.h"
-#include "rewards/kmp_loadimbalance_reward.h"
-#include "rewards/kmp_robustness_reward.h"
-
+//#include "rewards/kmp_looptime_average_reward.h"
+//#include "rewards/kmp_looptime_rolling_average_reward.h"
+//#include "rewards/kmp_looptime_inverse_reward.h"
+//#include "rewards/kmp_loadimbalance_reward.h"
+//#include "rewards/kmp_robustness_reward.h"
 #include "agents/kmp_agent.h"
-#include "agents/kmp_q_learner_old.h"
-#include "agents/kmp_sarsa_learner_old.h"
 #include "agents/kmp_q_learner.h"
 #include "agents/kmp_sarsa_learner.h"
 #include "agents/kmp_expected_sarsa_learner.h"

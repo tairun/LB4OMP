@@ -5,11 +5,12 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
-#include <numeric>
 
+#include <numeric>
 #include "kmp_loopdata.h"
 #include "kmp_looptime_rolling_average_reward.h"
-#include "../agents/kmp_agent.h"
+#include "reinforcement-learning/agents/kmp_agent.h"
+
 
 double LooptimeRollingAverageReward::reward(LoopData* stats, Agent* agent) {
 #if (RL_DEBUG > 1)

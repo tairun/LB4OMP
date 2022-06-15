@@ -13,11 +13,12 @@
 //  *     TAU (Temperature)                                                                      *
 //  **********************************************************************************************
 
+
 #pragma once
+
 
 #include <vector>
 #include <random>
-
 #include "kmp_base_policy.h"
 
 

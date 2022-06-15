@@ -5,10 +5,11 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
-#include <iostream>
 
+#include <iostream>
 #include "kmp_softmax_policy.h"
 #include "../agents/kmp_agent.h"
+
 
 int SoftmaxPolicy::policy(int episode, int timestep, Agent* agent)
 {

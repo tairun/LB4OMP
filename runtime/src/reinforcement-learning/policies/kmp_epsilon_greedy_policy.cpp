@@ -5,8 +5,8 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
-#include <random>
 
+#include <random>
 #include "kmp_epsilon_greedy_policy.h"
 #include "reinforcement-learning/agents/defaults.h"
 #include "reinforcement-learning/agents/kmp_agent.h"

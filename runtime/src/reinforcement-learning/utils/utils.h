@@ -5,14 +5,16 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
-#include <string>
-
-#include "../rewards/kmp_reward_type.h"
-#include "../policies/kmp_policy_type.h"
-#include "../initializers/kmp_init_type.h"
-#include "../decays/kmp_decay_type.h"
 
 #pragma once
+
+
+#include <string>
+#include "reinforcement-learning/rewards/kmp_reward_type.h"
+#include "reinforcement-learning/policies/kmp_policy_type.h"
+#include "reinforcement-learning/initializers/kmp_init_type.h"
+#include "reinforcement-learning/decays/kmp_decay_type.h"
+
 
 /*
 * Reads the environment variable with the name 'var_name' and parses it as a string.

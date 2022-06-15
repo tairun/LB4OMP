@@ -5,7 +5,6 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
-#include <random>
 
 #include "reinforcement-learning/utils/utils.h"
 #include "reinforcement-learning/agents/kmp_agent.h"
@@ -24,7 +23,7 @@ QLearner::QLearner(int num_states, int num_actions) :
 }
 
 // private
-void QLearner::update(int next_state, int next_action, int actions,double reward_value)
+void QLearner::update(int next_state, int next_action, int actions, double reward_value)
 {
     int best_action = argmax(q_table, next_state, actions);
     q_table[current_state][current_action] += alpha * (reward_value + gamma * Q(next_state, best_action) - Q(current_state, current_action));

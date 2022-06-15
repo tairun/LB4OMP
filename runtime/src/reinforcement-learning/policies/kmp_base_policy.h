@@ -5,9 +5,12 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
+
 #pragma once
 
+
 class Agent;
+
 
 class BasePolicy {
 public:

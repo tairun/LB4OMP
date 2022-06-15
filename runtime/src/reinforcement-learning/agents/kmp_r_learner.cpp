@@ -32,7 +32,7 @@ RLearner::RLearner(int num_states, int num_actions) :
 }
 
 // private
-void RLearner::update(int next_state, int next_action, double reward_value)
+void RLearner::update(int next_state, int next_action, int actions, double reward_value)
 {
     // TODO@kurluc00: Implement
 }

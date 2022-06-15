@@ -5,11 +5,12 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
+
 #pragma once
 
 
-
 class Agent;
+
 
 class BaseReward {
 public:

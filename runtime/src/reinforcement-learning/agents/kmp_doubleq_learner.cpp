@@ -1,11 +1,18 @@
-#include <random>
+// -------------------------- Reinforcement Learning Extension ---------------------------------//
+//  June 2022
+//  Master Thesis
+//  Luc Kury, <luc.kury@unibas.ch>
+//  University of Basel, Switzerland
+//  --------------------------------------------------------------------------------------------//
 
+
+#include <random>
 #include "kmp_doubleq_learner.h"
 
 
 // public
 DoubleQLearner::DoubleQLearner(int num_states, int num_actions) :
-        Agent(num_states, num_actions, "DoubleQ-Learner")
+                Agent(num_states, num_actions, "DoubleQ-Learner")
 {
     // Initialize first dimension of table
     pInit->init(q_table_a, state_space, action_space);
@@ -15,7 +22,7 @@ DoubleQLearner::DoubleQLearner(int num_states, int num_actions) :
 }
 
 // private
-void DoubleQLearner::update(int next_state, int next_action, double reward_value)
+void DoubleQLearner::update(int next_state, int next_action, int actions, double reward_value)
 {
     std::default_random_engine re(time(0));
     std::uniform_real_distribution<double> uniform(0, 1);
@@ -23,12 +30,12 @@ void DoubleQLearner::update(int next_state, int next_action, double reward_value
 
     if (updateA > 0.5) // Update table A or B with probability of 0.5
     {
-        int bestIndex = arg_max(q_table_a, next_state);
+        int bestIndex = argmax(q_table_a, next_state, actions);
         q_table_a[current_state][next_state] += alpha * (reward_value + gamma * q_table_b[next_state][bestIndex] - q_table_a[current_state][next_state]);
     }
     else
     {
-        int bestIndex = arg_max(q_table_a, next_state);
+        int bestIndex = argmax(q_table_a, next_state, actions);
         q_table_b[current_state][next_state] += alpha * (reward_value + gamma * q_table_a[next_state][bestIndex] - q_table_b[current_state][next_state]);
     }
 

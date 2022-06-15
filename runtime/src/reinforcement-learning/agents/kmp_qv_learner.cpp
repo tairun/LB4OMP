@@ -5,7 +5,7 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
-#include <random>
+
 
 #include "kmp_agent.h"
 #include "kmp_qv_learner.h"
@@ -22,7 +22,7 @@ QVLearner::QVLearner(int num_states, int num_actions) :
 }
 
 // private
-void QVLearner::update(int next_state, int next_action, double reward_value)
+void QVLearner::update(int next_state, int next_action, int actions, double reward_value)
 {
     v_table[current_state] += alpha * (reward_value + (gamma * V(next_state) - V(current_state)));
     q_table[current_state][next_action] += alpha * (reward_value + gamma * V(next_state) - Q(current_state, next_action));

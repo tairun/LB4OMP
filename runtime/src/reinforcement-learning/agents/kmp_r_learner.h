@@ -5,6 +5,7 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
+
 #pragma once
 
 #include <string>
@@ -22,5 +23,5 @@ private:
     double** q_table;
 
     /* Updates the internal values of the agent. */
-    void update(int next_state, int next_action, double reward_value) override;
+    void update(int next_state, int next_action, int actions, double reward_value) override;
 };

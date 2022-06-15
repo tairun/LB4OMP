@@ -164,11 +164,7 @@ Agent* AgentProvider::create_agent(int agent_type, LoopData* stats, int states, 
     switch (new_type)
     {
         case (0):
-            agent = new QLearnerOld(states, actions);
-            break;
         case (1):
-            agent = new SARSALearnerOld(states, actions);
-            break;
         case (2):
             std::cout << "[AgentProvider::create_agent] Before constructor ..." << std::endl;
             agent = new QLearner(states, actions);
@@ -197,42 +193,6 @@ Agent* AgentProvider::create_agent(int agent_type, LoopData* stats, int states, 
             agent = new QLearner(states, actions);
             break;
     }
-
-    std::cout << "[AgentProvider::create_agent] Left switch" << std::endl;
-    if (new_type == 0 || new_type == 1)
-    // Only set initializer and policy when we have a new agent
-    {
-        std::cout << "[AgentProvider::create_agent] Skipping initializer and policy creation for old agents." << std::endl;
-    }
-    else
-    {
-        std::cout << "[AgentProvider::create_agent] Before initializer" << std::endl;
-        BaseInit* init = create_initializer(agent);
-#if (PROVIDER_DEBUG > 1)
-        std::cout << "[AgentProvider::create_agent] Created initializer successfully." << std::endl;
-#endif
-        agent->set_initializer(init);
-#if (PROVIDER_DEBUG > 1)
-        std::cout << "[AgentProvider::create_agent] Set initializer successfully." << std::endl;
-#endif
-        BasePolicy* pol = create_policy(agent);
-#if (PROVIDER_DEBUG > 1)
-        std::cout << "[AgentProvider::create_agent] Created policy successfully." << std::endl;
-#endif
-        agent->set_policy(pol);
-#if (PROVIDER_DEBUG > 1)
-        std::cout << "[AgentProvider::create_agent] Set policy successfully." << std::endl;
-#endif
-        BaseReward* rew = create_reward(agent);
-#if (PROVIDER_DEBUG > 1)
-        std::cout << "[AgentProvider::create_agent] Created reward successfully." << std::endl;
-#endif
-        agent->set_reward(rew);
-#if (PROVIDER_DEBUG > 1)
-        std::cout << "[AgentProvider::create_agent] Set reward successfully." << std::endl;
-#endif
-    }
-
     return agent;
 }
 
@@ -249,86 +209,6 @@ std::unordered_map<std::string, Agent*>& AgentProvider::get_agents()
 std::fstream& AgentProvider::get_filestream()
 {
     return Get().ofs;
-}
-
-BaseInit* AgentProvider::create_initializer(Agent* agent)
-{
-#if (PROVIDER_DEBUG > 1)
-    std::cout << "[AgentProvider::create_initializer] Creating initializer ..." << std::endl;
-#endif
-
-    BaseInit* init;
-
-    switch (agent->get_init_input()) {
-        case InitType::ZERO:
-            init = new ZeroInit();
-            break;
-        case InitType::RANDOM:
-            init = new RandomInit();
-            break;
-        case InitType::OPTIMISTIC:
-            init = new OptimisticInit();
-            break;
-        default:
-            init = new ZeroInit();
-            break;
-    }
-
- return init;
-
-}
-
-BasePolicy* AgentProvider::create_policy(Agent* agent)
-{
-    BasePolicy* pol;
-
-    switch (agent->get_policy_input()) {
-        case PolicyType::EXPLORE_FIRST:
-            pol = new ExploreFirstPolicy();
-            break;
-        case PolicyType::EPSILON_GREEDY:
-            pol = new EpsilonGreedyPolicy();
-            break;
-        case PolicyType::SOFTMAX:
-            pol = new SoftmaxPolicy();
-            break;
-        default:
-            pol = new ExploreFirstPolicy();
-            break;
-    }
-
-    return pol;
-}
-
-BaseReward* AgentProvider::create_reward(Agent* agent)
-{
-    BaseReward* rew;
-
-    switch (agent->get_reward_input()) {
-        case RewardType::LOOPTIME:
-            rew = new LooptimeReward();
-            break;
-        case RewardType::LOOPTIME_AVERAGE:
-            rew = new LooptimeAverageReward();
-            break;
-        case RewardType::LOOPTIME_ROLLING_AVERAGE:
-            rew = new LooptimeRollingAverageReward();
-            break;
-        case RewardType::LOOPTIME_INVERSE:
-            rew = new LooptimeInverseReward();
-            break;
-        case RewardType::LOADIMBALANCE:
-            rew = new LoadimbalanceReward();
-            break;
-        case RewardType::ROBUSTNESS:
-            rew = new RobustnessReward();
-            break;
-        default:
-            rew = new LooptimeReward();
-            break;
-    }
-
-    return rew;
 }
 
 int AgentProvider::calculate_chunks(int *array, int size, int n, int p)

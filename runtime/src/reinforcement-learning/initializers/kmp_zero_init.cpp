@@ -1,4 +1,13 @@
+// -------------------------- Reinforcement Learning Extension ---------------------------------//
+//  June 2022
+//  Master Thesis
+//  Luc Kury, <luc.kury@unibas.ch>
+//  University of Basel, Switzerland
+//  --------------------------------------------------------------------------------------------//
+
+
 #include "kmp_zero_init.h"
+
 
 void ZeroInit::init(int* data, int size)
 {

@@ -5,6 +5,7 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
+
 #define AGENT_DEBUG 2   // Added by Reinforcement Learning Extension to minimize stdout clutter
 
 #pragma once
@@ -95,7 +96,7 @@ public:
 #if (AGENT_DEBUG > 1)
         std::cout << "[Agent::update] Updating agent data ..." << std::endl;
 #endif
-        update(next_state, next_action, reward_value);                    // Update the Q-Values based on the learning algorithm
+        update(next_state, next_action, action_space, reward_value);                    // Update the Q-Values based on the learning algorithm
 
         current_state = next_state;                    // Update the state in the class
         current_action = next_action;                  // Update the action in the class

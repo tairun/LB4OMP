@@ -21,7 +21,7 @@ SARSALearner::SARSALearner(int num_states, int num_actions) :
 }
 
 // private
-void SARSALearner::update(int next_state, int next_action, double reward_value)
+void SARSALearner::update(int next_state, int next_action, int actions, double reward_value)
 {
     q_table[current_state][next_action] += alpha * (reward_value + gamma * Q(next_state, next_state) - Q(current_state, next_state));
 }

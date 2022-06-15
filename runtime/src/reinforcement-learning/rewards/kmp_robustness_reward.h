@@ -5,12 +5,16 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
-#include "kmp_loopdata.h"
-#include "kmp_base_reward.h"
 
 #pragma once
 
+
+#include "kmp_loopdata.h"
+#include "kmp_base_reward.h"
+
+
 class Agent;
+
 
 class RobustnessReward : public BaseReward
 {

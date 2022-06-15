@@ -1,4 +1,13 @@
+// -------------------------- Reinforcement Learning Extension ---------------------------------//
+//  June 2022
+//  Master Thesis
+//  Luc Kury, <luc.kury@unibas.ch>
+//  University of Basel, Switzerland
+//  --------------------------------------------------------------------------------------------//
+
+
 #include "kmp_random_init.h"
+
 
 void RandomInit::init(int* data, int size)
 {

@@ -18,6 +18,7 @@ QLearner::QLearner(int num_states, int num_actions) :
     std::cout << "[QLearner::QLearner] Using init ..." << std::endl;
     pInit->init(q_table, state_space, action_space);
     std::cout << "[QLearner::QLearner] Done using init." << std::endl;
+    std::cout << "[QLearner::QLearner] First val: " << q_table[0][0] << std::endl;
     dumpArray2D(q_table, state_space, action_space);
     std::cout << "[QLearner::QLearner] Done dumping." << std::endl;
     set_table(&q_table);

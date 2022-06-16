@@ -16,7 +16,7 @@ public:
 
     ~QLearner() = default;
 
-private:
+protected:
     double** q_table{nullptr};
 
     /* Updates the internal values of the agent. */

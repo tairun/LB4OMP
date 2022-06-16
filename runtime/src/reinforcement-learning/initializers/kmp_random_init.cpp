@@ -49,6 +49,7 @@ void RandomInit::init(double* data, int size)
 
 void RandomInit::init(double **data, int num_states, int num_actions)
 {
+    std::cout << "[RandomInit::init] Hello from the init function " << std::endl;
     data = new double*[num_states];
 
     for (int i = 0; i < num_states; i++) {

@@ -22,7 +22,9 @@ double RandomInit::get_double() const {
     //std::cout << "[RandomInit::get_double] Before engine ..." << std::endl;
     static std::default_random_engine re(defaults::SEED);
     //std::cout << "[RandomInit::get_double] Before return ..." << std::endl;
-    return unif(re);
+    double the_num = unif(re);
+    std::cout << "[RandomInit::get_double] The number is  ... " << the_num << std::endl;
+    return the_num;
 }
 
 void RandomInit::init(int* data, int size)

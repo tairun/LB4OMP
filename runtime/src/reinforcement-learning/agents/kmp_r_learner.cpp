@@ -15,7 +15,7 @@
 RLearner::RLearner(int num_states, int num_actions) :
         Agent(num_states, num_actions, "R-Learner")
 {
-    pInit->init(q_table, state_space, action_space);
+    pInit->init(&q_table, state_space, action_space);
     set_table(&q_table);
 }
 

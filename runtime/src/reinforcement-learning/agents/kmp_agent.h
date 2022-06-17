@@ -351,7 +351,7 @@ protected:
      * */
     double* Q(int state)
     {
-        return *table[state];
+        return (*table)[state];
     }
 
     /*
@@ -359,7 +359,7 @@ protected:
      * */
     double Q(int state, int action)
     {
-        return *table[state][action];
+        return (*table)[state][action];
     }
 
     /*----------------------------------------------------------------------------*/

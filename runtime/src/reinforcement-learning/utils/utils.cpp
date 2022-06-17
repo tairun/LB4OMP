@@ -7,6 +7,7 @@
 
 
 #include <iostream>
+#include <iomanip>
 #include "utils.h"
 
 
@@ -143,19 +144,15 @@ int argmax(double** ref_table, int next_state, int size)
 }
 
 void dumpArray2D(double** ref_table, int row, int col) {
-    std::cout << "[Utils::dumpArray2D] Hi from dump " << std::endl;
-    std::cout << "[Utils::dumpArray2D] First value " << ref_table[0][0] << std::endl;
-    //std::cout << "[" << std::flush;
-
     int i, j;
-
     for (i = 0; i < row; i++) {
-        //std::string line_start = i == 0 ? "[" : " [";
-        //std::cout << line_start << std::flush;
+        std::cout << "[ " ;
         for (j = 0; j < col; j++) {
+            std::cout << std::fixed;
+            std::cout << std::setprecision(3);
             std::cout << ref_table[i][j] << " ";
         }
-        std::cout << std::endl;
+        std::cout << "]" << std::endl;
     }
-    //std::cout << "]" << std::endl;
+    std::cout << std::endl;
 }

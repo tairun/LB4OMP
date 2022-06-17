@@ -16,20 +16,16 @@ QLearner::QLearner(int num_states, int num_actions) :
           Agent(num_states, num_actions, "Q-Learner")
 {
     pInit->init(&q_table, state_space, action_space);
-    std::cout << "[QLearner::QLearner] Done using init." << std::endl;
     dumpArray2D(q_table, state_space, action_space);
-    std::cout << "[QLearner::QLearner] Done dumping." << std::endl;
     set_table(&q_table);
-    std::cout << "[QLearner::QLearner] Table   - Address: " << &table   << " Value: " << table   << std::endl;
-    std::cout << "[QLearner::QLearner] Q-Table - Address: " << &q_table << " Value: " << q_table << std::endl;
 }
 
 // private
 void QLearner::update(int next_state, int next_action, int actions, double reward_value)
 {
-    std::cout << "[QLearner::update] Using argmax ..." << std::endl;
-    std::cout << "[QLearner::update] Actions ..." << actions << std::endl;
     int best_action = argmax(q_table, next_state, actions);
-    std::cout << "[QLearner::update] Done using argmax." << std::endl;
-    q_table[current_state][current_action] += alpha * (reward_value + gamma * Q(next_state, best_action) - Q(current_state, current_action));
+    std::cout << "[QLearner::update] Done using argmax. Found: " << best_action << std::endl;
+    double right_term = alpha * (reward_value + gamma * Q(next_state, best_action) - Q(current_state, current_action));
+    std::cout << "[QLearner::update] Right term = " << right_term << std::endl;
+    q_table[current_state][current_action] += right_term;
 }

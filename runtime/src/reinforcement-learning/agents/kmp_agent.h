@@ -6,7 +6,7 @@
 //  --------------------------------------------------------------------------------------------//
 
 
-#define AGENT_DEBUG 2   // Added by Reinforcement Learning Extension to minimize stdout clutter
+#define AGENT_DEBUG 0   // Added by Reinforcement Learning Extension to minimize stdout clutter
 
 #pragma once
 

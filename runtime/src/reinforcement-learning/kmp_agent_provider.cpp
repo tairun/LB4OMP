@@ -5,7 +5,7 @@
 //  University of Basel, Switzerland
 //  --------------------------------------------------------------------------------------------//
 
-#define PROVIDER_DEBUG 2     // Added by Reinforcement Learning Extension to minimize stdout clutter
+#define PROVIDER_DEBUG 0     // Added by Reinforcement Learning Extension to minimize stdout clutter
 
 #include <string>
 #include <iostream>

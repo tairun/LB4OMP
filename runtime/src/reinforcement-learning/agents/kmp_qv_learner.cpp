@@ -15,9 +15,8 @@
 QVLearner::QVLearner(int num_states, int num_actions) :
         Agent(num_states, num_actions, "QV-Learner")
 {
-    // Initialize first dimension of table
-    pInit->init(v_table, state_space);
-    pInit->init(q_table, state_space, action_space);
+    pInit->init(&v_table, state_space);
+    pInit->init(&q_table, state_space, action_space);
     set_table(&q_table);
 }
 

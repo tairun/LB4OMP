@@ -9,37 +9,41 @@
 #include "kmp_optimistic_init.h"
 
 
-void OptimisticInit::init(int* data, int size)
+void OptimisticInit::init(int** data, int size)
 {
-    data = new int[size];
+    *data = new int[size];
 
-    for (int i = 0; i < size; i++)
+    int i;
+    for (i = 0; i < size; i++)
     {
-        data[i] = 0;
+        (*data)[i] = 0;
     }
 }
 
-void OptimisticInit::init(double* data, int size)
+void OptimisticInit::init(double** data, int size)
 {
-    data = new double[size];
+    *data = new double[size];
 
-    for (int i = 0; i < size; i++)
+    int i;
+    for (i = 0; i < size; i++)
     {
-        data[i] = 0.0f;
+        (*data)[i] = 0.0f;
     }
 }
 
-void OptimisticInit::init(double **data, int num_states, int num_actions)
+void OptimisticInit::init(double*** data, int num_states, int num_actions)
 {
-    data = new double*[num_states];
+    *data = new double*[num_states];
 
-    for (int i = 0; i < num_states; i++) {
-        data[i] = new double[num_actions];
+    int i;
+    for (i = 0; i < num_states; i++) {
+        (*data)[i] = new double[num_actions];
     }
 
-    for (int s = 0; s < num_states; s++)
+    int s, a;
+    for (s = 0; s < num_states; s++)
     {
-        for (int a = 0; a < num_actions; a++)
-            data[s][a] = 0.0f;
+        for (a = 0; a < num_actions; a++)
+            (*data)[s][a] = 0.0f;
     }
 }

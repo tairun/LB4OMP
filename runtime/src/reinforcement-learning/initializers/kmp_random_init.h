@@ -22,9 +22,9 @@ class RandomInit : public BaseInit
 {
 public:
     RandomInit(double upper_bound, double lower_bound);
-    void init(int* data, int size) override;
-    void init(double* data, int size) override;
-    void init(double** data, int num_actions, int num_states) override;
+    void init(int** data, int size) override;
+    void init(double** data, int size) override;
+    void init(double*** data, int num_actions, int num_states) override;
     double get_double() const;
 
 protected:

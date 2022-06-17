@@ -19,7 +19,7 @@
 class ZeroInit : public BaseInit
 {
 public:
-    void init(int* data, int size) override;
-    void init(double* data, int size) override;
-    void init(double** data, int num_actions, int num_states) override;
+    void init(int** data, int size) override;
+    void init(double** data, int size) override;
+    void init(double*** data, int num_actions, int num_states) override;
 };

@@ -17,49 +17,48 @@ RandomInit::RandomInit(double upper_bound, double lower_bound) : upper{upper_bou
 }
 
 double RandomInit::get_double() const {
-    //std::cout << "[RandomInit::get_double] Before unif ..." << std::endl;
     static std::uniform_real_distribution<double> unif(lower, upper);
-    //std::cout << "[RandomInit::get_double] Before engine ..." << std::endl;
     static std::default_random_engine re(defaults::SEED);
-    //std::cout << "[RandomInit::get_double] Before return ..." << std::endl;
     double the_num = unif(re);
-    std::cout << "[RandomInit::get_double] The number is  ... " << the_num << std::endl;
     return the_num;
 }
 
-void RandomInit::init(int* data, int size)
+void RandomInit::init(int** data, int size)
 {
-    data = new int[size];
+    *data = new int[size];
 
-    for (int i = 0; i < size; i++)
+    int i;
+    for (i = 0; i < size; i++)
     {
-        data[i] = 0;
+        (*data)[i] = 0;
     }
 }
 
-void RandomInit::init(double* data, int size)
+void RandomInit::init(double** data, int size)
 {
-    data = new double[size];
+    *data = new double[size];
 
-    for (int i = 0; i < size; i++)
+    int i;
+    for (i = 0; i < size; i++)
     {
-        data[i] = get_double();
+        (*data)[i] = get_double();
     }
 }
 
-void RandomInit::init(double **data, int num_states, int num_actions)
+void RandomInit::init(double*** data, int num_states, int num_actions)
 {
-    data = new double*[num_states];
+    *data = new double*[num_states];
 
-    for (int i = 0; i < num_states; i++) {
-        data[i] = new double[num_actions];
+    int i;
+    for (i = 0; i < num_states; i++) {
+        (*data)[i] = new double[num_actions];
     }
 
-    for (int s = 0; s < num_states; s++)
+    int s, a;
+    for (s = 0; s < num_states; s++)
     {
-        for (int a = 0; a < num_actions; a++){
-            data[s][a] = get_double();
-            std::cout << "[RandomInit::init] Data in array " << data[s][a] << std::endl;
+        for (a = 0; a < num_actions; a++){
+            (*data)[s][a] = get_double();
         }
     }
 }

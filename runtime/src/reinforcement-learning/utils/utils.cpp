@@ -133,7 +133,6 @@ int argmax(double** ref_table, int next_state, int size)
 
     for (int i = 0; i < size; i++)
     {
-        std::cout << "[Utils::argmax] Index ... " << i << std::endl;
         if (ref_table[next_state][i] > best_current)
         {
             best_current = ref_table[next_state][i];

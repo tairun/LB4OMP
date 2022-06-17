@@ -13,7 +13,6 @@
 
 RandomInit::RandomInit(double upper_bound, double lower_bound) : upper{upper_bound}, lower{lower_bound}
 {
-    std::cout << "[RandomInit::RandomInit] Hi from Constructor ..." << std::endl;
 }
 
 double RandomInit::get_double() const {

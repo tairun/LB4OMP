@@ -7,6 +7,7 @@
 
 
 #include "kmp_explore_first_policy.h"
+#include "reinforcement-learning/utils/utils.h"
 #include "reinforcement-learning/agents/kmp_agent.h"
 
 
@@ -29,12 +30,15 @@ int ExploreFirstPolicy::policy(int episode, int timestep, Agent* agent)
         std::cout << "[ExploreFirstPolicy::policy] Exploiting!" << std::endl;
 #endif
         std::cout << "[ExploreFirstPolicy::policy] Exploiting!" << std::endl;
-        action_max = 0;
+        /*action_max = 0;
         for (i = 0; i < agent->get_action_space(); i++)
             if (agent->get_table()[agent->get_current_state()][i] >
                 agent->get_table()[agent->get_current_state()][action_max])
                 action_max = i;
-        action = action_max;
+        action = action_max;*/
+
+        action = argmax(*agent->get_table(), agent->get_current_state(), agent->get_action_space());
+
         std::cout << "[ExploreFirstPolicy::policy] Found best action!" << std::endl;
     }
 

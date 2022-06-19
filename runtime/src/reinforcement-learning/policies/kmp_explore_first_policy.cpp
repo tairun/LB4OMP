@@ -13,7 +13,7 @@
 
 int ExploreFirstPolicy::policy(int episode, int timestep, Agent* agent)
 {
-    int i, action, action_max;
+    int next_action;
 
     if (timestep < (agent->get_state_space() * agent->get_action_space()))
     // Try all actions
@@ -21,7 +21,7 @@ int ExploreFirstPolicy::policy(int episode, int timestep, Agent* agent)
 #if (RL_DEBUG > 1)
         std::cout << "[ExploreFirstPolicy::policy] Exploring!" << std::endl;
 #endif
-        action = timestep % agent->get_action_space();
+        next_action = timestep % agent->get_action_space();
     }
     else
     // Greedy policy
@@ -29,18 +29,8 @@ int ExploreFirstPolicy::policy(int episode, int timestep, Agent* agent)
 #if (RL_DEBUG > 1)
         std::cout << "[ExploreFirstPolicy::policy] Exploiting!" << std::endl;
 #endif
-        std::cout << "[ExploreFirstPolicy::policy] Exploiting!" << std::endl;
-        /*action_max = 0;
-        for (i = 0; i < agent->get_action_space(); i++)
-            if (agent->get_table()[agent->get_current_state()][i] >
-                agent->get_table()[agent->get_current_state()][action_max])
-                action_max = i;
-        action = action_max;*/
-
-        action = argmax(*agent->get_table(), agent->get_current_state(), agent->get_action_space());
-
-        std::cout << "[ExploreFirstPolicy::policy] Found best action!" << std::endl;
+        next_action = argmax(*agent->get_table(), agent->get_current_state(), agent->get_action_space());
     }
 
-    return action;
+    return next_action;
 }

@@ -126,9 +126,9 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
             // Change some stuff only for the ChunkLearner!
             // Translate the action index to the actual chunk-size and return that instead
         {
-//#if (PROVIDER_DEBUG > 1)
+#if (PROVIDER_DEBUG > 1)
             std::cout << "[AgentProvider::search] Translating action index to chunk size: " << new_method << " --> " << chunk_sizes[new_method] << std::endl;
-//#endif
+#endif
             new_method = chunk_sizes[new_method];
         }
 

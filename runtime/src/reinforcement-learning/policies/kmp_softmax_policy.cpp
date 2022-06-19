@@ -14,7 +14,7 @@
 int SoftmaxPolicy::policy(int episode, int timestep, Agent* agent)
 {
     std::cout << "[SoftmaxPolicy::policy] Assembling weights ..." << std::endl;
-    std::vector<double> weights(*agent->get_table()[agent->get_current_state()], *agent->get_table()[agent->get_current_state()] + agent->get_action_space());
+    std::vector<double> weights((*agent->get_table())[agent->get_current_state()], (*agent->get_table())[agent->get_current_state()] + agent->get_action_space());
     std::cout << "[SoftmaxPolicy::policy] Calculating probabilities ..." << std::endl;
     auto probabilities = Softmax(weights, agent->get_tau());
     std::cout << "[SoftmaxPolicy::policy] Selecting an action ..." << std::endl;

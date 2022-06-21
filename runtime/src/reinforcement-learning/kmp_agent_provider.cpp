@@ -51,13 +51,12 @@ int AgentProvider::search(const std::string& loop_id, int agent_type, LoopData* 
 {
 #if (PROVIDER_DEBUG > 0)
     std::cout << "[AgentProvider::search] Loop: " << loop_id << std::endl;
-#endif
-    std::cout << "[AgentProvider::search] Loop: " << loop_id << std::endl;
     std::cout << "[AgentProvider::search] Current LoopTime: " << stats->cTime << std::endl;
-
-    if (stats->cTime < 1000)
+#endif
+    // Skip the agent when the looptime was minuscule, and we already have the loop in the "database" (Fix for SPHYNX Evrard 2000)
+    if (stats->cTime < 500 && stats->cTime > 0 && AgentProvider::get_timesteps().count(loop_id))
     {
-        std::cout << "[AgentProvider::search] Skipping small loop!" << std::endl;
+        std::cout << "[AgentProvider::search] Skipping small loop! (" << stats->cTime << ")" << std::endl;
         return 0;
     }
 

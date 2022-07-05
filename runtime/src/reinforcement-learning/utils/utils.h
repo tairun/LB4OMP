@@ -26,6 +26,7 @@ std::string read_env_string(const char* var_name);
  * */
 void read_env_string(const char* var_name, std::string& target);
 
+void read_env_int(const char* var_name, int& target);
 int read_env_int(const char* var_name, int rdefault);
 
 /*

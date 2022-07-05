@@ -36,6 +36,18 @@ void read_env_string(const char* var_name, std::string& target)
     }
 }
 
+void read_env_int(const char* var_name, int& target)
+{
+    if (std::getenv(var_name) != nullptr)
+    {
+        target = std::stoi(std::getenv(var_name));
+    }
+    else
+    {
+        std::cout << "[read_env_string] Couldn't read '" << var_name << "' from env. Using default." << std::endl;
+    }
+}
+
 int read_env_int(const char* var_name, int rdefault)
 {
     if (std::getenv(var_name) != nullptr)

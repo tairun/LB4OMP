@@ -276,6 +276,11 @@ public:
         return high;
     }
 
+    int get_window() const
+    {
+        return avg_window_size;
+    }
+
     // Setters
 
     void set_table(double*** table_ref)
@@ -313,6 +318,7 @@ protected:
     int action_space;         // Amount of action available to the agent. Exported to agent.ini
     int current_state{0};     // We always start with static scheduling method as initial state (it's the first method from the portfolio)
     int current_action{0};    // Set action also to selecting the static scheduling method
+    int avg_window_size{defaults::ROLLING_AVG_WINDOW};    // Set action also to selecting the static scheduling method
 
     double current_reward{0};                  // For statistics only
 

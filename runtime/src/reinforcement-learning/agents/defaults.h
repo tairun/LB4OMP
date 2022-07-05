@@ -27,7 +27,7 @@ namespace defaults {
 
     const int CHUNK_TYPE                = 8;
 
-    const int ROLLING_AVG_WINDOW         = 10;
+    const int ROLLING_AVG_WINDOW        = 10;
     const int INVERSE_REWARD_MULT       = 10;
 
     const RewardType REWARD_TYPE        = RewardType::LOOPTIME;

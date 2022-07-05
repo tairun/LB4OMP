@@ -19,7 +19,7 @@ double LooptimeRollingAverageReward::reward(LoopData* stats, Agent* agent) {
     static std::vector<double> avgs;
     double reward{0};
 
-    if (avgs.size() >= defaults::ROLLING_AVG_WINDOW)  // TODO@kurluc00: Read rolling average size from env
+    if (avgs.size() >= agent->get_window())
     {
         avgs.pop_back();
     }

@@ -67,6 +67,7 @@ public:
         read_env_enum("KMP_RL_POLICY", policy_type);
         read_env_enum("KMP_RL_DECAY", decay_type);
 
+        read_env_int("KMP_RL_AVG_WINDOW", avg_window_size);
         read_env_string("KMP_RL_REWARD_NUM", reward_string);
 
         split_reward_nums();
